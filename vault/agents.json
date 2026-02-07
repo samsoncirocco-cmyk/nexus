@@ -2,37 +2,41 @@
   {
     "id": "platform-spec",
     "label": "Platform Spec",
-    "status": "running",
+    "status": "completed",
     "model": "opus-4.6",
     "startedAt": "2026-02-07T20:06:00Z",
-    "lastUpdate": "2026-02-07T20:06:00Z",
-    "summary": "Writing full product spec for Second Brain platform"
+    "lastUpdate": "2026-02-07T20:16:49Z",
+    "summary": "54KB product spec for Second Brain as AI orchestration platform",
+    "completedAt": "2026-02-07T20:16:49Z"
   },
   {
     "id": "nexus-stitch",
     "label": "Nexus UI Rebuild",
-    "status": "running",
+    "status": "completed",
     "model": "opus-4.6",
     "startedAt": "2026-02-07T20:06:00Z",
-    "lastUpdate": "2026-02-07T20:06:00Z",
-    "summary": "Integrating Stitch designs into Nexus"
+    "lastUpdate": "2026-02-07T20:17:00Z",
+    "summary": "Stitch-designed landing + dashboard with 14 components",
+    "completedAt": "2026-02-07T20:17:00Z"
   },
   {
     "id": "tatt-stitch",
     "label": "TatT UI Rebuild",
-    "status": "running",
+    "status": "completed",
     "model": "opus-4.6",
     "startedAt": "2026-02-07T20:06:00Z",
-    "lastUpdate": "2026-02-07T20:06:00Z",
-    "summary": "Integrating Stitch designs into TatT for YC demo"
+    "lastUpdate": "2026-02-07T20:16:49Z",
+    "summary": "Stitch-designed landing + dashboard deployed to tatt-app.vercel.app",
+    "completedAt": "2026-02-07T20:16:49Z"
   },
   {
     "id": "gog-automations",
     "label": "Google Automations",
-    "status": "running",
+    "status": "completed",
     "model": "opus-4.6",
     "startedAt": "2026-02-07T20:06:00Z",
-    "lastUpdate": "2026-02-07T20:06:00Z",
-    "summary": "Building Gmail triage, calendar sync, Drive watch"
+    "lastUpdate": "2026-02-07T20:16:49Z",
+    "summary": "Gmail triage, calendar sync, Drive watch scripts built (needs gog auth)",
+    "completedAt": "2026-02-07T20:16:49Z"
   }
 ]
