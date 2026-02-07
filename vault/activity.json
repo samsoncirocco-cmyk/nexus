@@ -1,0 +1,68 @@
+[
+  {
+    "id": "act-001",
+    "timestamp": "2026-02-07T14:52:00.000Z",
+    "agent": "nightshift-book-ch4",
+    "type": "completed",
+    "title": "Book Chapter 4: Kids (and Other Tiny Terrorists)",
+    "summary": "Drafted ~2,200 words covering the Pinterest parenting lie, the roommate phase, and the reality of raising tiny terrorists. Matches Samson's voice from the working copy.",
+    "output": ["projects/book-toolkit/drafts/chapter-04-kids.md"],
+    "tags": ["book"],
+    "status": "done"
+  },
+  {
+    "id": "act-002",
+    "timestamp": "2026-02-07T14:53:00.000Z",
+    "agent": "nightshift-erate-outreach",
+    "type": "completed",
+    "title": "E-Rate Outreach: 3 Fortinet-Tagged Leads",
+    "summary": "Researched and drafted personalized outreach emails for Ogallala NE (FortiGate 600F, Feb 24 deadline), Parkston SD (FortiGate 70G + Meraki displacement, Feb 26), and Deshler NE (43x FortiSwitch, Mar 3). Includes research dossier with contact details, LinkedIn profiles, and revenue estimates (~$120-170K total).",
+    "output": ["projects/sled-toolkit/erate-fortinet-outreach/ogallala-ne-fortigate-600f.md", "projects/sled-toolkit/erate-fortinet-outreach/parkston-sd-fortigate-70g.md", "projects/sled-toolkit/erate-fortinet-outreach/deshler-ne-fortiswitch-148f.md", "projects/sled-toolkit/erate-fortinet-outreach/research-summary.md"],
+    "tags": ["sled", "erate", "revenue"],
+    "status": "done"
+  },
+  {
+    "id": "act-003",
+    "timestamp": "2026-02-07T15:07:00.000Z",
+    "agent": "workhorse",
+    "type": "completed",
+    "title": "TatT Test Suite + TypeScript Migration",
+    "summary": "Fixed TatT test suite — 129 tests now passing (was 0 runnable). Migrated 7 files to TypeScript: Button, Input, Card components + 4 services with proper types. Also added 18 tests to Second Brain. 6 commits pushed to main.",
+    "output": ["repos/TatT/src/components/ui/Button.tsx", "repos/TatT/src/components/ui/Input.tsx", "repos/TatT/src/components/ui/Card.tsx"],
+    "tags": ["dev", "tatt", "testing"],
+    "status": "done"
+  },
+  {
+    "id": "act-004",
+    "timestamp": "2026-02-07T15:08:00.000Z",
+    "agent": "yc-research",
+    "type": "completed",
+    "title": "YCombinator Prep Package",
+    "summary": "Created comprehensive YC prep: application guide (S26 deadline Feb 9!), TatT vs IRL analysis (TatT wins 10-0), market sizing ($60B+ TAM), draft YC application, competitive moat analysis, and 1-minute demo video script. 6 documents, ~52KB total.",
+    "output": ["projects/yc-prep/README.md", "projects/yc-prep/01-yc-application-guide.md", "projects/yc-prep/02-tatt-vs-irl-analysis.md", "projects/yc-prep/03-tatt-market-analysis.md", "projects/yc-prep/04-draft-yc-application.md", "projects/yc-prep/05-competitive-moat-analysis.md"],
+    "tags": ["yc", "founder", "tatt"],
+    "status": "done"
+  },
+  {
+    "id": "act-005",
+    "timestamp": "2026-02-07T15:23:00.000Z",
+    "agent": "second-brain-redesign",
+    "type": "completed",
+    "title": "🦆 Oregon Ducks × Nike Theme Redesign",
+    "summary": "Complete redesign of Second Brain with Oregon Ducks/Nike theme. Forest green (#154733) + gold (#FEE123) color palette. Mobile-first responsive: hamburger menu, bottom nav, touch-friendly 44px tap targets. Updated 7 files: globals.css, layout.tsx, Sidebar.tsx, page.tsx, tasks/page.tsx, activity/page.tsx, deals/page.tsx, doc page. Build passes, deployed to Vercel.",
+    "output": ["src/app/globals.css", "src/components/Sidebar.tsx", "src/app/page.tsx", "src/app/tasks/page.tsx", "src/app/activity/page.tsx", "src/app/deals/page.tsx"],
+    "tags": ["dev", "design", "second-brain"],
+    "status": "done"
+  },
+  {
+    "id": "act-006",
+    "timestamp": "2026-02-07T15:30:00.000Z",
+    "agent": "linkedin-buddy-build",
+    "type": "completed",
+    "title": "🔗 Nexus: LinkedIn Content Tool — Spec & MVP",
+    "summary": "Full product spec, competitive research, and MVP build for LinkedIn-focused AI content tool. Researched Taplio, AuthoredUp, Shield, Supergrow. Created SPEC.md (11 features, 5 personas, pricing tiers), COMPETITORS.md (gap analysis), ARCHITECTURE.md (tech stack, AI pipeline, database schema). Built Next.js 16 MVP with Oregon Ducks theme: landing page, dashboard, content composer, post history. All pages building successfully.",
+    "output": ["projects/linkedin-buddy/SPEC.md", "projects/linkedin-buddy/COMPETITORS.md", "projects/linkedin-buddy/ARCHITECTURE.md", "projects/linkedin-buddy/app/src/app/page.tsx", "projects/linkedin-buddy/app/src/app/dashboard/page.tsx", "projects/linkedin-buddy/app/src/app/dashboard/compose/page.tsx", "projects/linkedin-buddy/app/src/app/dashboard/history/page.tsx"],
+    "tags": ["dev", "product", "ai", "linkedin"],
+    "status": "done"
+  }
+]

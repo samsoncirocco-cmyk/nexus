@@ -1,0 +1,504 @@
+[
+  {
+    "id": "100",
+    "title": "\ud83d\udd25 Outlook API - restart VM server",
+    "description": "SAMSON DO THIS:\n1. Open VNC or RDP to fortinet-windows VM (192.168.122.104)\n2. Log in as samso (PIN: 3437)\n3. Open Outlook and wait for it to fully load\n4. Open Command Prompt (Win+R \u2192 cmd)\n5. Run: python C:\\outlook_server.py\n6. If firewall blocks port 8899, run: netsh advfirewall set allprofiles state off\n7. Test: curl http://192.168.122.104:8899/status from host",
+    "column": "Waiting on Samson",
+    "priority": "high",
+    "createdAt": "2026-02-06T21:50:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "infra",
+      "vm"
+    ],
+    "links": []
+  },
+  {
+    "id": "101",
+    "title": "\ud83d\udd25 Delete old bad E-Rate drafts from Outlook",
+    "description": "SAMSON DO THIS:\n1. Open Outlook on the VM\n2. Go to Drafts folder\n3. Delete the ~31 E-Rate draft emails Paul created for wrong accounts (Elkhorn, Blair, Beatrice, Cedar Rapids, etc.)\n4. Keep any drafts you've personally written",
+    "column": "Waiting on Samson",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "sled",
+      "cleanup"
+    ],
+    "links": []
+  },
+  {
+    "id": "102",
+    "title": "\ud83d\udd25 Review 3 Fortinet E-Rate outreach emails",
+    "description": "SAMSON DO THIS:\n1. Open the Google Drive folder below\n2. Review all 3 emails + research summary\n3. Ogallala NE \u2014 FortiGate 600F, deadline Feb 24\n4. Parkston SD \u2014 FortiGate 70G, deadline Feb 26\n5. Deshler NE \u2014 43x FortiSwitch, deadline Mar 3\n6. Add your personal touch / war stories\n7. Tell Paul to send or create Outlook drafts\n\n~$120-170K total revenue across all 3 deals.",
+    "column": "Waiting on Samson",
+    "priority": "high",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "sled",
+      "erate",
+      "revenue"
+    ],
+    "links": [
+      {
+        "label": "E-Rate Outreach Emails",
+        "url": "https://drive.google.com/drive/folders/1XWpVHpn4MlKM9whLvgkDuL9xtflcebHZ",
+        "type": "drive"
+      },
+      {
+        "label": "Research Summary",
+        "url": "https://brain.6eyes.dev/doc/reports-erate-report-2026-02-06",
+        "type": "brain"
+      }
+    ]
+  },
+  {
+    "id": "103",
+    "title": "\ud83d\udd25 Call bankruptcy lawyer (Oswalt Law Group)",
+    "description": "SAMSON DO THIS:\n1. Call Oswalt Law Group \u2014 welcome letter was in Gmail Dec 30\n2. Discuss Ch 13 (keep rental house) vs Ch 7\n3. URGENT: Means test window is shrinking \u2014 6-month lookback still includes $0 unemployment months\n4. Every month you wait, your calculated income goes UP (Fortinet salary replacing $0 months)\n5. GoodLeap and SoFi are past due and escalating",
+    "column": "Waiting on Samson",
+    "priority": "high",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "personal",
+      "financial",
+      "urgent"
+    ],
+    "links": []
+  },
+  {
+    "id": "104",
+    "title": "\ud83d\udd25 Review YC Prep & decide: TatT or IRL?",
+    "description": "SAMSON DO THIS:\n1. Open the YC Prep folder in Google Drive (link below)\n2. Read 02-tatt-vs-irl-analysis.md (TatT wins 10-0)\n3. Read 04-draft-yc-application.md \u2014 first draft ready for your personal details\n4. Read 03-tatt-market-analysis.md for market sizing\n5. Pick which product to submit\n6. \u26a0\ufe0f S26 deadline may be Feb 9 @ 8pm PT \u2014 verify!",
+    "column": "Waiting on Samson",
+    "priority": "high",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "yc",
+      "founder"
+    ],
+    "links": [
+      {
+        "label": "YC Prep Folder",
+        "url": "https://drive.google.com/open?id=1_RREXd3nXy-4225tHpy3DhdMmstyJFKu",
+        "type": "drive"
+      },
+      {
+        "label": "Draft Application",
+        "url": "https://drive.google.com/open?id=1_RREXd3nXy-4225tHpy3DhdMmstyJFKu",
+        "type": "drive"
+      },
+      {
+        "label": "TatT Live App",
+        "url": "https://tat-t-3x8t.vercel.app",
+        "type": "external"
+      }
+    ]
+  },
+  {
+    "id": "105",
+    "title": "Review Book Chapter 4: Kids draft",
+    "description": "SAMSON DO THIS:\n1. Open the chapter in Google Drive (link below)\n2. ~2,200 words \u2014 covers Pinterest parenting lie, roommate phase, tiny terrorists\n3. Add your personal stories \u2014 Paul wrote the framework, you add the real moments\n4. Flag anything that doesn't sound like you\n5. Tell Paul what to change",
+    "column": "Waiting on Samson",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "book"
+    ],
+    "links": [
+      {
+        "label": "Full Manuscript (19K words)",
+        "url": "https://drive.google.com/open?id=1-S9ZK_ZhQR9TR4hHA4vdFWhTGpdcnTxy",
+        "type": "drive"
+      },
+      {
+        "label": "All Book Materials",
+        "url": "https://drive.google.com/drive/folders/1kDuOjUubXBXoC7dEQYbTHWgvw0CXjzrk",
+        "type": "drive"
+      }
+    ]
+  },
+  {
+    "id": "200",
+    "title": "YC Application Research & Prep \u2705",
+    "description": "Full YC prep package: timeline, requirements, draft application, market analysis, competitive moat. 6 documents, ~52KB.",
+    "column": "Done",
+    "priority": "high",
+    "createdAt": "2026-02-07T15:00:00.000Z",
+    "updatedAt": "2026-02-07T15:08:00.000Z",
+    "tags": [
+      "yc",
+      "founder"
+    ],
+    "links": [
+      {
+        "label": "YC Prep Folder",
+        "url": "https://drive.google.com/open?id=1_RREXd3nXy-4225tHpy3DhdMmstyJFKu",
+        "type": "drive"
+      }
+    ]
+  },
+  {
+    "id": "201",
+    "title": "TatT \u2014 make demo-ready for investors",
+    "description": "Review codebase, fix bugs, polish UX, landing page, core flow, mobile. Opus sub-agent working on this.",
+    "column": "In Progress",
+    "priority": "high",
+    "createdAt": "2026-02-07T15:00:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "yc",
+      "tatt",
+      "dev"
+    ],
+    "links": [
+      {
+        "label": "TatT Live",
+        "url": "https://tat-t-3x8t.vercel.app",
+        "type": "external"
+      },
+      {
+        "label": "TatT GitHub",
+        "url": "https://github.com",
+        "type": "external"
+      }
+    ]
+  },
+  {
+    "id": "202",
+    "title": "TatT \u2014 pitch deck v1",
+    "description": "YC-style pitch deck: problem, solution, market size, traction, team, ask.",
+    "column": "Backlog",
+    "priority": "high",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "yc",
+      "tatt"
+    ],
+    "links": [
+      {
+        "label": "Market Analysis",
+        "url": "https://drive.google.com/open?id=1_RREXd3nXy-4225tHpy3DhdMmstyJFKu",
+        "type": "drive"
+      }
+    ]
+  },
+  {
+    "id": "203",
+    "title": "TatT \u2014 financial model / unit economics",
+    "description": "Revenue projections, CAC/LTV, marketplace take rate, subscription tiers, path to $1M ARR.",
+    "column": "Backlog",
+    "priority": "high",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "yc",
+      "tatt"
+    ],
+    "links": []
+  },
+  {
+    "id": "204",
+    "title": "LinkedIn CreatorBuddy \u2014 market research",
+    "description": "Research CreatorBuddy.io model, LinkedIn content tools landscape, build MVP spec for LinkedIn-focused AI content tool.",
+    "column": "Backlog",
+    "priority": "high",
+    "createdAt": "2026-02-07T15:13:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "founder",
+      "linkedin",
+      "new-product"
+    ],
+    "links": [
+      {
+        "label": "CreatorBuddy Reference",
+        "url": "https://www.creatorbuddy.io",
+        "type": "external"
+      }
+    ]
+  },
+  {
+    "id": "300",
+    "title": "E-Rate \u2014 outreach for remaining 52 leads",
+    "description": "Build templates for 52 validated territory leads grouped by state and deadline.",
+    "column": "Backlog",
+    "priority": "high",
+    "createdAt": "2026-02-07T14:52:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "sled",
+      "erate"
+    ],
+    "links": [
+      {
+        "label": "Validated Leads",
+        "url": "https://drive.google.com/drive/folders/1XWpVHpn4MlKM9whLvgkDuL9xtflcebHZ",
+        "type": "drive"
+      },
+      {
+        "label": "E-Rate Report",
+        "url": "https://brain.6eyes.dev/doc/reports-erate-report-2026-02-06",
+        "type": "brain"
+      }
+    ]
+  },
+  {
+    "id": "301",
+    "title": "E-Rate \u2014 SS Peter & Paul NE urgent 471 PIA",
+    "description": "15 Day PIA Notice already 20+ days old. Need to follow up ASAP.",
+    "column": "Backlog",
+    "priority": "high",
+    "createdAt": "2026-02-06T21:50:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "sled",
+      "erate",
+      "urgent"
+    ],
+    "links": []
+  },
+  {
+    "id": "302",
+    "title": "E-Rate \u2014 contact enrichment for all 55 leads",
+    "description": "Google-search based research for decision-maker contacts at each account.",
+    "column": "Backlog",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "sled",
+      "erate"
+    ],
+    "links": []
+  },
+  {
+    "id": "400",
+    "title": "Book Chapter 5: Sales/Career",
+    "description": "Draft ~2,500 words on career struggles, sales life, unemployment, starting over.",
+    "column": "Backlog",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "book"
+    ],
+    "links": [
+      {
+        "label": "Full Manuscript (19K words)",
+        "url": "https://drive.google.com/open?id=1-S9ZK_ZhQR9TR4hHA4vdFWhTGpdcnTxy",
+        "type": "drive"
+      }
+    ]
+  },
+  {
+    "id": "401",
+    "title": "Deep manuscript review \u2014 Stella's edits vs original",
+    "description": "Compare Working Copy (75K), Stella's Edits (50.6K), Original (50.7K). Produce diff analysis.",
+    "column": "Backlog",
+    "priority": "medium",
+    "createdAt": "2026-02-06T21:50:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "book"
+    ],
+    "links": [
+      {
+        "label": "Full Manuscript (19K words)",
+        "url": "https://drive.google.com/open?id=1-S9ZK_ZhQR9TR4hHA4vdFWhTGpdcnTxy",
+        "type": "drive"
+      },
+      {
+        "label": "Source Materials",
+        "url": "https://drive.google.com/drive/folders/1kDuOjUubXBXoC7dEQYbTHWgvw0CXjzrk",
+        "type": "drive"
+      }
+    ]
+  },
+  {
+    "id": "500",
+    "title": "IRL \u2014 improve codebase, tests, docs",
+    "description": "Potential B2B YC play. Schema governance for AI agents.",
+    "column": "Backlog",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "dev",
+      "irl"
+    ],
+    "links": []
+  },
+  {
+    "id": "501",
+    "title": "Second Brain \u2014 add search, mobile, vault nav",
+    "description": "Full-text search, better mobile responsiveness, improved vault browsing.",
+    "column": "Backlog",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "dev",
+      "second-brain"
+    ],
+    "links": [
+      {
+        "label": "Second Brain Live",
+        "url": "https://brain.6eyes.dev",
+        "type": "brain"
+      }
+    ]
+  },
+  {
+    "id": "502",
+    "title": "SFDC \u2014 improve quote builder & triage",
+    "description": "Improve quote_builder.py, triage system, add new automations.",
+    "column": "Backlog",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "dev",
+      "sfdc"
+    ],
+    "links": []
+  },
+  {
+    "id": "600",
+    "title": "Fix Notion API key compromise",
+    "description": "Key exposed Feb 6. Needs rotation.",
+    "column": "Backlog",
+    "priority": "low",
+    "createdAt": "2026-02-06T21:50:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "security"
+    ],
+    "links": []
+  },
+  {
+    "id": "700",
+    "title": "Founder toolkit \u2014 investor meeting templates",
+    "description": "One-pager, exec summary, FAQ sheet, cap table template, SAFE note explainer.",
+    "column": "Backlog",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "yc",
+      "founder"
+    ],
+    "links": []
+  },
+  {
+    "id": "701",
+    "title": "Daily morning briefing automation",
+    "description": "Auto-summary of Samson's day: meetings, deadlines, urgent emails, weather.",
+    "column": "Backlog",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:02:00.000Z",
+    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "tags": [
+      "automation",
+      "quality-of-life"
+    ],
+    "links": []
+  },
+  {
+    "id": "800",
+    "title": "Nightshift system \u2014 operational \u2705",
+    "description": "Workhorse cron every 3hrs (Opus 4.6, 2hr timeout). NIGHTSHIFT.md work queue.",
+    "column": "Done",
+    "priority": "high",
+    "createdAt": "2026-02-07T14:50:00.000Z",
+    "updatedAt": "2026-02-07T14:52:00.000Z",
+    "tags": [
+      "infra"
+    ],
+    "links": []
+  },
+  {
+    "id": "801",
+    "title": "E-Rate 3 Fortinet outreach emails \u2705",
+    "description": "Ogallala NE (600F), Parkston SD (70G), Deshler NE (FortiSwitch). All drafted.",
+    "column": "Done",
+    "priority": "high",
+    "createdAt": "2026-02-07T14:48:00.000Z",
+    "updatedAt": "2026-02-07T14:53:00.000Z",
+    "tags": [
+      "sled",
+      "erate"
+    ],
+    "links": [
+      {
+        "label": "Outreach Emails",
+        "url": "https://drive.google.com/drive/folders/1XWpVHpn4MlKM9whLvgkDuL9xtflcebHZ",
+        "type": "drive"
+      }
+    ]
+  },
+  {
+    "id": "802",
+    "title": "Book Chapter 4: Kids \u2705",
+    "description": "~2,200 words drafted.",
+    "column": "Done",
+    "priority": "high",
+    "createdAt": "2026-02-07T14:48:00.000Z",
+    "updatedAt": "2026-02-07T14:52:00.000Z",
+    "tags": [
+      "book"
+    ],
+    "links": [
+      {
+        "label": "Full Manuscript (19K words)",
+        "url": "https://drive.google.com/open?id=1-S9ZK_ZhQR9TR4hHA4vdFWhTGpdcnTxy",
+        "type": "drive"
+      }
+    ]
+  },
+  {
+    "id": "803",
+    "title": "TatT test suite + TypeScript migration \u2705",
+    "description": "129 tests passing, 7 files migrated to TypeScript.",
+    "column": "Done",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:07:00.000Z",
+    "updatedAt": "2026-02-07T15:07:00.000Z",
+    "tags": [
+      "dev",
+      "tatt"
+    ],
+    "links": [
+      {
+        "label": "TatT Live",
+        "url": "https://tat-t-3x8t.vercel.app",
+        "type": "external"
+      }
+    ]
+  },
+  {
+    "id": "804",
+    "title": "Activity Feed built \u2705",
+    "description": "Live at brain.6eyes.dev/activity. Shows all sub-agent work with timeline, tags, output files.",
+    "column": "Done",
+    "priority": "medium",
+    "createdAt": "2026-02-07T15:10:00.000Z",
+    "updatedAt": "2026-02-07T15:10:00.000Z",
+    "tags": [
+      "dev",
+      "second-brain"
+    ],
+    "links": [
+      {
+        "label": "Activity Feed",
+        "url": "https://brain.6eyes.dev/activity",
+        "type": "brain"
+      }
+    ]
+  }
+]
