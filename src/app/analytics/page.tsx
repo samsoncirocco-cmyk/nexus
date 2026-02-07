@@ -45,7 +45,6 @@ function tasksByColumn(tasks: Task[]): { column: string; count: number; color: s
 function activeStreak(entries: ActivityEntry[]): number {
   if (!entries.length) return 0;
   const days = new Set(entries.map((e) => e.timestamp.slice(0, 10)));
-  const sorted = [...days].sort().reverse();
   let streak = 0;
   const today = new Date();
   for (let i = 0; i < 365; i++) {
@@ -462,7 +461,7 @@ function SummaryCard({
 
   return (
     <div
-      className={`bg-card-dark rounded-2xl border border-border p-5 hover:${colors.ring} transition-colors group`}
+      className="bg-card-dark rounded-2xl border border-border p-5 hover:border-primary/20 transition-colors group"
     >
       <div className="flex items-center gap-3 mb-3">
         <div

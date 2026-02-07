@@ -95,7 +95,7 @@ export default function SettingsPage() {
     <div className="max-w-3xl mx-auto px-6 py-8">
       {/* Toast */}
       {toast && (
-        <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-secondary-dark border border-primary/30 rounded-xl text-primary text-sm font-medium shadow-lg shadow-primary/10 animate-in">
+        <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-secondary-dark border border-primary/30 rounded-xl text-primary text-sm font-medium shadow-lg shadow-primary/10 animate-fade-in">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined" style={{ fontSize: 18, fontVariationSettings: "'FILL' 1" }}>check_circle</span>
             {toast}

@@ -151,7 +151,7 @@ export default async function DocumentPage({ params }: PageProps) {
         {/* Footer */}
         <footer className="mt-16 pt-8 border-t border-white/5">
           <div className="flex items-center justify-between text-sm text-foreground-muted">
-            <span suppressHydrationWarning>Last updated: {format(doc.lastModified, "MMM d, yyyy 'at' h:mm a")}</span>
+            <span suppressHydrationWarning>Last updated: {(() => { try { return format(new Date(doc.lastModified), "MMM d, yyyy 'at' h:mm a"); } catch { return 'Unknown'; } })()}</span>
             <Link href={`/doc/${doc.category}`} className="text-primary hover:underline font-bold flex items-center gap-1">
               <span>←</span> Back to {doc.category}
             </Link>
