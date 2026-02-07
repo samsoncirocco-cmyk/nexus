@@ -1,0 +1,38 @@
+[
+  {
+    "id": "platform-spec",
+    "label": "Platform Spec",
+    "status": "running",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:06:00Z",
+    "lastUpdate": "2026-02-07T20:06:00Z",
+    "summary": "Writing full product spec for Second Brain platform"
+  },
+  {
+    "id": "nexus-stitch",
+    "label": "Nexus UI Rebuild",
+    "status": "running",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:06:00Z",
+    "lastUpdate": "2026-02-07T20:06:00Z",
+    "summary": "Integrating Stitch designs into Nexus"
+  },
+  {
+    "id": "tatt-stitch",
+    "label": "TatT UI Rebuild",
+    "status": "running",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:06:00Z",
+    "lastUpdate": "2026-02-07T20:06:00Z",
+    "summary": "Integrating Stitch designs into TatT for YC demo"
+  },
+  {
+    "id": "gog-automations",
+    "label": "Google Automations",
+    "status": "running",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:06:00Z",
+    "lastUpdate": "2026-02-07T20:06:00Z",
+    "summary": "Building Gmail triage, calendar sync, Drive watch"
+  }
+]

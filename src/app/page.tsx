@@ -3,6 +3,7 @@ import { getActivity } from '@/app/actions/activity';
 import { getTasks } from '@/app/actions/tasks';
 import { getDeals } from '@/app/actions/deals';
 import { getCommands } from '@/app/actions/commands';
+import { getRunningAgents } from '@/app/actions/agents';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
@@ -23,6 +24,7 @@ export default async function Home() {
   const tasks = await getTasks();
   const deals = await getDeals();
   const commands = await getCommands();
+  const runningAgents = await getRunningAgents();
 
   const activeTasks = tasks.filter(t => t.column !== 'Done').length;
   const activeDeals = deals.filter(d => d.stage !== 'Closed Won' && d.stage !== 'Closed Lost').length;
@@ -87,6 +89,41 @@ export default async function Home() {
           </div>
         </Link>
       </div>
+
+      {/* Running Agents Card */}
+      {runningAgents.length > 0 && (
+        <div className="px-6 mb-4">
+          <Link href="/agents" className="block">
+            <div className="bg-gradient-to-br from-emerald-900/30 to-bg-dark rounded-xl p-5 border border-emerald-500/20 relative overflow-hidden hover:border-emerald-500/40 transition-colors">
+              <div className="absolute -right-4 -top-4 size-20 bg-emerald-500/10 rounded-full blur-2xl" />
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-emerald-400" style={{ fontSize: 20 }}>smart_toy</span>
+                    <h4 className="text-emerald-400 font-bold text-sm uppercase tracking-wider">
+                      {runningAgents.length} Agent{runningAgents.length !== 1 ? 's' : ''} Running
+                    </h4>
+                  </div>
+                  <div className="relative">
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                    <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {runningAgents.map((agent) => (
+                    <span
+                      key={agent.id}
+                      className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-medium"
+                    >
+                      {agent.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      )}
 
       {/* Brain Status Card */}
       <div className="px-6 mb-6">

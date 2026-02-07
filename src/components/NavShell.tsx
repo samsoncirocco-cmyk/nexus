@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 const NAV_ITEMS = [
   { href: '/', icon: 'home', label: 'Home', fill: true },
-  { href: '/tasks', icon: 'checklist', label: 'Tasks' },
+  { href: '/agents', icon: 'smart_toy', label: 'Agents' },
   { href: '/ask', icon: 'neurology', label: 'Ask' },
   { href: '/deals', icon: 'rocket_launch', label: 'Deals' },
   { href: '/doc', icon: 'folder_open', label: 'Files' },
@@ -14,6 +14,7 @@ const NAV_ITEMS = [
 
 const SIDEBAR_LINKS = [
   { href: '/', icon: 'home', label: 'Dashboard' },
+  { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet' },
   { href: '/commands', icon: 'bolt', label: 'Commands' },
   { href: '/ask', icon: 'neurology', label: 'Ask Brain' },
   { href: '/tasks', icon: 'checklist', label: 'Task Board' },
