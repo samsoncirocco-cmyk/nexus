@@ -24,6 +24,7 @@ const SIDEBAR_LINKS = [
   { href: '/deals', icon: 'rocket_launch', label: 'Sales Pipeline' },
   { href: '/graph', icon: 'hub', label: 'Knowledge Graph' },
   { href: '/doc', icon: 'folder_open', label: 'Documents' },
+  { href: '/settings', icon: 'settings', label: 'Settings' },
 ];
 
 export default function NavShell({ children }: { children: React.ReactNode }) {
@@ -68,26 +69,30 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
           {SIDEBAR_LINKS.map((link) => {
             const active = isActive(link.href);
             return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all ${
-                  active
-                    ? 'bg-primary/10 text-primary border border-primary/20'
-                    : 'text-foreground-muted hover:bg-white/5 hover:text-foreground'
-                }`}
-              >
-                <span
-                  className={`material-symbols-outlined ${active ? 'text-primary' : ''}`}
-                  style={{ fontSize: 20, fontVariationSettings: active ? "'FILL' 1" : undefined }}
-                >
-                  {link.icon}
-                </span>
-                <span className="font-medium">{link.label}</span>
-                {active && (
-                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_#fade29]" />
+              <div key={link.href}>
+                {link.href === '/settings' && (
+                  <div className="my-2 mx-4 border-t border-border-subtle" />
                 )}
-              </Link>
+                <Link
+                  href={link.href}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all ${
+                    active
+                      ? 'bg-primary/10 text-primary border border-primary/20'
+                      : 'text-foreground-muted hover:bg-white/5 hover:text-foreground'
+                  }`}
+                >
+                  <span
+                    className={`material-symbols-outlined ${active ? 'text-primary' : ''}`}
+                    style={{ fontSize: 20, fontVariationSettings: active ? "'FILL' 1" : undefined }}
+                  >
+                    {link.icon}
+                  </span>
+                  <span className="font-medium">{link.label}</span>
+                  {active && (
+                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_#fade29]" />
+                  )}
+                </Link>
+              </div>
             );
           })}
         </nav>

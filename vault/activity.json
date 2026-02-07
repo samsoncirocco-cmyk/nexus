@@ -285,5 +285,16 @@
     "output": [],
     "tags": [],
     "status": "done"
+  },
+  {
+    "id": "d966bae4",
+    "timestamp": "2026-02-07T20:42:00Z",
+    "agent": "knowledge-graph",
+    "type": "deployed",
+    "title": "\ud83d\udd78\ufe0f Knowledge Graph",
+    "summary": "Interactive visualization of vault document connections at brain.6eyes.dev/graph",
+    "output": [],
+    "tags": [],
+    "status": "done"
   }
 ]

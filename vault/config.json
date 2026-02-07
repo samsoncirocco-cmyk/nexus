@@ -1,0 +1,25 @@
+{
+  "profile": {
+    "name": "Samson Cirocco",
+    "email": "samson.cirocco@gmail.com",
+    "timezone": "America/Phoenix"
+  },
+  "models": {
+    "main": "claude-opus-4-6",
+    "heartbeat": "gemini-3-pro",
+    "subagent": "gemini-3-pro",
+    "workhorse": "claude-opus-4-6"
+  },
+  "notifications": {
+    "email": false,
+    "browser": true,
+    "telegram": true
+  },
+  "services": {
+    "gmail": "connected",
+    "calendar": "pending",
+    "drive": "pending",
+    "salesforce": "connected",
+    "github": "connected"
+  }
+}

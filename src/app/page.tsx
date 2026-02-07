@@ -3,7 +3,7 @@ import { getActivity } from '@/app/actions/activity';
 import { getTasks } from '@/app/actions/tasks';
 import { getDeals } from '@/app/actions/deals';
 import { getCommands } from '@/app/actions/commands';
-import { getRunningAgents } from '@/app/actions/agents';
+import { getRunningAgents, getAgents } from '@/app/actions/agents';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
@@ -24,12 +24,15 @@ export default async function Home() {
   const tasks = await getTasks();
   const deals = await getDeals();
   const commands = await getCommands();
+  const agents = await getAgents();
   const runningAgents = await getRunningAgents();
 
   const activeTasks = tasks.filter(t => t.column !== 'Done').length;
   const activeDeals = deals.filter(d => d.stage !== 'Closed Won' && d.stage !== 'Closed Lost').length;
-  const pendingCommands = commands.filter(c => c.status === 'pending').length;
-  const recentActivity = activity.slice(0, 4);
+  const totalActivity = activity.length;
+  const totalAgents = agents.length;
+  const totalCommands = commands.length;
+  const recentActivity = activity.slice(0, 3);
 
   const activityIcons: Record<string, string> = {
     completed: 'check_circle',
@@ -37,10 +40,25 @@ export default async function Home() {
     alert: 'warning',
     note: 'draw',
     command: 'bolt',
+    deployed: 'rocket_launch',
   };
 
+  const QUICK_LINKS = [
+    { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul', desc: 'Talk to your AI' },
+    { href: '/tasks', icon: 'checklist', label: 'Task Board', desc: `${activeTasks} active` },
+    { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet', desc: `${runningAgents.length} running` },
+    { href: '/deals', icon: 'rocket_launch', label: 'Sales Pipeline', desc: `${activeDeals} deals` },
+    { href: '/ask', icon: 'neurology', label: 'Ask Brain', desc: 'Search knowledge' },
+    { href: '/commands', icon: 'bolt', label: 'Commands', desc: 'Issue orders' },
+    { href: '/analytics', icon: 'analytics', label: 'Analytics', desc: 'Insights' },
+    { href: '/activity', icon: 'data_usage', label: 'Activity Feed', desc: `${totalActivity} entries` },
+    { href: '/graph', icon: 'hub', label: 'Knowledge Graph', desc: `${allDocs.length} nodes` },
+    { href: '/doc', icon: 'folder_open', label: 'Documents', desc: `${Object.keys(documentsByCategory).length} categories` },
+    { href: '/settings', icon: 'settings', label: 'Settings', desc: 'Configure' },
+  ];
+
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-3xl mx-auto">
       {/* Top App Bar */}
       <div className="flex items-center p-6 pb-2 justify-between">
         <div className="flex size-10 shrink-0 items-center overflow-hidden rounded-full border border-primary/30 bg-secondary-dark">
@@ -50,7 +68,13 @@ export default async function Home() {
           <p className="text-xs font-medium uppercase tracking-widest text-primary/70">Welcome back</p>
           <h2 className="text-primary text-xl font-bold leading-tight tracking-tight">{getGreeting()}, Samson</h2>
         </div>
-        <div className="flex w-10 items-center justify-end">
+        <div className="flex gap-2 items-center">
+          <Link
+            href="/settings"
+            className="flex items-center justify-center rounded-full size-10 bg-secondary-dark/20 text-foreground-muted border border-primary/10 hover:text-primary transition-colors"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 20 }}>settings</span>
+          </Link>
           <Link
             href="/activity"
             className="flex items-center justify-center rounded-full size-10 bg-secondary-dark/20 text-primary border border-primary/10"
@@ -60,33 +84,44 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Command Bar Card — prominent at the top */}
+      {/* Command Bar */}
       <div className="px-6 mt-4 mb-2">
         <CommandBar placeholder="What should Paul work on?" variant="full" />
       </div>
 
-      {/* Quick Stats Cards */}
-      <div className="flex gap-3 p-6 overflow-x-auto hide-scrollbar">
-        <Link href="/commands" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: 24, fontVariationSettings: "'FILL' 1" }}>bolt</span>
-          <div>
-            <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Commands</p>
-            <p className="text-white tracking-tight text-3xl font-bold">{pendingCommands}</p>
+      {/* Stat Cards — Real Data */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-6 py-4">
+        <Link href="/activity" className="flex flex-col gap-2 rounded-xl p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: 22, fontVariationSettings: "'FILL' 1" }}>data_usage</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-primary/40">Activity</span>
           </div>
+          <p className="text-white tracking-tight text-3xl font-bold">{totalActivity}</p>
+          <p className="text-primary/50 text-[10px] font-medium">Total entries</p>
         </Link>
-        <Link href="/tasks" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>task_alt</span>
-          <div>
-            <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Tasks</p>
-            <p className="text-white tracking-tight text-3xl font-bold">{activeTasks}</p>
+        <Link href="/tasks" className="flex flex-col gap-2 rounded-xl p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: 22 }}>task_alt</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-primary/40">Tasks</span>
           </div>
+          <p className="text-white tracking-tight text-3xl font-bold">{activeTasks}</p>
+          <p className="text-primary/50 text-[10px] font-medium">{tasks.length} total</p>
         </Link>
-        <Link href="/deals" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>handshake</span>
-          <div>
-            <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Deals</p>
-            <p className="text-white tracking-tight text-3xl font-bold">{activeDeals}</p>
+        <Link href="/agents" className="flex flex-col gap-2 rounded-xl p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: 22 }}>smart_toy</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-primary/40">Agents</span>
           </div>
+          <p className="text-white tracking-tight text-3xl font-bold">{totalAgents}</p>
+          <p className="text-primary/50 text-[10px] font-medium">{runningAgents.length} running</p>
+        </Link>
+        <Link href="/commands" className="flex flex-col gap-2 rounded-xl p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+          <div className="flex items-center justify-between">
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: 22, fontVariationSettings: "'FILL' 1" }}>bolt</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-primary/40">Commands</span>
+          </div>
+          <p className="text-white tracking-tight text-3xl font-bold">{totalCommands}</p>
+          <p className="text-primary/50 text-[10px] font-medium">{commands.filter(c => c.status === 'pending').length} pending</p>
         </Link>
       </div>
 
@@ -143,65 +178,91 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Recent Activity Section */}
-      <div className="flex items-center justify-between px-6 pb-2">
-        <h3 className="text-primary text-lg font-bold tracking-tight">Recent Activity</h3>
-        <Link href="/activity" className="text-primary/60 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors">
-          View All
-        </Link>
+      {/* What's New — 3 most recent activity entries */}
+      <div className="px-6 mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-primary text-lg font-bold tracking-tight">What&apos;s New</h3>
+          <Link href="/activity" className="text-primary/60 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors">
+            View All
+          </Link>
+        </div>
+
+        <div className="space-y-2">
+          {recentActivity.length > 0 ? (
+            recentActivity.map((entry) => (
+              <div
+                key={entry.id}
+                className={`flex items-center gap-4 border px-4 py-4 rounded-xl ${
+                  entry.type === 'command'
+                    ? 'bg-primary/5 border-primary/20'
+                    : 'bg-secondary-dark/40 border-primary/5'
+                }`}
+              >
+                <div className={`flex items-center justify-center rounded-lg shrink-0 size-11 border ${
+                  entry.type === 'command'
+                    ? 'text-primary bg-primary/15 border-primary/30'
+                    : 'text-primary bg-secondary-dark border-primary/20'
+                }`}>
+                  <span className="material-symbols-outlined" style={entry.type === 'command' ? { fontVariationSettings: "'FILL' 1" } : undefined}>
+                    {activityIcons[entry.type] || 'info'}
+                  </span>
+                </div>
+                <div className="flex flex-col justify-center flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="text-white text-sm font-semibold leading-tight truncate">{entry.title}</p>
+                    {entry.type === 'command' && (
+                      <span className="shrink-0 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[9px] font-bold tracking-wider border border-primary/20">
+                        CMD
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-primary/50 text-xs font-normal leading-normal truncate">{entry.summary}</p>
+                </div>
+                <div className="shrink-0">
+                  <p className="text-primary font-medium text-[10px] uppercase tracking-tighter" suppressHydrationWarning>
+                    {(() => { try { return formatDistanceToNow(new Date(entry.timestamp), { addSuffix: false }); } catch { return ''; } })()}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-10">
+              <div className="size-16 rounded-full bg-secondary-dark/40 border border-primary/10 flex items-center justify-center mx-auto mb-3">
+                <span className="material-symbols-outlined text-primary" style={{ fontSize: 28 }}>rocket_launch</span>
+              </div>
+              <p className="text-primary/50 text-sm">No recent activity yet. Sub-agents will log their work here.</p>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="px-4 space-y-2 mb-8">
-        {recentActivity.length > 0 ? (
-          recentActivity.map((entry) => (
-            <div
-              key={entry.id}
-              className={`flex items-center gap-4 border px-4 py-4 rounded-xl ${
-                entry.type === 'command'
-                  ? 'bg-primary/5 border-primary/20'
-                  : 'bg-secondary-dark/40 border-primary/5'
-              }`}
+      {/* Quick Links Grid */}
+      <div className="px-6 mb-8">
+        <h3 className="text-primary text-lg font-bold tracking-tight mb-3">Quick Links</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {QUICK_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex items-center gap-3 bg-secondary-dark/40 border border-primary/5 rounded-xl px-4 py-3 hover:border-primary/20 hover:bg-secondary-dark/60 transition-all group"
             >
-              <div className={`flex items-center justify-center rounded-lg shrink-0 size-11 border ${
-                entry.type === 'command'
-                  ? 'text-primary bg-primary/15 border-primary/30'
-                  : 'text-primary bg-secondary-dark border-primary/20'
-              }`}>
-                <span className="material-symbols-outlined" style={entry.type === 'command' ? { fontVariationSettings: "'FILL' 1" } : undefined}>
-                  {activityIcons[entry.type] || 'info'}
+              <div className="size-9 rounded-lg bg-primary/10 border border-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
+                <span className="material-symbols-outlined text-primary" style={{ fontSize: 18 }}>
+                  {link.icon}
                 </span>
               </div>
-              <div className="flex flex-col justify-center flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="text-white text-sm font-semibold leading-tight truncate">{entry.title}</p>
-                  {entry.type === 'command' && (
-                    <span className="shrink-0 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[9px] font-bold tracking-wider border border-primary/20">
-                      CMD
-                    </span>
-                  )}
-                </div>
-                <p className="text-primary/50 text-xs font-normal leading-normal truncate">{entry.summary}</p>
+              <div className="min-w-0">
+                <p className="text-white text-sm font-semibold truncate">{link.label}</p>
+                <p className="text-primary/40 text-[10px] font-medium uppercase tracking-wider">{link.desc}</p>
               </div>
-              <div className="shrink-0">
-                <p className="text-primary font-medium text-[10px] uppercase tracking-tighter" suppressHydrationWarning>
-                  {(() => { try { return formatDistanceToNow(new Date(entry.timestamp), { addSuffix: false }); } catch { return ''; } })()}
-                </p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="text-center py-10">
-            <div className="size-16 rounded-full bg-secondary-dark/40 border border-primary/10 flex items-center justify-center mx-auto mb-3">
-              <span className="material-symbols-outlined text-primary" style={{ fontSize: 28 }}>rocket_launch</span>
-            </div>
-            <p className="text-primary/50 text-sm">No recent activity yet. Sub-agents will log their work here.</p>
-          </div>
-        )}
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Quick Access - Categories */}
       <div className="px-6 mb-8">
-        <h3 className="text-primary text-lg font-bold tracking-tight mb-3">Quick Access</h3>
+        <h3 className="text-primary text-lg font-bold tracking-tight mb-3">Vault Categories</h3>
         <div className="grid grid-cols-2 gap-3">
           {Object.entries(documentsByCategory).slice(0, 6).map(([category, docs]) => {
             const icons: Record<string, string> = {

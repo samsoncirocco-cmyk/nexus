@@ -92,5 +92,14 @@
     "startedAt": "2026-02-07T20:41:00Z",
     "lastUpdate": "2026-02-07T20:41:00Z",
     "summary": "Installable on mobile, offline support, notification banners"
+  },
+  {
+    "id": "knowledge-graph",
+    "label": "Knowledge Graph",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:42:28Z",
+    "lastUpdate": "2026-02-07T20:42:28Z",
+    "summary": "Interactive force-directed graph of 50+ vault docs at brain.6eyes.dev/graph"
   }
 ]
