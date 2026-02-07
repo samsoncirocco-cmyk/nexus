@@ -7,13 +7,14 @@ import { useState, useEffect } from 'react';
 const NAV_ITEMS = [
   { href: '/', icon: 'home', label: 'Home', fill: true },
   { href: '/agents', icon: 'smart_toy', label: 'Agents' },
-  { href: '/ask', icon: 'neurology', label: 'Ask' },
+  { href: '/chat', icon: 'chat_bubble', label: 'Chat' },
   { href: '/deals', icon: 'rocket_launch', label: 'Deals' },
   { href: '/doc', icon: 'folder_open', label: 'Files' },
 ];
 
 const SIDEBAR_LINKS = [
   { href: '/', icon: 'home', label: 'Dashboard' },
+  { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul' },
   { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet' },
   { href: '/commands', icon: 'bolt', label: 'Commands' },
   { href: '/ask', icon: 'neurology', label: 'Ask Brain' },
@@ -126,11 +127,11 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
                       className={`material-symbols-outlined font-bold ${active ? 'text-bg-dark' : 'text-primary'}`}
                       style={{ fontSize: 28 }}
                     >
-                      neurology
+                      chat_bubble
                     </span>
                   </div>
                   <span className={`text-[10px] font-bold uppercase tracking-tighter mt-1 ${active ? 'text-primary' : 'text-foreground-muted'}`}>
-                    Ask
+                    Chat
                   </span>
                 </Link>
               );
