@@ -1,0 +1,9 @@
+{
+  "project_id": "killuacode",
+  "data_lake": {
+    "bigquery_dataset": "openclaw",
+    "pubsub_topic": "openclaw-events"
+  },
+  "sheet_id": "15-3fveXfHSKyTXmQ3x344ie4p9rbtTZGaNl-GLQ8Eac",
+  "skills_dir": "./skills"
+}
