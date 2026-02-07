@@ -56,5 +56,23 @@
     "startedAt": "2026-02-07T20:29:26Z",
     "lastUpdate": "2026-02-07T20:29:26Z",
     "summary": "Deck outline, one-pager, financial model at projects/yc-prep/"
+  },
+  {
+    "id": "chat-ui",
+    "label": "Chat Interface",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:33:42Z",
+    "lastUpdate": "2026-02-07T20:33:42Z",
+    "summary": "Full chat UI at brain.6eyes.dev/chat \u2014 talk to Paul from the browser"
+  },
+  {
+    "id": "gateway-tunnel",
+    "label": "Gateway Tunnel",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:33:42Z",
+    "lastUpdate": "2026-02-07T20:33:42Z",
+    "summary": "Cloudflare tunnel live \u2014 OpenClaw reachable from the internet"
   }
 ]

@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { href: '/', icon: 'home', label: 'Home', fill: true },
   { href: '/agents', icon: 'smart_toy', label: 'Agents' },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat' },
-  { href: '/deals', icon: 'rocket_launch', label: 'Deals' },
+  { href: '/analytics', icon: 'analytics', label: 'Analytics' },
   { href: '/doc', icon: 'folder_open', label: 'Files' },
 ];
 
@@ -16,6 +16,7 @@ const SIDEBAR_LINKS = [
   { href: '/', icon: 'home', label: 'Dashboard' },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul' },
   { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet' },
+  { href: '/analytics', icon: 'analytics', label: 'Analytics' },
   { href: '/commands', icon: 'bolt', label: 'Commands' },
   { href: '/ask', icon: 'neurology', label: 'Ask Brain' },
   { href: '/tasks', icon: 'checklist', label: 'Task Board' },
