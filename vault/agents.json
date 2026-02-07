@@ -119,5 +119,32 @@
     "startedAt": "2026-02-07T20:50:19Z",
     "lastUpdate": "2026-02-07T20:50:19Z",
     "summary": "10 priority lead dossiers, 18K-.13M estimated pipeline"
+  },
+  {
+    "id": "ui-audit",
+    "label": "UI Audit",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T21:00:15Z",
+    "lastUpdate": "2026-02-07T21:00:15Z",
+    "summary": "10 issues fixed across all 11 pages \u2014 zero build warnings"
+  },
+  {
+    "id": "readme-marketing",
+    "label": "README + Marketing",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T21:00:15Z",
+    "lastUpdate": "2026-02-07T21:00:15Z",
+    "summary": "README, landing copy, Product Hunt materials"
+  },
+  {
+    "id": "book-ch5",
+    "label": "Book Chapter 5",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T21:00:15Z",
+    "lastUpdate": "2026-02-07T21:00:15Z",
+    "summary": "The Grind \u2014 5,500 words on sales, rejection, starting over"
   }
 ]
