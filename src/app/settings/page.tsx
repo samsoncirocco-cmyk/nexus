@@ -318,7 +318,7 @@ export default function SettingsPage() {
         </section>
 
         {/* ── Data Management ── */}
-        <section className="bg-bg-secondary border border-border rounded-2xl p-6 mb-8">
+        <section className="bg-bg-secondary border border-border rounded-2xl p-6">
           <div className="flex items-center gap-3 mb-5">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 22 }}>database</span>
             <h2 className="text-lg font-bold text-foreground">Data Management</h2>
@@ -353,6 +353,32 @@ export default function SettingsPage() {
                 <p className="text-foreground text-sm font-semibold">Reset Tasks</p>
                 <p className="text-foreground-muted text-[10px]">Clear task board</p>
               </div>
+            </button>
+          </div>
+        </section>
+
+        {/* ── Session / Logout ── */}
+        <section className="bg-bg-secondary border border-border rounded-2xl p-6 mb-8">
+          <div className="flex items-center gap-3 mb-5">
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: 22, fontVariationSettings: "'FILL' 1" }}>lock</span>
+            <h2 className="text-lg font-bold text-foreground">Session</h2>
+          </div>
+          <div className="flex items-center justify-between px-4 py-4 bg-bg-dark border border-border-subtle rounded-xl">
+            <div className="flex items-center gap-4">
+              <div className="size-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-emerald-400" style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}>verified_user</span>
+              </div>
+              <div>
+                <p className="text-foreground text-sm font-semibold">Authenticated</p>
+                <p className="text-foreground-muted text-xs">PIN-based session active</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2.5 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm font-semibold hover:bg-red-500/20 hover:border-red-500/30 transition-all group"
+            >
+              <span className="material-symbols-outlined group-hover:scale-110 transition-transform" style={{ fontSize: 18 }}>logout</span>
+              Sign Out
             </button>
           </div>
         </section>
