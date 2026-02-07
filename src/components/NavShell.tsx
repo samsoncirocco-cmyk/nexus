@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { href: '/', icon: 'home', label: 'Home', fill: true },
   { href: '/agents', icon: 'smart_toy', label: 'Agents' },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat' },
-  { href: '/analytics', icon: 'analytics', label: 'Analytics' },
+  { href: '/graph', icon: 'hub', label: 'Graph' },
   { href: '/doc', icon: 'folder_open', label: 'Files' },
 ];
 
@@ -22,6 +22,7 @@ const SIDEBAR_LINKS = [
   { href: '/tasks', icon: 'checklist', label: 'Task Board' },
   { href: '/activity', icon: 'data_usage', label: 'Activity Feed' },
   { href: '/deals', icon: 'rocket_launch', label: 'Sales Pipeline' },
+  { href: '/graph', icon: 'hub', label: 'Knowledge Graph' },
   { href: '/doc', icon: 'folder_open', label: 'Documents' },
 ];
 
