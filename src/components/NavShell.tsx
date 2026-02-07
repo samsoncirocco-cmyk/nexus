@@ -6,10 +6,10 @@ import { useState, useEffect } from 'react';
 
 const NAV_ITEMS = [
   { href: '/', icon: 'home', label: 'Home', fill: true },
-  { href: '/agents', icon: 'smart_toy', label: 'Agents' },
+  { href: '/tasks', icon: 'checklist', label: 'Tasks' },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat' },
-  { href: '/graph', icon: 'hub', label: 'Graph' },
-  { href: '/doc', icon: 'folder_open', label: 'Files' },
+  { href: '/commands', icon: 'bolt', label: 'Commands' },
+  { href: '/agents', icon: 'smart_toy', label: 'Agents' },
 ];
 
 const SIDEBAR_LINKS = [
