@@ -186,5 +186,27 @@
     "output": [],
     "tags": [],
     "status": "done"
+  },
+  {
+    "id": "d65714e1",
+    "timestamp": "2026-02-07T20:12:25Z",
+    "agent": "agent-dashboard",
+    "type": "deployed",
+    "title": "\ud83e\udd16 Agent Management Dashboard",
+    "summary": "Live agent status, auto-refresh, running agent cards at brain.6eyes.dev/agents",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "abc78322",
+    "timestamp": "2026-02-07T20:12:31Z",
+    "agent": "tatt-redesign",
+    "type": "completed",
+    "title": "\ud83c\udfa8 TatT Stitch UI Rebuild",
+    "summary": "Integrated Stitch-generated designs \u2014 new landing page and app screen for YC demo",
+    "output": [],
+    "tags": [],
+    "status": "done"
   }
 ]
