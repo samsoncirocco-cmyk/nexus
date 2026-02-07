@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import NavShell from "@/components/NavShell";
+import { NotificationProvider } from "@/components/NotificationBanner";
+import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 
 export const metadata: Metadata = {
   title: "Second Brain",
@@ -44,13 +46,16 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className="antialiased overflow-x-hidden font-[--font-display]">
-        <NavShell>{children}</NavShell>
-
-        {/* Background ambient glow effects (from designs) */}
+        <NotificationProvider>
+          <NavShell>{children}</NavShell>
+          <ServiceWorkerRegistrar />
+        
+          {/* Background ambient glow effects (from designs) */}
         <div className="fixed inset-0 pointer-events-none -z-10 opacity-40">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_35%,_#fade290a_0%,_transparent_20%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_65%,_#15473315_0%,_transparent_25%)]" />
         </div>
+        </NotificationProvider>
       </body>
     </html>
   );

@@ -74,5 +74,14 @@
     "startedAt": "2026-02-07T20:33:42Z",
     "lastUpdate": "2026-02-07T20:33:42Z",
     "summary": "Cloudflare tunnel live \u2014 OpenClaw reachable from the internet"
+  },
+  {
+    "id": "analytics",
+    "label": "Analytics Dashboard",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:37:32Z",
+    "lastUpdate": "2026-02-07T20:37:32Z",
+    "summary": "Agent performance, task flow, activity timeline at brain.6eyes.dev/analytics"
   }
 ]
