@@ -38,5 +38,23 @@
     "lastUpdate": "2026-02-07T20:16:49Z",
     "summary": "Gmail triage, calendar sync, Drive watch scripts built (needs gog auth)",
     "completedAt": "2026-02-07T20:16:49Z"
+  },
+  {
+    "id": "gateway-bridge",
+    "label": "Gateway Bridge",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:29:26Z",
+    "lastUpdate": "2026-02-07T20:29:26Z",
+    "summary": "Second Brain \u2194 OpenClaw proxy with fallback mode. Commands now spawn real agents."
+  },
+  {
+    "id": "yc-pitch",
+    "label": "YC Pitch Materials",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:29:26Z",
+    "lastUpdate": "2026-02-07T20:29:26Z",
+    "summary": "Deck outline, one-pager, financial model at projects/yc-prep/"
   }
 ]
