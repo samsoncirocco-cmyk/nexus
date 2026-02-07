@@ -351,5 +351,16 @@
     "output": [],
     "tags": [],
     "status": "done"
+  },
+  {
+    "id": "25a4f7ad",
+    "timestamp": "2026-02-07T21:01:28Z",
+    "agent": "divorce-book",
+    "type": "completed",
+    "title": "\ud83d\udcd6 Divorce Book Assembled",
+    "summary": "All 16 chapters from 26 source files assembled into divorce-manuscript.md",
+    "output": [],
+    "tags": [],
+    "status": "done"
   }
 ]
