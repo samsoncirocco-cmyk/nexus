@@ -1,7 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Task, TaskLink, Column, Priority, getTasks, updateTask, createTask, deleteTask } from '../actions/tasks';
+import { useState, useEffect, useCallback } from 'react';
+
+export type Priority = 'low' | 'medium' | 'high';
+export type Column = 'Backlog' | 'In Progress' | 'Waiting on Samson' | 'Done';
+
+export interface TaskLink {
+  label: string;
+  url: string;
+  type: 'drive' | 'brain' | 'file' | 'external';
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  column: Column;
+  priority: Priority;
+  createdAt: string;
+  updatedAt: string;
+  tags: string[];
+  links?: TaskLink[];
+}
 
 const COLUMNS: Column[] = ['Backlog', 'In Progress', 'Waiting on Samson', 'Done'];
 
@@ -11,6 +31,21 @@ const colIcons: Record<Column, string> = {
   'Waiting on Samson': 'hourglass_top',
   'Done': 'check_circle',
 };
+
+const STORAGE_KEY = 'second-brain-tasks';
+
+function loadTasksFromStorage(): Task[] | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch { return null; }
+}
+
+function saveTasksToStorage(tasks: Task[]) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -22,10 +57,29 @@ export default function TasksPage() {
     title: '', description: '', priority: 'medium', column: 'Backlog', tags: []
   });
 
+  const persistTasks = useCallback((updated: Task[]) => {
+    setTasks(updated);
+    saveTasksToStorage(updated);
+  }, []);
+
   useEffect(() => { loadTasks(); }, []);
 
   async function loadTasks() {
-    try { setTasks(await getTasks()); } catch (e) { console.error(e); }
+    // Try localStorage first (has latest state), fall back to server seed
+    const stored = loadTasksFromStorage();
+    if (stored && stored.length > 0) {
+      setTasks(stored);
+      setLoading(false);
+      return;
+    }
+    try {
+      const res = await fetch('/api/tasks');
+      if (res.ok) {
+        const data = await res.json();
+        setTasks(data);
+        saveTasksToStorage(data);
+      }
+    } catch (e) { console.error(e); }
     setLoading(false);
   }
 
@@ -33,16 +87,30 @@ export default function TasksPage() {
     setDraggedTaskId(id); e.dataTransfer.effectAllowed = 'move';
   };
   const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
-  const handleDrop = async (e: React.DragEvent, targetColumn: Column) => {
+  const handleDrop = (e: React.DragEvent, targetColumn: Column) => {
     e.preventDefault();
     if (!draggedTaskId) return;
     const task = tasks.find(t => t.id === draggedTaskId);
     if (task && task.column !== targetColumn) {
-      const updated = { ...task, column: targetColumn };
-      setTasks(prev => prev.map(t => t.id === draggedTaskId ? updated : t));
-      await updateTask(updated);
+      const updated = tasks.map(t => t.id === draggedTaskId ? { ...t, column: targetColumn, updatedAt: new Date().toISOString() } : t);
+      persistTasks(updated);
     }
     setDraggedTaskId(null);
+  };
+
+  const moveTask = (taskId: string, direction: 'left' | 'right') => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    const currentIndex = COLUMNS.indexOf(task.column);
+    const newIndex = direction === 'right' ? currentIndex + 1 : currentIndex - 1;
+    if (newIndex < 0 || newIndex >= COLUMNS.length) return;
+    const updated = tasks.map(t => t.id === taskId ? { ...t, column: COLUMNS[newIndex], updatedAt: new Date().toISOString() } : t);
+    persistTasks(updated);
+  };
+
+  const markDone = (taskId: string) => {
+    const updated = tasks.map(t => t.id === taskId ? { ...t, column: 'Done' as Column, updatedAt: new Date().toISOString() } : t);
+    persistTasks(updated);
   };
 
   const openNewTaskModal = () => {
@@ -57,24 +125,28 @@ export default function TasksPage() {
 
   const closeModal = () => { setIsModalOpen(false); setEditingTask(null); };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title) return;
     if (editingTask) {
-      const updated = { ...editingTask, ...formData } as Task;
-      await updateTask(updated);
-      setTasks(prev => prev.map(t => t.id === updated.id ? updated : t));
+      const updated = tasks.map(t => t.id === editingTask.id ? { ...editingTask, ...formData, updatedAt: new Date().toISOString() } as Task : t);
+      persistTasks(updated);
     } else {
-      const newOne = await createTask(formData as any);
-      setTasks(prev => [...prev, newOne]);
+      const newTask: Task = {
+        ...(formData as Task),
+        id: Math.random().toString(36).substring(2, 9),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        tags: formData.tags || [],
+      };
+      persistTasks([...tasks, newTask]);
     }
     closeModal();
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (editingTask && confirm('Delete this task?')) {
-      await deleteTask(editingTask.id);
-      setTasks(prev => prev.filter(t => t.id !== editingTask.id));
+      persistTasks(tasks.filter(t => t.id !== editingTask.id));
       closeModal();
     }
   };
@@ -144,18 +216,28 @@ export default function TasksPage() {
 
                 {/* Column Body */}
                 <div className="flex-1 bg-card-dark rounded-b-xl p-3 border border-white/5 border-t-0 min-h-[300px] md:min-h-[400px] space-y-3">
-                  {columnTasks.map((task) => (
+                  {columnTasks.map((task) => {
+                    const colIdx = COLUMNS.indexOf(col);
+                    const canMoveLeft = colIdx > 0;
+                    const canMoveRight = colIdx < COLUMNS.length - 1;
+                    const isDone = col === 'Done';
+                    return (
                     <div
                       key={task.id}
                       draggable
                       onDragStart={(e) => handleDragStart(e, task.id)}
-                      onClick={() => openEditModal(task)}
-                      className="cursor-pointer rounded-xl border border-white/10 bg-bg-dark p-4 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all active:cursor-grabbing group"
+                      className="rounded-xl border border-white/10 bg-bg-dark p-4 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all group"
                     >
-                      <div className="mb-3">
+                      <div className="flex items-center justify-between mb-3">
                         <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${getPriorityStyles(task.priority)}`}>
                           {task.priority}
                         </span>
+                        <button
+                          onClick={() => openEditModal(task)}
+                          className="text-foreground-muted hover:text-primary transition-colors p-1"
+                        >
+                          <span className="material-symbols-outlined" style={{ fontSize: 16 }}>edit</span>
+                        </button>
                       </div>
                       <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors mb-2 leading-snug">
                         {task.title}
@@ -164,7 +246,7 @@ export default function TasksPage() {
                         <p className="text-xs text-foreground-muted line-clamp-2 mb-3">{task.description}</p>
                       )}
                       {task.links && task.links.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5">
+                        <div className="flex flex-wrap gap-1.5 mb-3">
                           {task.links.map((link, i) => (
                             <a
                               key={i}
@@ -183,8 +265,35 @@ export default function TasksPage() {
                           ))}
                         </div>
                       )}
+                      {/* Action buttons — mobile-friendly */}
+                      <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+                        <button
+                          onClick={() => moveTask(task.id, 'left')}
+                          disabled={!canMoveLeft}
+                          className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                        >
+                          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>arrow_back</span>
+                        </button>
+                        {!isDone && (
+                          <button
+                            onClick={() => markDone(task.id)}
+                            className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold bg-primary/20 text-primary hover:bg-primary hover:text-bg-dark transition-all active:scale-95"
+                          >
+                            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>check</span>
+                            Done
+                          </button>
+                        )}
+                        <button
+                          onClick={() => moveTask(task.id, 'right')}
+                          disabled={!canMoveRight}
+                          className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                        >
+                          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>arrow_forward</span>
+                        </button>
+                      </div>
                     </div>
-                  ))}
+                    );
+                  })}
                   {columnTasks.length === 0 && (
                     <div className="flex items-center justify-center h-32 text-foreground-muted text-sm border border-dashed border-white/10 rounded-xl">
                       Drop tasks here

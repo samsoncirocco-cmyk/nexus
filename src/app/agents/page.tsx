@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import Link from 'next/link';
 
 interface AgentEntry {
   id: string;
@@ -12,6 +11,18 @@ interface AgentEntry {
   completedAt?: string;
   lastUpdate: string;
   summary: string;
+  // Gateway-enriched fields
+  source?: 'gateway' | 'local';
+  tokens?: { input: number; output: number; total: number };
+  contextTokens?: number;
+  sessionKey?: string;
+}
+
+interface GatewayStatus {
+  bridge: string;
+  reachable: boolean;
+  mode: 'live' | 'fallback';
+  error?: string;
 }
 
 function formatDuration(startedAt: string, completedAt?: string): string {
@@ -23,13 +34,28 @@ function formatDuration(startedAt: string, completedAt?: string): string {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
 
-  if (hours > 0) {
-    return `${hours}h ${minutes % 60}m`;
-  }
-  if (minutes > 0) {
-    return `${minutes}m ${seconds % 60}s`;
-  }
+  if (hours > 0) return `${hours}h ${minutes % 60}m`;
+  if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
   return `${seconds}s`;
+}
+
+function formatTokens(count: number): string {
+  if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1)}M`;
+  if (count >= 1_000) return `${(count / 1_000).toFixed(1)}K`;
+  return String(count);
+}
+
+function formatTimeAgo(dateStr: string): string {
+  const ms = Date.now() - new Date(dateStr).getTime();
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) return `${days}d ago`;
+  if (hours > 0) return `${hours}h ago`;
+  if (minutes > 0) return `${minutes}m ago`;
+  return 'just now';
 }
 
 function StatusIndicator({ status }: { status: AgentEntry['status'] }) {
@@ -64,9 +90,58 @@ function StatusIndicator({ status }: { status: AgentEntry['status'] }) {
   );
 }
 
+function SourceBadge({ source }: { source?: 'gateway' | 'local' }) {
+  if (source === 'gateway') {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        Live
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-500/10 border border-zinc-500/20 text-zinc-400 text-[10px] font-bold uppercase tracking-wider">
+      Local
+    </span>
+  );
+}
+
+function TokenBar({ tokens, contextTokens }: { tokens?: { input: number; output: number; total: number }; contextTokens?: number }) {
+  if (!tokens || tokens.total === 0) return null;
+  const pct = contextTokens && contextTokens > 0 ? Math.min(100, (tokens.total / contextTokens) * 100) : 0;
+
+  return (
+    <div className="mt-3 space-y-1.5">
+      <div className="flex items-center justify-between text-[10px]">
+        <span className="text-foreground-muted uppercase tracking-wider">Context</span>
+        <span className="text-foreground-muted font-mono">
+          {formatTokens(tokens.total)} {contextTokens ? `/ ${formatTokens(contextTokens)}` : ''}
+          {pct > 0 && <span className="ml-1 text-primary">{pct.toFixed(0)}%</span>}
+        </span>
+      </div>
+      {contextTokens && contextTokens > 0 && (
+        <div className="w-full h-1.5 bg-secondary-dark/60 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${pct}%`,
+              background: pct > 80 ? '#ef4444' : pct > 60 ? '#f59e0b' : '#fade29',
+            }}
+          />
+        </div>
+      )}
+      <div className="flex gap-4 text-[10px] text-foreground-muted">
+        <span>In: {formatTokens(tokens.input)}</span>
+        <span>Out: {formatTokens(tokens.output)}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function AgentsPage() {
   const [agents, setAgents] = useState<AgentEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [gwStatus, setGwStatus] = useState<GatewayStatus | null>(null);
   const [, setTick] = useState(0);
 
   const fetchAgents = useCallback(async () => {
@@ -83,12 +158,29 @@ export default function AgentsPage() {
     }
   }, []);
 
-  // Initial fetch + 10s polling
+  const fetchGatewayStatus = useCallback(async () => {
+    try {
+      const res = await fetch('/api/gateway', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        setGwStatus(data);
+      }
+    } catch {
+      setGwStatus({ bridge: 'offline', reachable: false, mode: 'fallback' });
+    }
+  }, []);
+
+  // Initial fetch + polling
   useEffect(() => {
     fetchAgents();
-    const interval = setInterval(fetchAgents, 10000);
-    return () => clearInterval(interval);
-  }, [fetchAgents]);
+    fetchGatewayStatus();
+    const agentInterval = setInterval(fetchAgents, 10000);
+    const gwInterval = setInterval(fetchGatewayStatus, 30000);
+    return () => {
+      clearInterval(agentInterval);
+      clearInterval(gwInterval);
+    };
+  }, [fetchAgents, fetchGatewayStatus]);
 
   // Tick every second for live duration counters
   useEffect(() => {
@@ -110,6 +202,22 @@ export default function AgentsPage() {
             <h1 className="text-2xl font-bold tracking-tight">Agent Fleet</h1>
           </div>
           <div className="flex items-center gap-2">
+            {/* Gateway Connection Status */}
+            {gwStatus && (
+              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${
+                gwStatus.reachable
+                  ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                  : 'bg-amber-500/10 border-amber-500/20 text-amber-400'
+              }`}>
+                <div className="relative">
+                  <div className={`w-1.5 h-1.5 rounded-full ${gwStatus.reachable ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                  {gwStatus.reachable && (
+                    <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                  )}
+                </div>
+                {gwStatus.reachable ? 'Gateway' : 'Offline'}
+              </div>
+            )}
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
               <div className="relative">
                 <div className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -154,7 +262,9 @@ export default function AgentsPage() {
             </div>
             <h3 className="text-lg font-bold mb-2">No Agents</h3>
             <p className="text-foreground-muted text-sm text-center max-w-xs">
-              No agents are currently registered. They&apos;ll show up here when spawned.
+              {gwStatus?.reachable
+                ? 'No active sessions on the gateway. Issue a command to spawn an agent.'
+                : 'Gateway offline — no agents registered. They\'ll show up here when spawned.'}
             </p>
           </div>
         ) : (
@@ -167,7 +277,6 @@ export default function AgentsPage() {
                     key={agent.id}
                     className="relative bg-gradient-to-br from-secondary-dark/80 to-bg-dark rounded-xl p-5 border border-emerald-500/20 overflow-hidden"
                   >
-                    {/* Glow accent */}
                     <div className="absolute -right-6 -top-6 size-20 bg-emerald-500/10 rounded-full blur-2xl" />
 
                     <div className="relative z-10">
@@ -177,8 +286,11 @@ export default function AgentsPage() {
                             <span className="material-symbols-outlined text-emerald-400" style={{ fontSize: 22 }}>smart_toy</span>
                           </div>
                           <div>
-                            <h3 className="text-white font-bold text-base leading-tight">{agent.label}</h3>
-                            <p className="text-foreground-muted text-xs font-mono">{agent.id}</p>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-white font-bold text-base leading-tight">{agent.label}</h3>
+                              <SourceBadge source={agent.source} />
+                            </div>
+                            <p className="text-foreground-muted text-xs font-mono">{agent.sessionKey || agent.id}</p>
                           </div>
                         </div>
                         <StatusIndicator status={agent.status} />
@@ -195,7 +307,13 @@ export default function AgentsPage() {
                           <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>memory</span>
                           <span className="text-foreground-muted">{agent.model}</span>
                         </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>schedule</span>
+                          <span className="text-foreground-muted">{formatTimeAgo(agent.lastUpdate)}</span>
+                        </div>
                       </div>
+
+                      <TokenBar tokens={agent.tokens} contextTokens={agent.contextTokens} />
                     </div>
                   </div>
                 ))}
@@ -217,8 +335,11 @@ export default function AgentsPage() {
                           <span className="material-symbols-outlined text-primary" style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                         </div>
                         <div>
-                          <h3 className="text-white font-bold text-sm">{agent.label}</h3>
-                          <p className="text-foreground-muted text-xs font-mono">{agent.id}</p>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-white font-bold text-sm">{agent.label}</h3>
+                            <SourceBadge source={agent.source} />
+                          </div>
+                          <p className="text-foreground-muted text-xs font-mono">{agent.sessionKey || agent.id}</p>
                         </div>
                       </div>
                       <StatusIndicator status={agent.status} />
@@ -233,7 +354,12 @@ export default function AgentsPage() {
                         <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>memory</span>
                         <span className="text-foreground-muted">{agent.model}</span>
                       </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>schedule</span>
+                        <span className="text-foreground-muted">{formatTimeAgo(agent.lastUpdate)}</span>
+                      </div>
                     </div>
+                    <TokenBar tokens={agent.tokens} contextTokens={agent.contextTokens} />
                   </div>
                 ))}
               </div>
@@ -254,8 +380,11 @@ export default function AgentsPage() {
                           <span className="material-symbols-outlined text-red-400" style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}>error</span>
                         </div>
                         <div>
-                          <h3 className="text-white font-bold text-sm">{agent.label}</h3>
-                          <p className="text-foreground-muted text-xs font-mono">{agent.id}</p>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-white font-bold text-sm">{agent.label}</h3>
+                            <SourceBadge source={agent.source} />
+                          </div>
+                          <p className="text-foreground-muted text-xs font-mono">{agent.sessionKey || agent.id}</p>
                         </div>
                       </div>
                       <StatusIndicator status={agent.status} />

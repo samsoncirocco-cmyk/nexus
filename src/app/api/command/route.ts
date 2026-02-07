@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { spawnAgent } from '@/lib/gateway';
 
 const VAULT_PATH = path.join(process.cwd(), 'vault');
 const COMMANDS_FILE = path.join(VAULT_PATH, 'commands.json');
@@ -10,7 +11,10 @@ export interface CommandEntry {
   id: string;
   timestamp: string;
   text: string;
-  status: 'pending' | 'processing' | 'done';
+  status: 'pending' | 'processing' | 'done' | 'failed';
+  gatewayRunId?: string;
+  gatewayStatus?: string;
+  agentResponse?: string;
 }
 
 async function readJSON(file: string): Promise<any[]> {
@@ -69,13 +73,75 @@ export async function POST(req: NextRequest) {
       summary: `Command issued: ${text.trim()}`,
       output: [],
       tags: ['command'],
-      status: 'pending',
+      status: 'processing',
       commandId: id,
     });
     await writeJSON(ACTIVITY_FILE, activity);
 
-    return NextResponse.json({ ok: true, id }, { status: 201 });
+    // ─── Gateway Bridge: Spawn an agent for this command ───
+    // Fire and forget — don't block the response waiting for the agent
+    // Update command status to processing immediately
+    const cmdIndex = commands.findIndex((c: CommandEntry) => c.id === id);
+    if (cmdIndex >= 0) {
+      commands[cmdIndex].status = 'processing';
+      await writeJSON(COMMANDS_FILE, commands);
+    }
+
+    // Spawn agent in background (non-blocking)
+    spawnAgent(text.trim(), {
+      sessionId: `command:${id}`,
+      thinking: 'low',
+      timeout: 120,
+    })
+      .then(async (result) => {
+        // Update command with agent result
+        try {
+          const cmds = await readJSON(COMMANDS_FILE);
+          const idx = cmds.findIndex((c: CommandEntry) => c.id === id);
+          if (idx >= 0) {
+            cmds[idx].status = result.status === 'ok' ? 'done' : 'failed';
+            cmds[idx].gatewayRunId = result.runId;
+            cmds[idx].gatewayStatus = result.status;
+            cmds[idx].agentResponse = result.result?.payloads?.[0]?.text || result.summary;
+            await writeJSON(COMMANDS_FILE, cmds);
+          }
+
+          // Update activity entry too
+          const acts = await readJSON(ACTIVITY_FILE);
+          const actIdx = acts.findIndex(
+            (a: { commandId?: string }) => a.commandId === id
+          );
+          if (actIdx >= 0) {
+            acts[actIdx].status = result.status === 'ok' ? 'done' : 'failed';
+            acts[actIdx].summary = result.result?.payloads?.[0]?.text
+              ? `Agent responded: ${result.result.payloads[0].text.substring(0, 200)}`
+              : `Command ${result.status}: ${result.summary}`;
+            await writeJSON(ACTIVITY_FILE, acts);
+          }
+        } catch (updateErr) {
+          console.error('[Command] Failed to update result:', updateErr);
+        }
+      })
+      .catch((err) => {
+        console.error('[Command] Agent spawn failed:', err);
+        // Update command to failed
+        readJSON(COMMANDS_FILE).then((cmds) => {
+          const idx = cmds.findIndex((c: CommandEntry) => c.id === id);
+          if (idx >= 0) {
+            cmds[idx].status = 'failed';
+            cmds[idx].gatewayStatus = 'error';
+            cmds[idx].agentResponse = (err as Error).message;
+            writeJSON(COMMANDS_FILE, cmds);
+          }
+        });
+      });
+
+    return NextResponse.json(
+      { ok: true, id, status: 'processing', message: 'Command dispatched to agent' },
+      { status: 201 }
+    );
   } catch (error) {
+    console.error('[Command] Error:', error);
     return NextResponse.json({ error: 'Failed to create command' }, { status: 500 });
   }
 }
@@ -85,7 +151,7 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const { id, status } = body;
 
-    if (!id || !status || !['pending', 'processing', 'done'].includes(status)) {
+    if (!id || !status || !['pending', 'processing', 'done', 'failed'].includes(status)) {
       return NextResponse.json({ error: 'id and valid status required' }, { status: 400 });
     }
 
