@@ -1,8 +1,8 @@
-import Sidebar from '@/components/Sidebar';
-import { getDocument, getDocumentsByCategory, getAllDocuments, getAllTags } from '@/lib/documents';
+import { getDocument, getDocumentsByCategory, getAllDocuments, getAllTags, getCategories } from '@/lib/documents';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import DocSidebar from '@/components/DocSidebar';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,93 +20,144 @@ export async function generateStaticParams() {
 export default async function DocumentPage({ params }: PageProps) {
   const { slug } = await params;
   const slugPath = slug.join('/');
-  const doc = await getDocument(slugPath);
   const documentsByCategory = getDocumentsByCategory();
-  const allTags = getAllTags();
+  const categories = getCategories();
 
-  if (!doc) {
-    notFound();
+  // Check if it's a category index (e.g., /doc/projects)
+  if (slug.length === 1 && categories.includes(slug[0])) {
+    const categoryDocs = documentsByCategory[slug[0]] || [];
+    const categoryIcons: Record<string, string> = {
+      concepts: 'lightbulb', journal: 'auto_stories', projects: 'rocket_launch',
+      accounts: 'account_balance', erate: 'bolt', intel: 'security', reports: 'analytics',
+    };
+
+    return (
+      <div className="flex min-h-screen">
+        <DocSidebar documents={documentsByCategory} activeSlug={slugPath} />
+
+        <div className="flex-1 max-w-2xl mx-auto px-4 pt-8 pb-24">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-1 text-sm text-foreground-muted mb-6">
+            <Link href="/doc" className="hover:text-primary transition-colors">
+              <span className="material-symbols-outlined text-xs">chevron_left</span>
+            </Link>
+            <span className="text-foreground-muted">Documents</span>
+            <span className="material-symbols-outlined text-xs">chevron_right</span>
+            <span className="text-primary capitalize">{slug[0]}</span>
+          </div>
+
+          <h1 className="text-white tracking-tight text-3xl font-bold leading-tight pb-2 capitalize">
+            {slug[0]} <span className="text-primary">.</span>
+          </h1>
+          <p className="text-foreground-muted text-sm mb-8">{categoryDocs.length} documents</p>
+
+          <div className="space-y-3">
+            {categoryDocs.map(doc => (
+              <Link
+                key={doc.slug}
+                href={`/doc/${doc.slug}`}
+                className="block bg-card-dark border border-white/5 rounded-xl p-4 hover:border-primary/30 transition-all group"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold group-hover:text-primary transition-colors truncate">{doc.title}</h3>
+                    {doc.description && <p className="text-sm text-foreground-muted mt-1 line-clamp-2">{doc.description}</p>}
+                    {doc.tags && doc.tags.length > 0 && (
+                      <div className="flex gap-1.5 mt-2 flex-wrap">
+                        {doc.tags.slice(0, 3).map(tag => (
+                          <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-secondary-dark text-foreground-muted">#{tag}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  {doc.date && (
+                    <span className="text-xs text-foreground-muted whitespace-nowrap" suppressHydrationWarning>
+                      {(() => { try { return format(new Date(doc.date), 'MMM d'); } catch { return ''; } })()}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
+
+  // Full document view
+  const doc = await getDocument(slugPath);
+  if (!doc) notFound();
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar documents={documentsByCategory} allTags={allTags} />
-      
-      <main className="flex-1 overflow-y-auto pt-14 md:pt-0 pb-20 md:pb-0">
-        <article className="max-w-3xl mx-auto p-4 md:p-8">
-          {/* Header */}
-          <header className="mb-8 pb-8 border-b border-[#262626]">
-            {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-[#9CA3AF] mb-4">
-              <Link href="/" className="hover:text-[#FEE123] transition-colors font-medium">
-                Home
-              </Link>
-              <span className="text-[#FEE123]">/</span>
-              <span className="capitalize text-[#FEE123] font-semibold">{doc.category}</span>
-            </div>
-            
-            {/* Title */}
-            <h1 className="text-2xl md:text-4xl font-bold mb-4 text-[#FAFAFA] tracking-tight leading-tight">
-              {doc.title}
-            </h1>
-            
-            {/* Description */}
-            {doc.description && (
-              <p className="text-[#9CA3AF] mb-4 text-base md:text-lg leading-relaxed">{doc.description}</p>
-            )}
-            
-            {/* Meta */}
-            <div className="flex items-center flex-wrap gap-4 text-sm text-[#9CA3AF]">
-              {doc.date && (
-                <span className="flex items-center gap-1.5">
-                  <span className="text-[#FEE123]">📅</span>
-                  {format(new Date(doc.date), 'MMMM d, yyyy')}
-                </span>
-              )}
-              <span className="flex items-center gap-1.5">
-                <span className="text-[#FEE123]">🕐</span>
-                {format(doc.lastModified, 'h:mm a')}
-              </span>
-            </div>
-            
-            {/* Tags */}
-            {doc.tags && doc.tags.length > 0 && (
-              <div className="flex items-center flex-wrap gap-2 mt-4">
-                {doc.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs px-3 py-1.5 rounded-full bg-[#154733] text-[#FEE123] font-semibold border border-[#FEE123]/30"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </header>
+      <DocSidebar documents={documentsByCategory} activeSlug={slugPath} />
 
-          {/* Content */}
-          <div
-            className="document-content"
-            dangerouslySetInnerHTML={{ __html: doc.htmlContent || '' }}
-          />
+      <div className="flex-1 w-full max-w-2xl mx-auto px-4 pt-8 pb-24">
+        {/* TopAppBar */}
+        <header className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-1">
+            <Link href={`/doc/${doc.category}`} className="text-foreground-muted hover:text-primary transition-colors flex items-center">
+              <span className="material-symbols-outlined">chevron_left</span>
+            </Link>
+            <h2 className="text-foreground-muted text-sm font-medium leading-tight tracking-wide flex items-center gap-1">
+              <span className="capitalize">{doc.category}</span>
+              <span className="material-symbols-outlined text-xs">chevron_right</span>
+              <span className="text-foreground truncate max-w-[200px]">{doc.title}</span>
+            </h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="text-foreground-muted p-2 hover:bg-white/10 rounded-full transition-colors">
+              <span className="material-symbols-outlined" style={{ fontSize: 22 }}>share</span>
+            </button>
+          </div>
+        </header>
 
-          {/* Footer */}
-          <footer className="mt-12 pt-8 border-t border-[#262626]">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-sm text-[#9CA3AF]">
-              <span className="font-medium">
-                Last updated: {format(doc.lastModified, 'MMM d, yyyy \'at\' h:mm a')}
-              </span>
-              <Link 
-                href="/" 
-                className="text-[#FEE123] hover:text-[#FFE94D] transition-colors font-bold flex items-center gap-2"
-              >
-                <span>←</span>
-                <span>Back to overview</span>
-              </Link>
+        {/* Document Title */}
+        <h1 className="text-white tracking-tight text-3xl md:text-4xl font-bold leading-tight pb-6 pt-2">
+          {doc.title} <span className="text-primary">.</span>
+        </h1>
+
+        {/* Metadata Pills */}
+        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 hide-scrollbar">
+          {doc.date && (
+            <div className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-secondary-dark px-4 border border-white/5">
+              <span className="material-symbols-outlined text-sm text-primary">calendar_today</span>
+              <p className="text-zinc-200 text-xs font-semibold leading-normal uppercase tracking-wider" suppressHydrationWarning>
+                {(() => { try { return format(new Date(doc.date), 'MMM d, yyyy'); } catch { return doc.date; } })()}
+              </p>
             </div>
-          </footer>
-        </article>
-      </main>
+          )}
+          <div className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary px-4">
+            <span className="material-symbols-outlined text-sm text-bg-dark">science</span>
+            <p className="text-bg-dark text-xs font-bold leading-normal uppercase tracking-wider capitalize">{doc.category}</p>
+          </div>
+          {doc.tags?.map(tag => (
+            <div key={tag} className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-secondary-dark px-4 border border-white/5">
+              <p className="text-zinc-200 text-xs font-semibold leading-normal">#{tag}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Description as blockquote */}
+        {doc.description && (
+          <p className="text-zinc-300 text-lg font-light leading-relaxed italic border-l-2 border-primary/40 pl-4 py-1 mb-8">
+            {doc.description}
+          </p>
+        )}
+
+        {/* Markdown Content */}
+        <div className="document-content" dangerouslySetInnerHTML={{ __html: doc.htmlContent || '' }} />
+
+        {/* Footer */}
+        <footer className="mt-16 pt-8 border-t border-white/5">
+          <div className="flex items-center justify-between text-sm text-foreground-muted">
+            <span suppressHydrationWarning>Last updated: {format(doc.lastModified, "MMM d, yyyy 'at' h:mm a")}</span>
+            <Link href={`/doc/${doc.category}`} className="text-primary hover:underline font-bold flex items-center gap-1">
+              <span>←</span> Back to {doc.category}
+            </Link>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }

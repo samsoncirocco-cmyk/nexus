@@ -1,161 +1,176 @@
-import Sidebar from '@/components/Sidebar';
-import { getDocumentsByCategory, getAllDocuments, getAllTags } from '@/lib/documents';
-import { format } from 'date-fns';
+import { getDocumentsByCategory, getAllDocuments } from '@/lib/documents';
+import { getActivity } from '@/app/actions/activity';
+import { getTasks } from '@/app/actions/tasks';
+import { getDeals } from '@/app/actions/deals';
+import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-export default function Home() {
-  const documentsByCategory = getDocumentsByCategory();
-  const allDocs = getAllDocuments();
-  const allTags = getAllTags();
-  const recentDocs = allDocs.slice(0, 5);
+function getGreeting(): string {
+  const hour = new Date().getUTCHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
+}
 
-  const stats = {
-    total: allDocs.length,
-    concepts: documentsByCategory['concepts']?.length || 0,
-    journal: documentsByCategory['journal']?.length || 0,
-    projects: documentsByCategory['projects']?.length || 0,
+export default async function Home() {
+  const allDocs = getAllDocuments();
+  const documentsByCategory = getDocumentsByCategory();
+  const activity = await getActivity();
+  const tasks = await getTasks();
+  const deals = await getDeals();
+
+  const activeTasks = tasks.filter(t => t.column !== 'Done').length;
+  const activeDeals = deals.filter(d => d.stage !== 'Closed Won' && d.stage !== 'Closed Lost').length;
+  const recentActivity = activity.slice(0, 4);
+
+  const activityIcons: Record<string, string> = {
+    completed: 'check_circle',
+    started: 'sync',
+    alert: 'warning',
+    note: 'draw',
   };
 
+  const docGrowthPercent = Math.min(99, Math.round(allDocs.length * 1.2));
+
   return (
-    <div className="flex min-h-screen">
-      <Sidebar documents={documentsByCategory} allTags={allTags} />
-      
-      <main className="flex-1 overflow-y-auto pt-14 md:pt-0 pb-20 md:pb-0">
-        <div className="max-w-4xl mx-auto p-4 md:p-8">
-          {/* Hero - Oregon Ducks Style */}
-          <div className="gradient-oregon rounded-2xl p-6 md:p-10 mb-8 border border-[#FEE123]/20 glow-green">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-4xl md:text-5xl">🧠</span>
-              <div className="w-12 h-1 bg-[#FEE123] rounded-full" />
-            </div>
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-[#FAFAFA] tracking-tight">
-              SECOND BRAIN
-            </h1>
-            <p className="text-lg md:text-xl text-[#FAFAFA]/80 font-medium">
-              Your personal knowledge base. Built through our conversations.
-            </p>
-            <p className="text-[#FEE123] font-bold mt-4 text-sm tracking-widest uppercase">
-              Just Do It. 🦆
-            </p>
-          </div>
+    <div className="max-w-2xl mx-auto">
+      {/* Top App Bar */}
+      <div className="flex items-center p-6 pb-2 justify-between">
+        <div className="flex size-10 shrink-0 items-center overflow-hidden rounded-full border border-primary/30 bg-secondary-dark">
+          <span className="material-symbols-outlined text-primary mx-auto" style={{ fontSize: 22 }}>person</span>
+        </div>
+        <div className="flex-1 px-4">
+          <p className="text-xs font-medium uppercase tracking-widest text-primary/70">Welcome back</p>
+          <h2 className="text-primary text-xl font-bold leading-tight tracking-tight">{getGreeting()}, Samson</h2>
+        </div>
+        <div className="flex w-10 items-center justify-end">
+          <Link
+            href="/activity"
+            className="flex items-center justify-center rounded-full size-10 bg-secondary-dark/20 text-primary border border-primary/10"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 22 }}>notifications</span>
+          </Link>
+        </div>
+      </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
-            <div className="card-stat p-4 md:p-5">
-              <div className="text-3xl md:text-4xl font-bold text-[#FEE123]">{stats.total}</div>
-              <div className="text-sm text-[#FAFAFA]/70 font-medium mt-1">Total Docs</div>
-            </div>
-            <div className="bg-[#111111] rounded-xl p-4 md:p-5 border border-[#FEE123]/20 hover:border-[#FEE123]/50 transition-all">
-              <div className="text-3xl md:text-4xl font-bold flex items-center gap-2">
-                <span className="text-2xl">💡</span>
-                <span className="text-[#FEE123]">{stats.concepts}</span>
-              </div>
-              <div className="text-sm text-[#9CA3AF] font-medium mt-1">Concepts</div>
-            </div>
-            <div className="bg-[#111111] rounded-xl p-4 md:p-5 border border-[#FEE123]/20 hover:border-[#FEE123]/50 transition-all">
-              <div className="text-3xl md:text-4xl font-bold flex items-center gap-2">
-                <span className="text-2xl">📓</span>
-                <span className="text-[#FEE123]">{stats.journal}</span>
-              </div>
-              <div className="text-sm text-[#9CA3AF] font-medium mt-1">Journal</div>
-            </div>
-            <div className="bg-[#111111] rounded-xl p-4 md:p-5 border border-[#FEE123]/20 hover:border-[#FEE123]/50 transition-all">
-              <div className="text-3xl md:text-4xl font-bold flex items-center gap-2">
-                <span className="text-2xl">🚀</span>
-                <span className="text-[#FEE123]">{stats.projects}</span>
-              </div>
-              <div className="text-sm text-[#9CA3AF] font-medium mt-1">Projects</div>
-            </div>
+      {/* Quick Stats Cards */}
+      <div className="flex gap-3 p-6 overflow-x-auto hide-scrollbar">
+        <Link href="/tasks" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+          <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>task_alt</span>
+          <div>
+            <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Tasks</p>
+            <p className="text-white tracking-tight text-3xl font-bold">{activeTasks}</p>
           </div>
-
-          {/* Recent Documents */}
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <h2 className="text-xl md:text-2xl font-bold text-[#FAFAFA]">Recent Documents</h2>
-              <div className="flex-1 h-px bg-gradient-to-r from-[#FEE123]/30 to-transparent" />
-            </div>
-            {recentDocs.length > 0 ? (
-              <div className="space-y-3">
-                {recentDocs.map((doc) => (
-                  <Link
-                    key={doc.slug}
-                    href={`/doc/${doc.slug}`}
-                    className="block bg-[#111111] rounded-xl p-4 md:p-5 border border-[#262626] hover:border-[#FEE123] transition-all group tap-target"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-[#FAFAFA] group-hover:text-[#FEE123] transition-colors truncate">
-                          {doc.title}
-                        </h3>
-                        {doc.description && (
-                          <p className="text-sm text-[#9CA3AF] mt-1 line-clamp-2">
-                            {doc.description}
-                          </p>
-                        )}
-                        <div className="flex items-center flex-wrap gap-2 mt-3">
-                          <span className="text-xs px-2.5 py-1 rounded-full bg-[#154733] text-[#FEE123] font-semibold uppercase">
-                            {doc.category}
-                          </span>
-                          {doc.tags?.slice(0, 3).map((tag) => (
-                            <span
-                              key={tag}
-                              className="text-xs px-2 py-1 rounded-full bg-[#1a1a1a] text-[#9CA3AF] border border-[#262626]"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      {doc.date && (
-                        <span className="text-xs text-[#9CA3AF] whitespace-nowrap font-medium">
-                          {format(new Date(doc.date), 'MMM d')}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="bg-[#111111] rounded-xl p-8 md:p-12 border border-[#262626] text-center">
-                <div className="text-5xl mb-4">📝</div>
-                <p className="text-[#9CA3AF] font-medium">
-                  No documents yet. They&apos;ll appear here as we talk.
-                </p>
-              </div>
-            )}
+        </Link>
+        <Link href="/deals" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+          <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>handshake</span>
+          <div>
+            <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Deals</p>
+            <p className="text-white tracking-tight text-3xl font-bold">{activeDeals}</p>
           </div>
+        </Link>
+        <Link href="/doc" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+          <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>description</span>
+          <div>
+            <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Docs</p>
+            <p className="text-white tracking-tight text-3xl font-bold">{allDocs.length}</p>
+          </div>
+        </Link>
+      </div>
 
-          {/* How it works - Nike card style */}
-          <div className="gradient-oregon rounded-2xl p-6 md:p-8 border border-[#FEE123]/20">
-            <h2 className="text-xl md:text-2xl font-bold mb-6 text-[#FEE123] uppercase tracking-wide">How This Works</h2>
-            <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-              <div className="bg-[#0A0A0A]/50 rounded-xl p-4 md:p-5 border border-[#FEE123]/10">
-                <div className="text-3xl mb-3">📓</div>
-                <h3 className="font-bold text-[#FAFAFA] mb-2">Journal</h3>
-                <p className="text-sm text-[#FAFAFA]/70">
-                  Daily entries summarizing our conversations
-                </p>
-              </div>
-              <div className="bg-[#0A0A0A]/50 rounded-xl p-4 md:p-5 border border-[#FEE123]/10">
-                <div className="text-3xl mb-3">💡</div>
-                <h3 className="font-bold text-[#FAFAFA] mb-2">Concepts</h3>
-                <p className="text-sm text-[#FAFAFA]/70">
-                  Deep dives on important ideas we discuss
-                </p>
-              </div>
-              <div className="bg-[#0A0A0A]/50 rounded-xl p-4 md:p-5 border border-[#FEE123]/10">
-                <div className="text-3xl mb-3">🚀</div>
-                <h3 className="font-bold text-[#FAFAFA] mb-2">Projects</h3>
-                <p className="text-sm text-[#FAFAFA]/70">
-                  Notes on things we&apos;re building together
-                </p>
-              </div>
+      {/* Brain Status Card */}
+      <div className="px-6 mb-6">
+        <div className="bg-gradient-to-br from-secondary-dark to-bg-dark rounded-xl p-5 border border-primary/20 relative overflow-hidden">
+          <div className="absolute -right-4 -top-4 size-24 bg-primary/10 rounded-full blur-2xl" />
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex-1">
+              <h4 className="text-primary font-bold text-lg">Brain Status: Optimal</h4>
+              <p className="text-primary/70 text-sm">
+                Your knowledge graph spans {allDocs.length} documents across {Object.keys(documentsByCategory).length} categories.
+              </p>
+            </div>
+            <div className="size-12 rounded-full bg-primary/20 flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>psychology</span>
             </div>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Recent Activity Section */}
+      <div className="flex items-center justify-between px-6 pb-2">
+        <h3 className="text-primary text-lg font-bold tracking-tight">Recent Activity</h3>
+        <Link href="/activity" className="text-primary/60 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors">
+          View All
+        </Link>
+      </div>
+
+      <div className="px-4 space-y-2 mb-8">
+        {recentActivity.length > 0 ? (
+          recentActivity.map((entry) => (
+            <div
+              key={entry.id}
+              className="flex items-center gap-4 bg-secondary-dark/40 border border-primary/5 px-4 py-4 rounded-xl"
+            >
+              <div className="text-primary flex items-center justify-center rounded-lg bg-secondary-dark shrink-0 size-11 border border-primary/20">
+                <span className="material-symbols-outlined">
+                  {activityIcons[entry.type] || 'info'}
+                </span>
+              </div>
+              <div className="flex flex-col justify-center flex-1 min-w-0">
+                <p className="text-white text-sm font-semibold leading-tight truncate">{entry.title}</p>
+                <p className="text-primary/50 text-xs font-normal leading-normal truncate">{entry.summary}</p>
+              </div>
+              <div className="shrink-0">
+                <p className="text-primary font-medium text-[10px] uppercase tracking-tighter" suppressHydrationWarning>
+                  {(() => { try { return formatDistanceToNow(new Date(entry.timestamp), { addSuffix: false }); } catch { return ''; } })()}
+                </p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center py-10">
+            <div className="size-16 rounded-full bg-secondary-dark/40 border border-primary/10 flex items-center justify-center mx-auto mb-3">
+              <span className="material-symbols-outlined text-primary" style={{ fontSize: 28 }}>rocket_launch</span>
+            </div>
+            <p className="text-primary/50 text-sm">No recent activity yet. Sub-agents will log their work here.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Quick Access - Categories */}
+      <div className="px-6 mb-8">
+        <h3 className="text-primary text-lg font-bold tracking-tight mb-3">Quick Access</h3>
+        <div className="grid grid-cols-2 gap-3">
+          {Object.entries(documentsByCategory).slice(0, 6).map(([category, docs]) => {
+            const icons: Record<string, string> = {
+              journal: 'auto_stories',
+              concepts: 'lightbulb',
+              projects: 'rocket_launch',
+              accounts: 'account_balance',
+              erate: 'bolt',
+              intel: 'security',
+              reports: 'analytics',
+            };
+            return (
+              <Link
+                key={category}
+                href={`/doc/${category}`}
+                className="flex items-center gap-3 bg-secondary-dark/40 border border-primary/5 rounded-xl px-4 py-3 hover:border-primary/20 transition-colors"
+              >
+                <span className="material-symbols-outlined text-primary" style={{ fontSize: 20 }}>
+                  {icons[category] || 'folder_open'}
+                </span>
+                <div>
+                  <p className="text-white text-sm font-semibold capitalize">{category}</p>
+                  <p className="text-primary/50 text-[10px] font-medium uppercase tracking-wider">{docs.length} docs</p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

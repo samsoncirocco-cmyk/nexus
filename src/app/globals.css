@@ -1,187 +1,72 @@
 @import "tailwindcss";
 
 /* ========================================
-   OREGON DUCKS × NIKE THEME
-   Premium, Athletic, Bold
+   TAILWIND v4 THEME — Oregon Ducks × Space
    ======================================== */
 
-:root {
-  /* Primary palette */
-  --oregon-green: #154733;
-  --oregon-green-dark: #004F27;
-  --oregon-yellow: #FEE123;
-  --gold-muted: #D4A843;
-  
-  /* Backgrounds */
-  --background: #0A0A0A;
-  --background-secondary: #111111;
-  --background-tertiary: #1a1a1a;
-  
-  /* Text */
-  --foreground: #FAFAFA;
-  --foreground-muted: #9CA3AF;
-  
-  /* Accents */
-  --accent: #FEE123;
-  --accent-muted: #D4A843;
-  
-  /* Borders */
-  --border: #262626;
-  --border-subtle: #1f1f1f;
-  --border-glow: rgba(254, 225, 35, 0.3);
+@theme {
+  --color-primary: #fade29;
+  --color-primary-muted: #D4A843;
+  --color-bg-dark: #0a0f0c;
+  --color-bg-secondary: #111111;
+  --color-bg-tertiary: #1a1a1a;
+  --color-secondary-dark: #154733;
+  --color-secondary-dark-deep: #004F27;
+  --color-card-dark: #141a17;
+  --color-timeline-line: #1a251f;
+  --color-foreground: #FAFAFA;
+  --color-foreground-muted: #9CA3AF;
+  --color-border: #262626;
+  --color-border-subtle: #1f1f1f;
+
+  --font-display: "Space Grotesk", sans-serif;
 }
 
 /* ========================================
-   BASE STYLES
+   BASE
    ======================================== */
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html {
+  color-scheme: dark;
 }
 
-/* Athletic, bold headings */
+body {
+  background: var(--color-bg-dark);
+  color: var(--color-foreground);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 /* ========================================
-   SCROLLBAR - Green/Gold Theme
+   SCROLLBAR
    ======================================== */
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--background-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--oregon-green);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--oregon-yellow);
-}
-
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--oregon-green) var(--background-secondary);
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-secondary-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+* { scrollbar-width: thin; scrollbar-color: var(--color-secondary-dark) transparent; }
 
 /* ========================================
-   MOBILE-FIRST UTILITIES
+   HIDE-SCROLLBAR UTILITY
    ======================================== */
 
-/* Touch-friendly tap targets */
-.tap-target {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-/* Hide scrollbars on mobile for horizontal scroll */
-.scroll-hidden::-webkit-scrollbar {
-  display: none;
-}
-
-.scroll-hidden {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Mobile bottom safe area padding */
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 16px);
-}
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* ========================================
-   GRADIENT UTILITIES
+   MATERIAL SYMBOLS OVERRIDE
    ======================================== */
 
-.gradient-oregon {
-  background: linear-gradient(135deg, var(--oregon-green) 0%, var(--oregon-green-dark) 100%);
-}
-
-.gradient-gold-border {
-  background: linear-gradient(135deg, rgba(254, 225, 35, 0.2) 0%, rgba(212, 168, 67, 0.1) 100%);
-  border: 1px solid rgba(254, 225, 35, 0.3);
-}
-
-.gradient-card {
-  background: linear-gradient(180deg, var(--background-secondary) 0%, var(--background) 100%);
-  border: 1px solid var(--border);
-}
-
-.glow-gold {
-  box-shadow: 0 0 20px rgba(254, 225, 35, 0.15);
-}
-
-.glow-green {
-  box-shadow: 0 0 20px rgba(21, 71, 51, 0.3);
-}
-
-/* ========================================
-   CARD STYLES - Nike Premium Feel
-   ======================================== */
-
-.card-oregon {
-  background: var(--background-secondary);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.card-oregon:hover {
-  border-color: var(--oregon-yellow);
-  box-shadow: 0 0 0 1px var(--oregon-yellow), 0 4px 20px rgba(254, 225, 35, 0.1);
-}
-
-.card-stat {
-  background: linear-gradient(135deg, var(--oregon-green) 0%, var(--oregon-green-dark) 100%);
-  border: 1px solid rgba(254, 225, 35, 0.2);
-  border-radius: 12px;
-}
-
-/* ========================================
-   BUTTON STYLES
-   ======================================== */
-
-.btn-primary {
-  background: var(--oregon-yellow);
-  color: var(--oregon-green-dark);
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-  background: #FFE94D;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(254, 225, 35, 0.3);
-}
-
-.btn-secondary {
-  background: var(--oregon-green);
-  color: var(--foreground);
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--oregon-yellow);
-  transition: all 0.2s ease;
-}
-
-.btn-secondary:hover {
-  background: var(--oregon-green-dark);
-  border-color: var(--oregon-yellow);
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
 /* ========================================
@@ -192,22 +77,12 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.8;
 }
 
-.document-content h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  color: var(--foreground);
-  letter-spacing: -0.02em;
-}
-
 .document-content h2 {
   font-size: 1.5rem;
   font-weight: 700;
-  margin-top: 1.75rem;
-  margin-bottom: 0.75rem;
-  color: var(--oregon-yellow);
-  letter-spacing: -0.01em;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
 }
 
 .document-content h3 {
@@ -215,12 +90,13 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  color: var(--foreground);
+  color: var(--color-foreground);
 }
 
 .document-content p {
-  margin-bottom: 1rem;
-  color: var(--foreground);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+  color: #e5e7eb;
 }
 
 .document-content ul, .document-content ol {
@@ -228,73 +104,83 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 1.5rem;
 }
 
+.document-content ul {
+  list-style-type: none;
+  padding-left: 0.5rem;
+}
+
 .document-content li {
+  position: relative;
+  padding-left: 1.5rem;
   margin-bottom: 0.5rem;
+  color: #e5e7eb;
+}
+
+.document-content li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
 }
 
 .document-content li::marker {
-  color: var(--oregon-yellow);
+  color: var(--color-primary);
 }
 
 .document-content code {
-  background: var(--oregon-green);
-  color: var(--oregon-yellow);
+  background: var(--color-secondary-dark);
+  color: var(--color-primary);
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
   font-size: 0.875rem;
-  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
 .document-content pre {
-  background: var(--oregon-green-dark);
+  background: var(--color-secondary-dark-deep);
   padding: 1.25rem;
   border-radius: 8px;
   overflow-x: auto;
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(254, 225, 35, 0.2);
+  border: 1px solid rgba(250, 222, 41, 0.2);
 }
 
 .document-content pre code {
   background: none;
   padding: 0;
-  color: var(--foreground);
+  color: var(--color-foreground);
 }
 
 .document-content blockquote {
-  border-left: 4px solid var(--oregon-yellow);
-  padding-left: 1.25rem;
+  border-left: 4px solid rgba(250, 222, 41, 0.4);
+  padding: 1rem 1.25rem;
   margin: 1.5rem 0;
-  color: var(--foreground-muted);
+  color: var(--color-foreground-muted);
   font-style: italic;
   background: rgba(21, 71, 51, 0.2);
-  padding: 1rem 1.25rem;
   border-radius: 0 8px 8px 0;
 }
 
 .document-content a {
-  color: var(--oregon-yellow);
+  color: var(--color-primary);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color 0.2s ease;
 }
 
 .document-content a:hover {
-  border-bottom-color: var(--oregon-yellow);
+  border-bottom-color: var(--color-primary);
 }
 
 .document-content hr {
   border: none;
-  border-top: 2px solid var(--oregon-green);
+  border-top: 2px solid var(--color-secondary-dark);
   margin: 2.5rem 0;
 }
 
 .document-content strong {
   font-weight: 700;
-  color: var(--foreground);
-}
-
-.document-content em {
-  font-style: italic;
+  color: var(--color-foreground);
 }
 
 .document-content table {
@@ -304,83 +190,31 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .document-content th {
-  background: var(--oregon-green);
-  color: var(--oregon-yellow);
+  background: var(--color-secondary-dark);
+  color: var(--color-primary);
   font-weight: 600;
   text-align: left;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--color-border);
 }
 
 .document-content td {
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--color-border);
 }
 
 .document-content tr:nth-child(even) {
-  background: var(--background-secondary);
+  background: var(--color-bg-secondary);
 }
 
 /* ========================================
-   FORM INPUTS - Oregon Theme
+   GLASS PANEL (doc viewer)
    ======================================== */
 
-.inp {
-  width: 100%;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--background);
-  padding: 0.625rem 0.875rem;
-  font-size: 0.875rem;
-  color: var(--foreground);
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.inp:focus {
-  border-color: var(--oregon-yellow);
-  box-shadow: 0 0 0 3px rgba(254, 225, 35, 0.1);
-}
-
-.inp::placeholder {
-  color: var(--foreground-muted);
-}
-
-/* Select styling */
-select.inp {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1rem;
-  padding-right: 2.5rem;
-}
-
-/* ========================================
-   RESPONSIVE BREAKPOINTS
-   ======================================== */
-
-/* Mobile: < 768px */
-@media (max-width: 767px) {
-  .document-content h1 {
-    font-size: 1.5rem;
-  }
-  
-  .document-content h2 {
-    font-size: 1.25rem;
-  }
-  
-  .document-content pre {
-    font-size: 0.75rem;
-    padding: 0.75rem;
-  }
-}
-
-/* Tablet: 768px - 1023px */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .document-content h1 {
-    font-size: 1.75rem;
-  }
+.glass-panel {
+  background: rgba(21, 71, 51, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(250, 222, 41, 0.1);
 }
 
 /* ========================================
@@ -388,116 +222,60 @@ select.inp {
    ======================================== */
 
 @keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes pulse-gold {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(254, 225, 35, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(254, 225, 35, 0);
-  }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(250, 222, 41, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(250, 222, 41, 0); }
 }
 
-.animate-slide-in {
-  animation: slideIn 0.3s ease-out;
-}
+.animate-slide-in { animation: slideIn 0.3s ease-out; }
+.animate-fade-in { animation: fadeIn 0.2s ease-out; }
+.animate-pulse-gold { animation: pulse-gold 2s infinite; }
 
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
-}
+/* ========================================
+   SAFE AREA
+   ======================================== */
 
-.animate-pulse-gold {
-  animation: pulse-gold 2s infinite;
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
 }
 
 /* ========================================
-   MOBILE NAVIGATION
+   FORM INPUTS
    ======================================== */
 
-.mobile-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--background-secondary);
-  border-top: 1px solid var(--border);
-  padding: 0.5rem 1rem;
-  padding-bottom: env(safe-area-inset-bottom, 0.5rem);
-  z-index: 50;
+.inp {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-dark);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: var(--color-foreground);
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.mobile-nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  color: var(--foreground-muted);
-  transition: color 0.2s ease;
-  min-width: 64px;
+.inp:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(250, 222, 41, 0.1);
 }
 
-.mobile-nav-item.active {
-  color: var(--oregon-yellow);
-}
+.inp::placeholder { color: var(--color-foreground-muted); }
 
-.mobile-nav-item:hover {
-  color: var(--oregon-yellow);
-}
-
-/* ========================================
-   PRIORITY BADGES - Oregon Style
-   ======================================== */
-
-.badge-high {
-  background: linear-gradient(135deg, rgba(254, 225, 35, 0.2) 0%, rgba(254, 225, 35, 0.1) 100%);
-  color: var(--oregon-yellow);
-  border: 1px solid rgba(254, 225, 35, 0.4);
-}
-
-.badge-medium {
-  background: rgba(21, 71, 51, 0.4);
-  color: #4ADE80;
-  border: 1px solid rgba(74, 222, 128, 0.4);
-}
-
-.badge-low {
-  background: var(--background-tertiary);
-  color: var(--foreground-muted);
-  border: 1px solid var(--border);
-}
-
-/* ========================================
-   KANBAN BOARD MOBILE
-   ======================================== */
-
-@media (max-width: 767px) {
-  .kanban-container {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .kanban-column {
-    scroll-snap-align: center;
-    min-width: 85vw;
-  }
+select.inp {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
 }
