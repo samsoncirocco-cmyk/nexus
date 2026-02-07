@@ -101,5 +101,23 @@
     "startedAt": "2026-02-07T20:42:28Z",
     "lastUpdate": "2026-02-07T20:42:28Z",
     "summary": "Interactive force-directed graph of 50+ vault docs at brain.6eyes.dev/graph"
+  },
+  {
+    "id": "settings-polish",
+    "label": "Settings + Polish",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:47:10Z",
+    "lastUpdate": "2026-02-07T20:47:10Z",
+    "summary": "Settings page with config, services status, and polished home dashboard with real data"
+  },
+  {
+    "id": "erate-batch2",
+    "label": "E-Rate Batch 2",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:50:19Z",
+    "lastUpdate": "2026-02-07T20:50:19Z",
+    "summary": "10 priority lead dossiers, 18K-.13M estimated pipeline"
   }
 ]

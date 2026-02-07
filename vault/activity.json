@@ -296,5 +296,38 @@
     "output": [],
     "tags": [],
     "status": "done"
+  },
+  {
+    "id": "585fef33",
+    "timestamp": "2026-02-07T20:46:52Z",
+    "agent": "settings-polish",
+    "type": "deployed",
+    "title": "\u2699\ufe0f Settings + Dashboard Polish",
+    "summary": "Settings page with config, connected services, and polished home dashboard",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "be8c502e",
+    "timestamp": "2026-02-07T20:50:04Z",
+    "agent": "erate-batch2",
+    "type": "completed",
+    "title": "\ud83c\udfaf E-Rate Batch 2: Top 10 Leads",
+    "summary": "Research dossiers for 10 priority E-Rate leads with talking points",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "de4ab240",
+    "timestamp": "2026-02-07T20:53:21Z",
+    "agent": "book-ch5",
+    "type": "completed",
+    "title": "\ud83d\udcd6 Book Chapter 5: Sales",
+    "summary": "Chapter 5 written/edited in manuscript.md \u2014 career, rejection, identity",
+    "output": [],
+    "tags": [],
+    "status": "done"
   }
 ]
