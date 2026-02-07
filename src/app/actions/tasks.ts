@@ -1,14 +1,17 @@
 'use server';
 
-import fs from 'fs/promises';
-import path from 'path';
-import { revalidatePath } from 'next/cache';
-import { VAULT_PATH, WRITABLE_VAULT, writablePath, readWithFallback } from '@/lib/paths';
+import { ensureVaultDir, getVaultFilePath, readJsonFile, writeJsonFile } from '@/lib/vault-io';
 
-const TASKS_FILE = path.join(VAULT_PATH, 'tasks.json');
+const TASKS_FILE = getVaultFilePath('tasks.json');
 
 export type Priority = 'low' | 'medium' | 'high';
-export type Column = 'todo' | 'in-progress' | 'done';
+export type Column = 'Backlog' | 'In Progress' | 'Waiting on Samson' | 'Done';
+
+export interface TaskLink {
+  label: string;
+  url: string;
+  type: 'drive' | 'brain' | 'file' | 'external';
+}
 
 export interface Task {
   id: string;
@@ -16,37 +19,23 @@ export interface Task {
   description: string;
   column: Column;
   priority: Priority;
-  assignee?: string;
-  tags: string[];
   createdAt: string;
   updatedAt: string;
+  tags: string[];
+  links?: TaskLink[];
 }
 
 // Ensure vault directory exists
-async function ensureVault() {
-  try {
-    await fs.access(WRITABLE_VAULT);
-  } catch {
-    await fs.mkdir(WRITABLE_VAULT, { recursive: true });
-  }
-}
-
 // Read all tasks
 export async function getTasks(): Promise<Task[]> {
-  await ensureVault();
-  try {
-    const data = await readWithFallback(TASKS_FILE, '[]');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
+  await ensureVaultDir();
+  return readJsonFile<Task[]>(TASKS_FILE, []);
 }
 
 // Save tasks
 export async function saveTasks(tasks: Task[]): Promise<void> {
-  await ensureVault();
-  await fs.writeFile(writablePath(TASKS_FILE), JSON.stringify(tasks, null, 2), 'utf-8');
-  revalidatePath('/tasks');
+  await ensureVaultDir();
+  await writeJsonFile(TASKS_FILE, tasks);
 }
 
 // Create a new task
@@ -54,7 +43,7 @@ export async function createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedA
   const tasks = await getTasks();
   const newTask: Task = {
     ...task,
-    id: Math.random().toString(36).substring(2, 11),
+    id: Math.random().toString(36).substring(2, 9),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -64,44 +53,18 @@ export async function createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedA
 }
 
 // Update a task
-export async function updateTask(id: string, updates: Partial<Task>): Promise<Task | null> {
+export async function updateTask(updatedTask: Task): Promise<void> {
   const tasks = await getTasks();
-  const index = tasks.findIndex((t) => t.id === id);
-  
-  if (index === -1) {
-    return null;
+  const index = tasks.findIndex((t) => t.id === updatedTask.id);
+  if (index !== -1) {
+    tasks[index] = { ...updatedTask, updatedAt: new Date().toISOString() };
+    await saveTasks(tasks);
   }
-  
-  const updatedTask: Task = {
-    ...tasks[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-  
-  tasks[index] = updatedTask;
-  await saveTasks(tasks);
-  return updatedTask;
 }
 
 // Delete a task
-export async function deleteTask(id: string): Promise<boolean> {
+export async function deleteTask(id: string): Promise<void> {
   const tasks = await getTasks();
   const filtered = tasks.filter((t) => t.id !== id);
-  
-  if (filtered.length === tasks.length) {
-    return false;
-  }
-  
   await saveTasks(filtered);
-  return true;
-}
-
-// Get tasks grouped by column
-export async function getTasksByColumn(): Promise<Record<Column, Task[]>> {
-  const tasks = await getTasks();
-  return {
-    todo: tasks.filter(t => t.column === 'todo'),
-    'in-progress': tasks.filter(t => t.column === 'in-progress'),
-    done: tasks.filter(t => t.column === 'done'),
-  };
 }

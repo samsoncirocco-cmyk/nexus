@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 
 /* ================================================================
@@ -77,7 +77,6 @@ function getGlow(cat: string) {
    ================================================================ */
 
 function initializePositions(nodes: GraphNode[], w: number, h: number) {
-  // Group by category, lay out in rough clusters
   const categories = [...new Set(nodes.map(n => n.category))];
   const angleStep = (2 * Math.PI) / Math.max(categories.length, 1);
   const radius = Math.min(w, h) * 0.3;
@@ -102,7 +101,6 @@ function simulationTick(
 ) {
   const nodeMap = new Map(nodes.map(n => [n.id, n]));
 
-  // Center gravity
   const cx = w / 2;
   const cy = h / 2;
   const GRAVITY = 0.01 * alpha;
@@ -110,13 +108,11 @@ function simulationTick(
   for (const node of nodes) {
     if (node.fx != null) { node.x = node.fx; node.vx = 0; }
     if (node.fy != null) { node.y = node.fy; node.vy = 0; }
-
-    // Gravity toward center
     node.vx += (cx - node.x) * GRAVITY;
     node.vy += (cy - node.y) * GRAVITY;
   }
 
-  // Repulsion between all nodes (Barnes-Hut would be better, but N is small enough)
+  // Repulsion
   const REPULSION = 800 * alpha;
   for (let i = 0; i < nodes.length; i++) {
     for (let j = i + 1; j < nodes.length; j++) {
@@ -136,7 +132,7 @@ function simulationTick(
     }
   }
 
-  // Spring force along edges
+  // Springs
   const SPRING = 0.05 * alpha;
   const TARGET_LEN = 120;
   for (const edge of edges) {
@@ -155,7 +151,7 @@ function simulationTick(
     if (b.fy == null) b.vy -= fy;
   }
 
-  // Apply velocity with damping
+  // Velocity + damping
   const DAMPING = 0.85;
   for (const node of nodes) {
     if (node.fx != null && node.fy != null) continue;
@@ -163,7 +159,6 @@ function simulationTick(
     node.vy *= DAMPING;
     node.x += node.vx;
     node.y += node.vy;
-    // Bounds
     node.x = Math.max(40, Math.min(w - 40, node.x));
     node.y = Math.max(40, Math.min(h - 40, node.y));
   }
@@ -178,6 +173,8 @@ export default function GraphPage() {
   const svgRef = useRef<SVGSVGElement>(null);
   const nodesRef = useRef<GraphNode[]>([]);
   const edgesRef = useRef<GraphEdge[]>([]);
+  const allNodesRef = useRef<GraphNode[]>([]);
+  const allEdgesRef = useRef<GraphEdge[]>([]);
   const animRef = useRef<number>(0);
   const alphaRef = useRef(1);
 
@@ -186,12 +183,17 @@ export default function GraphPage() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState({ w: 1200, h: 800 });
 
-  // Camera state for zoom/pan
+  // Search & filter state
+  const [search, setSearch] = useState('');
+  const [hiddenCategories, setHiddenCategories] = useState<Set<string>>(new Set());
+  const [searchFocusId, setSearchFocusId] = useState<string | null>(null);
+
+  // Camera
   const [camera, setCamera] = useState({ x: 0, y: 0, scale: 1 });
   const cameraRef = useRef(camera);
   cameraRef.current = camera;
 
-  // Drag state
+  // Drag
   const dragRef = useRef<{
     type: 'node' | 'pan' | null;
     nodeId?: string;
@@ -201,7 +203,6 @@ export default function GraphPage() {
     startCamY: number;
   }>({ type: null, startX: 0, startY: 0, startCamX: 0, startCamY: 0 });
 
-  // Stats for legend
   const [stats, setStats] = useState<Record<string, number>>({});
 
   /* ---- Fetch data ---- */
@@ -220,19 +221,77 @@ export default function GraphPage() {
         initializePositions(nodes, w, h);
         nodesRef.current = nodes;
         edgesRef.current = data.edges;
+        allNodesRef.current = [...nodes];
+        allEdgesRef.current = [...data.edges];
 
-        // Count per category
         const counts: Record<string, number> = {};
         nodes.forEach((n: GraphNode) => {
           counts[n.category] = (counts[n.category] || 0) + 1;
         });
         setStats(counts);
         setLoaded(true);
-
-        // Center camera
         setCamera({ x: 0, y: 0, scale: 1 });
       })
       .catch(console.error);
+  }, []);
+
+  /* ---- Apply filters ---- */
+  const applyFilters = useCallback(() => {
+    const q = search.toLowerCase();
+    const allNodes = allNodesRef.current;
+    const allEdges = allEdgesRef.current;
+
+    const filtered = allNodes.filter(n => {
+      if (hiddenCategories.has(n.category)) return false;
+      if (q && !n.title.toLowerCase().includes(q) && !n.tags.some(t => t.toLowerCase().includes(q))) return false;
+      return true;
+    });
+
+    const visibleIds = new Set(filtered.map(n => n.id));
+    const filteredEdges = allEdges.filter(e => visibleIds.has(e.source) && visibleIds.has(e.target));
+
+    nodesRef.current = filtered;
+    edgesRef.current = filteredEdges;
+    alphaRef.current = Math.max(alphaRef.current, 0.5);
+  }, [search, hiddenCategories]);
+
+  useEffect(() => {
+    if (!loaded) return;
+    applyFilters();
+  }, [loaded, applyFilters]);
+
+  /* ---- Search results dropdown ---- */
+  const searchResults = useMemo(() => {
+    if (!search || search.length < 2) return [];
+    const q = search.toLowerCase();
+    return allNodesRef.current
+      .filter(n => n.title.toLowerCase().includes(q) || n.tags.some(t => t.toLowerCase().includes(q)))
+      .slice(0, 8);
+  }, [search]);
+
+  const focusOnNode = useCallback((nodeId: string) => {
+    const node = nodesRef.current.find(n => n.id === nodeId);
+    if (!node) return;
+    const { w, h } = dimensions;
+    setCamera({
+      scale: 1.5,
+      x: w / 2 - node.x * 1.5,
+      y: h / 2 - node.y * 1.5,
+    });
+    setSearchFocusId(nodeId);
+    setHovered(nodeId);
+    setTimeout(() => setSearchFocusId(null), 3000);
+  }, [dimensions]);
+
+  /* ---- Get connected docs for popover ---- */
+  const getConnectedDocs = useCallback((nodeId: string) => {
+    const edges = allEdgesRef.current;
+    const connected = new Set<string>();
+    for (const e of edges) {
+      if (e.source === nodeId) connected.add(e.target);
+      if (e.target === nodeId) connected.add(e.source);
+    }
+    return allNodesRef.current.filter(n => connected.has(n.id)).slice(0, 6);
   }, []);
 
   /* ---- Animation loop ---- */
@@ -248,7 +307,7 @@ export default function GraphPage() {
 
       if (alpha > 0.001) {
         simulationTick(nodesRef.current, edgesRef.current, w, h, alpha);
-        alphaRef.current *= 0.995; // cool down
+        alphaRef.current *= 0.995;
       }
 
       renderSVG();
@@ -268,13 +327,11 @@ export default function GraphPage() {
     const nodeMap = new Map(nodes.map(n => [n.id, n]));
     const cam = cameraRef.current;
 
-    // Clear
     while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-    // Defs for filters
+    // Defs
     const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
 
-    // Glow filter
     const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
     filter.setAttribute('id', 'glow');
     filter.setAttribute('x', '-50%');
@@ -295,7 +352,6 @@ export default function GraphPage() {
     filter.appendChild(merge);
     defs.appendChild(filter);
 
-    // Edge glow filter
     const edgeFilter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
     edgeFilter.setAttribute('id', 'edge-glow');
     edgeFilter.setAttribute('x', '-20%');
@@ -322,7 +378,7 @@ export default function GraphPage() {
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('transform', `translate(${cam.x},${cam.y}) scale(${cam.scale})`);
 
-    // Draw edges
+    // Edges
     for (const edge of edges) {
       const a = nodeMap.get(edge.source);
       const b = nodeMap.get(edge.target);
@@ -337,7 +393,6 @@ export default function GraphPage() {
       line.setAttribute('stroke-width', edge.type === 'reference' ? '2' : '1');
       line.setAttribute('filter', 'url(#edge-glow)');
 
-      // Highlight edges connected to hovered node
       if (hovered && (edge.source === hovered || edge.target === hovered)) {
         line.setAttribute('stroke', 'rgba(250,222,41,0.6)');
         line.setAttribute('stroke-width', '2.5');
@@ -346,22 +401,50 @@ export default function GraphPage() {
       g.appendChild(line);
     }
 
-    // Draw nodes
+    // Nodes
     for (const node of nodes) {
       const color = getColor(node.category);
       const glowColor = getGlow(node.category);
       const isHovered = hovered === node.id;
+      const isFocused = searchFocusId === node.id;
       const baseRadius = Math.max(6, Math.min(20, 6 + node.connections * 2));
-      const radius = isHovered ? baseRadius * 1.3 : baseRadius;
+      const radius = (isHovered || isFocused) ? baseRadius * 1.3 : baseRadius;
 
-      // Ambient glow circle
+      // Ambient glow
       const glowCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       glowCircle.setAttribute('cx', String(node.x));
       glowCircle.setAttribute('cy', String(node.y));
-      glowCircle.setAttribute('r', String(radius * 2));
-      glowCircle.setAttribute('fill', isHovered ? glowColor : 'transparent');
-      glowCircle.setAttribute('opacity', '0.3');
+      glowCircle.setAttribute('r', String(radius * (isFocused ? 3 : 2)));
+      glowCircle.setAttribute('fill', (isHovered || isFocused) ? glowColor : 'transparent');
+      glowCircle.setAttribute('opacity', isFocused ? '0.5' : '0.3');
       g.appendChild(glowCircle);
+
+      // Pulse ring for focused node
+      if (isFocused) {
+        const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        pulse.setAttribute('cx', String(node.x));
+        pulse.setAttribute('cy', String(node.y));
+        pulse.setAttribute('r', String(radius * 2.5));
+        pulse.setAttribute('fill', 'none');
+        pulse.setAttribute('stroke', color);
+        pulse.setAttribute('stroke-width', '1.5');
+        pulse.setAttribute('opacity', '0.6');
+        const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+        animate.setAttribute('attributeName', 'r');
+        animate.setAttribute('from', String(radius * 1.5));
+        animate.setAttribute('to', String(radius * 3.5));
+        animate.setAttribute('dur', '1.5s');
+        animate.setAttribute('repeatCount', 'indefinite');
+        pulse.appendChild(animate);
+        const fadeAnimate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+        fadeAnimate.setAttribute('attributeName', 'opacity');
+        fadeAnimate.setAttribute('from', '0.6');
+        fadeAnimate.setAttribute('to', '0');
+        fadeAnimate.setAttribute('dur', '1.5s');
+        fadeAnimate.setAttribute('repeatCount', 'indefinite');
+        pulse.appendChild(fadeAnimate);
+        g.appendChild(pulse);
+      }
 
       // Node circle
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -370,14 +453,14 @@ export default function GraphPage() {
       circle.setAttribute('r', String(radius));
       circle.setAttribute('fill', `${color}22`);
       circle.setAttribute('stroke', color);
-      circle.setAttribute('stroke-width', isHovered ? '3' : '2');
+      circle.setAttribute('stroke-width', (isHovered || isFocused) ? '3' : '2');
       circle.setAttribute('filter', 'url(#glow)');
       circle.setAttribute('style', 'cursor: pointer;');
       circle.setAttribute('data-node-id', node.id);
       g.appendChild(circle);
 
       // Label on hover
-      if (isHovered) {
+      if (isHovered || isFocused) {
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', String(node.x));
         text.setAttribute('y', String(node.y - radius - 8));
@@ -387,10 +470,9 @@ export default function GraphPage() {
         text.setAttribute('font-family', 'Space Grotesk, sans-serif');
         text.setAttribute('font-weight', '600');
         text.setAttribute('filter', 'url(#glow)');
-        text.textContent = node.title.length > 30 ? node.title.slice(0, 28) + '…' : node.title;
+        text.textContent = node.title.length > 30 ? node.title.slice(0, 28) + '\u2026' : node.title;
         g.appendChild(text);
 
-        // Category label
         const catText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         catText.setAttribute('x', String(node.x));
         catText.setAttribute('y', String(node.y - radius - 22));
@@ -407,7 +489,7 @@ export default function GraphPage() {
     }
 
     svg.appendChild(g);
-  }, [hovered, dimensions]);
+  }, [hovered, dimensions, searchFocusId]);
 
   /* ---- Mouse handlers ---- */
   const screenToWorld = useCallback((sx: number, sy: number) => {
@@ -489,7 +571,6 @@ export default function GraphPage() {
       return;
     }
 
-    // Hover detection
     const world = screenToWorld(sx, sy);
     const node = findNodeAt(world.x, world.y);
     setHovered(node ? node.id : null);
@@ -500,7 +581,6 @@ export default function GraphPage() {
     if (drag.type === 'node' && drag.nodeId) {
       const node = nodesRef.current.find(n => n.id === drag.nodeId);
       if (node) {
-        // Check if it was a click (not a drag)
         node.fx = null;
         node.fy = null;
       }
@@ -536,7 +616,6 @@ export default function GraphPage() {
 
     setCamera(cam => {
       const newScale = Math.max(0.2, Math.min(5, cam.scale * scaleFactor));
-      // Zoom toward mouse position
       const wx = (sx - cam.x) / cam.scale;
       const wy = (sy - cam.y) / cam.scale;
       return {
@@ -564,8 +643,28 @@ export default function GraphPage() {
   /* ---- Reset view ---- */
   const resetView = useCallback(() => {
     setCamera({ x: 0, y: 0, scale: 1 });
-    alphaRef.current = 0.5; // reheat
+    alphaRef.current = 0.5;
   }, []);
+
+  /* ---- Toggle category ---- */
+  const toggleCategory = useCallback((cat: string) => {
+    setHiddenCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  }, []);
+
+  /* ---- Connected docs for popover ---- */
+  const connectedDocs = useMemo(() => {
+    if (!selected) return [];
+    return getConnectedDocs(selected.node.id);
+  }, [selected, getConnectedDocs]);
+
+  /* ---- Visible counts ---- */
+  const visibleCount = nodesRef.current.length;
+  const visibleEdgeCount = edgesRef.current.length;
 
   return (
     <div className="relative w-full h-screen overflow-hidden" style={{ background: '#0a0f0c' }}>
@@ -578,31 +677,88 @@ export default function GraphPage() {
             Knowledge Graph
           </h1>
           <p className="text-xs text-foreground-muted mt-0.5">
-            {nodesRef.current.length} documents · {edgesRef.current.length} connections
+            {visibleCount} documents · {visibleEdgeCount} connections
+            {(search || hiddenCategories.size > 0) && (
+              <span className="text-primary ml-1">(filtered)</span>
+            )}
           </p>
         </div>
-        <button
-          onClick={resetView}
-          className="pointer-events-auto px-3 py-1.5 rounded-lg bg-bg-secondary border border-border text-xs text-foreground-muted hover:text-foreground hover:border-primary/30 transition-all"
-        >
-          <span className="material-symbols-outlined align-middle mr-1" style={{ fontSize: 14 }}>center_focus_strong</span>
-          Reset View
-        </button>
+
+        {/* Search + Reset */}
+        <div className="pointer-events-auto flex items-center gap-2">
+          <div className="relative">
+            <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-foreground-muted" style={{ fontSize: 16 }}>search</span>
+            <input
+              type="text"
+              placeholder="Search nodes..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-8 pr-3 py-1.5 rounded-lg bg-bg-secondary/80 backdrop-blur border border-border text-xs text-foreground placeholder:text-foreground-muted/50 focus:outline-none focus:border-primary/40 w-48 transition-all"
+            />
+            {/* Search dropdown */}
+            {search.length >= 2 && searchResults.length > 0 && (
+              <div className="absolute top-full mt-1 left-0 right-0 bg-bg-secondary/95 backdrop-blur-xl border border-border rounded-lg overflow-hidden shadow-2xl max-h-64 overflow-y-auto">
+                {searchResults.map(n => (
+                  <button
+                    key={n.id}
+                    onClick={() => {
+                      focusOnNode(n.id);
+                      setSearch('');
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs hover:bg-white/5 transition-colors flex items-center gap-2"
+                  >
+                    <div
+                      className="w-2.5 h-2.5 rounded-full shrink-0 border"
+                      style={{ borderColor: getColor(n.category), background: `${getColor(n.category)}33` }}
+                    />
+                    <span className="text-foreground truncate">{n.title}</span>
+                    <span className="text-foreground-muted/50 capitalize text-[10px] ml-auto shrink-0">{n.category}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <button
+            onClick={resetView}
+            className="px-3 py-1.5 rounded-lg bg-bg-secondary border border-border text-xs text-foreground-muted hover:text-foreground hover:border-primary/30 transition-all"
+          >
+            <span className="material-symbols-outlined align-middle mr-1" style={{ fontSize: 14 }}>center_focus_strong</span>
+            Reset
+          </button>
+        </div>
       </div>
 
-      {/* Legend */}
+      {/* Legend with category toggles */}
       <div className="absolute bottom-20 md:bottom-6 left-6 z-20 bg-bg-secondary/80 backdrop-blur-md border border-border rounded-xl p-3 space-y-1.5">
         <div className="text-[10px] font-bold text-foreground-muted uppercase tracking-wider mb-2">Categories</div>
-        {Object.entries(stats).sort((a, b) => b[1] - a[1]).map(([cat, count]) => (
-          <div key={cat} className="flex items-center gap-2 text-xs">
-            <div
-              className="w-3 h-3 rounded-full border-2"
-              style={{ borderColor: getColor(cat), background: `${getColor(cat)}22` }}
-            />
-            <span className="text-foreground-muted capitalize">{cat}</span>
-            <span className="text-foreground-muted/50 ml-auto">{count}</span>
-          </div>
-        ))}
+        {Object.entries(stats).sort((a, b) => b[1] - a[1]).map(([cat, count]) => {
+          const isHidden = hiddenCategories.has(cat);
+          return (
+            <button
+              key={cat}
+              onClick={() => toggleCategory(cat)}
+              className={`flex items-center gap-2 text-xs w-full text-left transition-opacity ${isHidden ? 'opacity-30' : 'opacity-100'}`}
+            >
+              <div
+                className="w-3 h-3 rounded-full border-2 transition-all"
+                style={{
+                  borderColor: isHidden ? '#555' : getColor(cat),
+                  background: isHidden ? 'transparent' : `${getColor(cat)}22`,
+                }}
+              />
+              <span className={`capitalize ${isHidden ? 'text-foreground-muted/40 line-through' : 'text-foreground-muted'}`}>{cat}</span>
+              <span className="text-foreground-muted/50 ml-auto">{count}</span>
+            </button>
+          );
+        })}
+        {hiddenCategories.size > 0 && (
+          <button
+            onClick={() => setHiddenCategories(new Set())}
+            className="text-[10px] text-primary hover:text-primary/80 mt-1 transition-colors"
+          >
+            Show all
+          </button>
+        )}
       </div>
 
       {/* Zoom controls */}
@@ -621,13 +777,13 @@ export default function GraphPage() {
         </button>
       </div>
 
-      {/* Selected node popover */}
+      {/* Selected node popover with backlinks */}
       {selected && (
         <div
-          className="absolute z-30 bg-bg-secondary/95 backdrop-blur-xl border border-primary/20 rounded-xl p-4 shadow-2xl min-w-[240px] max-w-[320px] animate-fade-in"
+          className="absolute z-30 bg-bg-secondary/95 backdrop-blur-xl border border-primary/20 rounded-xl p-4 shadow-2xl min-w-[260px] max-w-[340px] animate-fade-in"
           style={{
-            left: Math.min(selected.screenX, dimensions.w - 340),
-            top: Math.min(selected.screenY + 10, dimensions.h - 200),
+            left: Math.min(selected.screenX, dimensions.w - 360),
+            top: Math.min(selected.screenY + 10, dimensions.h - 300),
           }}
         >
           <div className="flex items-start justify-between gap-2 mb-2">
@@ -664,6 +820,31 @@ export default function GraphPage() {
           <div className="flex items-center gap-3 text-xs text-foreground-muted mb-3">
             <span>{selected.node.connections} connections</span>
           </div>
+
+          {/* Connected documents / backlinks */}
+          {connectedDocs.length > 0 && (
+            <div className="border-t border-white/5 pt-2 mb-3">
+              <div className="text-[10px] font-bold text-foreground-muted uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <span className="material-symbols-outlined" style={{ fontSize: 12 }}>link</span>
+                Linked Documents
+              </div>
+              <div className="space-y-1 max-h-32 overflow-y-auto">
+                {connectedDocs.map(doc => (
+                  <Link
+                    key={doc.id}
+                    href={`/doc/${doc.id}`}
+                    className="flex items-center gap-1.5 text-[11px] text-foreground-muted hover:text-primary transition-colors py-0.5"
+                  >
+                    <div
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ background: getColor(doc.category) }}
+                    />
+                    <span className="truncate">{doc.title}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           <Link
             href={`/doc/${selected.node.id}`}

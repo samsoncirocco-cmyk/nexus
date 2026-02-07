@@ -1,10 +1,8 @@
 'use server';
 
-import fs from 'fs/promises';
-import path from 'path';
-import { VAULT_PATH, WRITABLE_VAULT, writablePath, readWithFallback } from '@/lib/paths';
+import { ensureVaultDir, getVaultFilePath, readJsonFile, writeJsonFile } from '@/lib/vault-io';
 
-const DEALS_FILE = path.join(VAULT_PATH, 'deals.json');
+const DEALS_FILE = getVaultFilePath('deals.json');
 
 export type ActivityType = 'call' | 'email' | 'meeting' | 'task' | 'follow-up' | 'quote' | 'proposal' | 'note';
 export type ActivityStatus = 'planned' | 'completed' | 'overdue' | 'cancelled';
@@ -50,23 +48,14 @@ export interface DealsData {
   activities: Activity[];
 }
 
-async function ensureVault() {
-  try { await fs.access(WRITABLE_VAULT); } catch { await fs.mkdir(WRITABLE_VAULT, { recursive: true }); }
-}
-
 async function readData(): Promise<DealsData> {
-  await ensureVault();
-  try {
-    const raw = await readWithFallback(DEALS_FILE, '{"deals":[],"activities":[]}');
-    return JSON.parse(raw);
-  } catch {
-    return { deals: [], activities: [] };
-  }
+  await ensureVaultDir();
+  return readJsonFile<DealsData>(DEALS_FILE, { deals: [], activities: [] });
 }
 
 async function writeData(data: DealsData): Promise<void> {
-  await ensureVault();
-  await fs.writeFile(writablePath(DEALS_FILE), JSON.stringify(data, null, 2), 'utf-8');
+  await ensureVaultDir();
+  await writeJsonFile(DEALS_FILE, data);
 }
 
 function genId(): string {

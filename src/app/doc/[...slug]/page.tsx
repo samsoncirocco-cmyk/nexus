@@ -1,8 +1,10 @@
-import { getDocument, getDocumentsByCategory, getAllDocuments, getAllTags, getCategories } from '@/lib/documents';
+import { getDocument, getDocumentsByCategory, getAllDocuments, getAllTags, getCategories, estimateReadingTime, getRelatedDocuments } from '@/lib/documents';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import DocSidebar from '@/components/DocSidebar';
+import RecentDocTracker from './RecentDocTracker';
+import DocReaderClient from './DocReaderClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -88,9 +90,13 @@ export default async function DocumentPage({ params }: PageProps) {
   const doc = await getDocument(slugPath);
   if (!doc) notFound();
 
+  const readingTime = estimateReadingTime(doc.content);
+  const relatedDocs = getRelatedDocuments(slugPath, 5);
+
   return (
     <div className="flex min-h-screen">
       <DocSidebar documents={documentsByCategory} activeSlug={slugPath} />
+      <RecentDocTracker slug={slugPath} />
 
       <div className="flex-1 w-full max-w-2xl mx-auto px-4 pt-8 pb-24">
         {/* TopAppBar */}
@@ -125,7 +131,7 @@ export default async function DocumentPage({ params }: PageProps) {
         </h1>
 
         {/* Metadata Pills */}
-        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 hide-scrollbar">
+        <div className="flex gap-2 mb-8 overflow-x-auto pb-2 hide-scrollbar flex-wrap">
           {doc.date && (
             <div className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-secondary-dark px-4 border border-white/5">
               <span className="material-symbols-outlined text-sm text-primary">calendar_today</span>
@@ -137,6 +143,13 @@ export default async function DocumentPage({ params }: PageProps) {
           <div className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary px-4">
             <span className="material-symbols-outlined text-sm text-bg-dark">science</span>
             <p className="text-bg-dark text-xs font-bold leading-normal uppercase tracking-wider capitalize">{doc.category}</p>
+          </div>
+          {/* Reading time */}
+          <div className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-secondary-dark px-4 border border-white/5">
+            <span className="material-symbols-outlined text-sm text-primary">schedule</span>
+            <p className="text-zinc-200 text-xs font-semibold leading-normal uppercase tracking-wider">
+              {readingTime} min read
+            </p>
           </div>
           {doc.tags?.map(tag => (
             <div key={tag} className="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-secondary-dark px-4 border border-white/5">
@@ -152,8 +165,40 @@ export default async function DocumentPage({ params }: PageProps) {
           </p>
         )}
 
-        {/* Markdown Content */}
-        <div className="document-content" dangerouslySetInnerHTML={{ __html: doc.htmlContent || '' }} />
+        {/* Markdown Content with Reading Progress, TOC, and Back-to-Top */}
+        <DocReaderClient htmlContent={doc.htmlContent || ''} />
+
+        {/* Related Documents / Backlinks */}
+        {relatedDocs.length > 0 && (
+          <div className="mt-16 pt-8 border-t border-white/5">
+            <h3 className="text-xs font-bold text-foreground-muted uppercase tracking-wider mb-4 flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary" style={{ fontSize: 16 }}>link</span>
+              Related Documents
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {relatedDocs.map(rel => (
+                <Link
+                  key={rel.slug}
+                  href={`/doc/${rel.slug}`}
+                  className="flex items-start gap-3 bg-card-dark border border-white/5 rounded-xl p-3 hover:border-primary/30 transition-all group"
+                >
+                  <span className="material-symbols-outlined text-foreground-muted/40 group-hover:text-primary mt-0.5 transition-colors" style={{ fontSize: 18 }}>description</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">{rel.title}</p>
+                    <p className="text-[10px] text-foreground-muted uppercase tracking-wider">{rel.category}</p>
+                    {rel.tags && rel.tags.length > 0 && (
+                      <div className="flex gap-1 mt-1">
+                        {rel.tags.slice(0, 3).map(t => (
+                          <span key={t} className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-foreground-muted/50">#{t}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <footer className="mt-16 pt-8 border-t border-white/5">

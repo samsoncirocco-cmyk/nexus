@@ -1,6 +1,7 @@
-import { getDocumentsByCategory, getAllDocuments, getCategories } from '@/lib/documents';
+import { getDocumentsByCategory, getAllDocuments, getAllTags } from '@/lib/documents';
 import Link from 'next/link';
 import DocSidebar from '@/components/DocSidebar';
+import DocBrowserClient from './DocBrowserClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,12 +18,26 @@ const categoryIcons: Record<string, string> = {
 export default function DocsIndexPage() {
   const documentsByCategory = getDocumentsByCategory();
   const allDocs = getAllDocuments();
+  const allTags = getAllTags();
+
+  // Serialize for client component
+  const serializedDocs = allDocs.map(d => ({
+    ...d,
+    lastModified: d.lastModified.toISOString(),
+  }));
+
+  const serializedByCategory = Object.fromEntries(
+    Object.entries(documentsByCategory).map(([cat, docs]) => [
+      cat,
+      docs.map(d => ({ ...d, lastModified: d.lastModified.toISOString() })),
+    ])
+  );
 
   return (
     <div className="flex min-h-screen">
       <DocSidebar documents={documentsByCategory} activeSlug="" />
 
-      <div className="flex-1 max-w-2xl mx-auto px-4 pt-8 pb-24">
+      <div className="flex-1 max-w-3xl mx-auto px-4 pt-8 pb-24">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-start justify-between gap-4">
@@ -43,35 +58,12 @@ export default function DocsIndexPage() {
           </div>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {Object.entries(documentsByCategory).map(([category, docs]) => (
-            <Link
-              key={category}
-              href={`/doc/${category}`}
-              className="group bg-card-dark border border-white/5 rounded-xl p-5 hover:border-primary/30 transition-all"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="size-10 rounded-lg bg-secondary-dark flex items-center justify-center border border-primary/20">
-                  <span className="material-symbols-outlined text-primary" style={{ fontSize: 20 }}>
-                    {categoryIcons[category] || 'folder_open'}
-                  </span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-bold capitalize group-hover:text-primary transition-colors">{category}</h3>
-                  <p className="text-[10px] text-foreground-muted uppercase tracking-wider font-bold">{docs.length} docs</p>
-                </div>
-                <span className="material-symbols-outlined text-foreground-muted group-hover:text-primary transition-colors">arrow_forward</span>
-              </div>
-              {/* Preview latest doc */}
-              {docs[0] && (
-                <p className="text-xs text-foreground-muted truncate">
-                  Latest: {docs[0].title}
-                </p>
-              )}
-            </Link>
-          ))}
-        </div>
+        <DocBrowserClient
+          documentsByCategory={serializedByCategory}
+          allDocs={serializedDocs}
+          allTags={allTags}
+          categoryIcons={categoryIcons}
+        />
       </div>
     </div>
   );

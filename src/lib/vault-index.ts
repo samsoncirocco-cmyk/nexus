@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { getVaultPath } from '@/lib/vault-io';
 
-const vaultPath = path.join(process.cwd(), 'vault');
+const vaultPath = getVaultPath();
+const MAX_CONTEXT_CHARS = Number(process.env.VAULT_CONTEXT_CHAR_LIMIT || 200000);
 
 export interface VaultDoc {
   filePath: string;
@@ -14,6 +16,8 @@ export interface VaultDoc {
 }
 
 let cachedDocs: VaultDoc[] | null = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 5000;
 
 function scanVaultRecursive(dir: string): string[] {
   const files: string[] = [];
@@ -32,7 +36,9 @@ function scanVaultRecursive(dir: string): string[] {
 }
 
 export function loadVaultDocs(forceReload = false): VaultDoc[] {
-  if (cachedDocs && !forceReload) return cachedDocs;
+  if (cachedDocs && !forceReload && Date.now() - cacheTimestamp < CACHE_TTL_MS) {
+    return cachedDocs;
+  }
 
   const files = scanVaultRecursive(vaultPath);
   cachedDocs = files.map((filePath) => {
@@ -52,6 +58,7 @@ export function loadVaultDocs(forceReload = false): VaultDoc[] {
     };
   });
 
+  cacheTimestamp = Date.now();
   return cachedDocs;
 }
 
@@ -59,12 +66,17 @@ export function buildVaultContext(): { context: string; docNames: string[] } {
   const docs = loadVaultDocs();
   const docNames: string[] = [];
   const parts: string[] = [];
+  let currentLength = 0;
 
   for (const doc of docs) {
+    const section = `--- DOCUMENT: ${doc.filePath} ---\nTitle: ${doc.title}\nCategory: ${doc.category}\nTags: ${doc.tags.join(', ') || 'none'}\n\n${doc.content}\n`;
+    if (currentLength + section.length > MAX_CONTEXT_CHARS) {
+      parts.push('\n--- CONTEXT TRUNCATED: vault exceeded context limit ---\n');
+      break;
+    }
     docNames.push(doc.filePath);
-    parts.push(
-      `--- DOCUMENT: ${doc.filePath} ---\nTitle: ${doc.title}\nCategory: ${doc.category}\nTags: ${doc.tags.join(', ') || 'none'}\n\n${doc.content}\n`
-    );
+    parts.push(section);
+    currentLength += section.length;
   }
 
   return { context: parts.join('\n'), docNames };

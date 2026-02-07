@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import NavShell from "@/components/NavShell";
+import CommandPalette from "@/components/CommandPalette";
+import NavigationProgress from "@/components/NavigationProgress";
 import { NotificationProvider } from "@/components/NotificationBanner";
 import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 import GlobalSearchShortcut from "@/components/GlobalSearchShortcut";
@@ -43,7 +45,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
         <link
@@ -53,17 +55,22 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className="antialiased overflow-x-hidden font-display">
+      <body className="antialiased overflow-x-hidden font-body">
         <NotificationProvider>
+          <NavigationProgress />
+          <CommandPalette />
           <NavShell>{children}</NavShell>
           <ServiceWorkerRegistrar />
           <GlobalSearchShortcut />
         
-          {/* Background ambient glow effects (from designs) */}
-        <div className="fixed inset-0 pointer-events-none -z-10 opacity-40">
+          {/* Background ambient glow effects */}
+        <div className="fixed inset-0 pointer-events-none -z-10 opacity-40" style={{ animation: 'gradientShift 20s ease-in-out infinite', backgroundSize: '200% 200%' }}>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_35%,_#fade290a_0%,_transparent_20%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_65%,_#15473315_0%,_transparent_25%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_90%,_#fade2906_0%,_transparent_30%)]" />
         </div>
+        {/* Grain overlay */}
+        <div className="fixed inset-0 pointer-events-none z-[9999] grain-overlay" />
         </NotificationProvider>
       </body>
     </html>

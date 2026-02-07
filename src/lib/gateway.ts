@@ -10,16 +10,14 @@
 
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import fs from 'fs/promises';
-import path from 'path';
+import { getVaultFilePath, readJsonFile } from '@/lib/vault-io';
 
 const execAsync = promisify(exec);
 
-const GATEWAY_URL = process.env.OPENCLAW_GATEWAY_URL || '';
-const GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN || '';
+const GATEWAY_URL = process.env.OPENCLAW_GATEWAY_URL || 'http://localhost:18789';
+const GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN;
 
-const VAULT_PATH = path.join(process.cwd(), 'vault');
-const AGENTS_FILE = path.join(VAULT_PATH, 'agents.json');
+const AGENTS_FILE = getVaultFilePath('agents.json');
 
 // ─── Types ────────────────────────────────────────────────
 
@@ -105,6 +103,8 @@ async function runClawCommand(command: string, timeoutMs = 30000): Promise<strin
       timeout: timeoutMs,
       env: {
         ...process.env,
+        ...(GATEWAY_URL ? { OPENCLAW_GATEWAY_URL: GATEWAY_URL } : {}),
+        ...(GATEWAY_TOKEN ? { OPENCLAW_GATEWAY_TOKEN: GATEWAY_TOKEN } : {}),
         PATH: `${process.env.HOME}/.local/bin:${process.env.HOME}/.openclaw/bin:/usr/local/bin:/usr/bin:/bin`,
         HOME: process.env.HOME || '/home/samson',
       },
@@ -130,12 +130,7 @@ interface LocalAgent {
 }
 
 async function readLocalAgents(): Promise<LocalAgent[]> {
-  try {
-    const data = await fs.readFile(AGENTS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
+  return readJsonFile<LocalAgent[]>(AGENTS_FILE, []);
 }
 
 function localAgentsToSessions(agents: LocalAgent[]): GatewaySession[] {
@@ -309,8 +304,7 @@ export async function getEnrichedSessions(): Promise<{
   }
 
   try {
-    // Fetch active sessions (last 60 minutes for good coverage)
-    const raw = await runClawCommand('openclaw sessions --active 60 --json');
+    const raw = await runClawCommand('openclaw sessions --json');
     const data: GatewaySessionsResponse = JSON.parse(raw);
 
     const enriched: EnrichedSession[] = data.sessions.map((s) => {
@@ -318,14 +312,6 @@ export async function getEnrichedSessions(): Promise<{
       const localMatch = localAgents.find(
         (a) => s.key.includes(a.id) || s.sessionId === a.id
       );
-
-      const tokens = {
-        input: s.inputTokens || 0,
-        output: s.outputTokens || 0,
-        total: s.totalTokens || 0,
-      };
-
-      const cost = tokens.total > 0 ? calculateCost(tokens, s.model || '') : undefined;
 
       return {
         id: s.sessionId,
@@ -336,9 +322,12 @@ export async function getEnrichedSessions(): Promise<{
         startedAt: localMatch?.startedAt || new Date(s.updatedAt - s.ageMs).toISOString(),
         lastUpdate: new Date(s.updatedAt).toISOString(),
         summary: localMatch?.summary || `Session ${s.key}`,
-        tokens,
+        tokens: {
+          input: s.inputTokens || 0,
+          output: s.outputTokens || 0,
+          total: s.totalTokens || 0,
+        },
         contextTokens: s.contextTokens || 0,
-        cost,
         source: 'gateway' as const,
       };
     });
@@ -379,50 +368,20 @@ export interface EnrichedSession {
     total: number;
   };
   contextTokens: number;
-  cost?: number; // Estimated cost in USD
   source: 'gateway' | 'local';
 }
 
 // ─── Utilities ────────────────────────────────────────────
 
 function parseSessionLabel(key: string): string {
-  // "agent:main:main" → "Main Agent"
-  // "agent:main:subagent:uuid" → "Sub-Agent"  
-  // "agent:main:cron:uuid" → "Cron Job"
+  // "agent:main:main" → "main"
+  // "agent:main:subagent:uuid" → "subagent"  
+  // "agent:main:cron:uuid" → "cron job"
   const parts = key.split(':');
   if (parts.includes('subagent')) return 'Sub-Agent';
   if (parts.includes('cron')) return 'Cron Job';
   if (parts[parts.length - 1] === 'main') return 'Main Agent';
   return parts[parts.length - 1] || key;
-}
-
-/**
- * Calculate cost estimate based on token usage and model
- */
-function calculateCost(tokens: { input: number; output: number }, model: string): number {
-  // Pricing per 1M tokens (approximate, Feb 2026)
-  const pricing: Record<string, { input: number; output: number }> = {
-    'claude-opus-4': { input: 15, output: 75 },
-    'claude-opus-4-6': { input: 15, output: 75 },
-    'claude-sonnet-4': { input: 3, output: 15 },
-    'claude-sonnet-4-5': { input: 3, output: 15 },
-    'claude-sonnet-4-5-20250929': { input: 3, output: 15 },
-    'claude-haiku-4': { input: 0.25, output: 1.25 },
-  };
-
-  // Find matching model pricing
-  let modelPricing = { input: 3, output: 15 }; // Default to Sonnet pricing
-  for (const [modelKey, price] of Object.entries(pricing)) {
-    if (model.includes(modelKey)) {
-      modelPricing = price;
-      break;
-    }
-  }
-
-  const inputCost = (tokens.input / 1_000_000) * modelPricing.input;
-  const outputCost = (tokens.output / 1_000_000) * modelPricing.output;
-  
-  return inputCost + outputCost;
 }
 
 function inferSessionStatus(

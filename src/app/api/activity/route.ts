@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-import { VAULT_PATH, writablePath, readWithFallback } from '@/lib/paths';
+import { getVaultFilePath, readJsonFile, writeJsonFile } from '@/lib/vault-io';
 
-const ACTIVITY_FILE = path.join(VAULT_PATH, 'activity.json');
+const ACTIVITY_FILE = getVaultFilePath('activity.json');
 
 export async function GET() {
   try {
-    const data = await readWithFallback(ACTIVITY_FILE, '[]');
-    const entries = JSON.parse(data);
+    const entries = await readJsonFile<any[]>(ACTIVITY_FILE, []);
     entries.sort((a: { timestamp: string }, b: { timestamp: string }) =>
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
@@ -22,13 +19,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     
-    let entries = [];
-    try {
-      const data = await readWithFallback(ACTIVITY_FILE, '[]');
-      entries = JSON.parse(data);
-    } catch {
-      // File doesn't exist yet
-    }
+    const entries = await readJsonFile<any[]>(ACTIVITY_FILE, []);
 
     const newEntry = {
       ...body,
@@ -37,7 +28,7 @@ export async function POST(req: NextRequest) {
     };
     
     entries.push(newEntry);
-    await fs.writeFile(writablePath(ACTIVITY_FILE), JSON.stringify(entries, null, 2), 'utf-8');
+    await writeJsonFile(ACTIVITY_FILE, entries);
     
     return NextResponse.json(newEntry, { status: 201 });
   } catch (error) {
