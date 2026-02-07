@@ -274,5 +274,16 @@
     "output": [],
     "tags": [],
     "status": "done"
+  },
+  {
+    "id": "e03d1934",
+    "timestamp": "2026-02-07T20:40:45Z",
+    "agent": "pwa",
+    "type": "deployed",
+    "title": "\ud83d\udcf1 PWA + Notifications",
+    "summary": "Second Brain is now installable on mobile with offline support and notification banners",
+    "output": [],
+    "tags": [],
+    "status": "done"
   }
 ]

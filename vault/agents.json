@@ -83,5 +83,14 @@
     "startedAt": "2026-02-07T20:37:32Z",
     "lastUpdate": "2026-02-07T20:37:32Z",
     "summary": "Agent performance, task flow, activity timeline at brain.6eyes.dev/analytics"
+  },
+  {
+    "id": "pwa",
+    "label": "PWA + Notifications",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T20:41:00Z",
+    "lastUpdate": "2026-02-07T20:41:00Z",
+    "summary": "Installable on mobile, offline support, notification banners"
   }
 ]
