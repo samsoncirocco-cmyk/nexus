@@ -45,6 +45,11 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
     return pathname.startsWith(href);
   };
 
+  // Don't render shell on login page
+  if (pathname === '/login') {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex min-h-screen">
       {/* ==================== DESKTOP SIDEBAR ==================== */}

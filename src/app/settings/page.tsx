@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Config {
   profile: { name: string; email: string; timezone: string };
@@ -44,6 +45,18 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState({ email: false, browser: true, telegram: true });
   const [toast, setToast] = useState<string | null>(null);
+  const router = useRouter();
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await fetch('/api/auth', { method: 'DELETE' });
+      router.push('/login');
+      router.refresh();
+    } catch {
+      // Force redirect even on error
+      window.location.href = '/login';
+    }
+  }, [router]);
 
   useEffect(() => {
     Promise.all([

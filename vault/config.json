@@ -1,4 +1,8 @@
 {
+  "auth": {
+    "pin": "3437",
+    "sessionSecret": "brain-session-secret-2026"
+  },
   "profile": {
     "name": "Samson Cirocco",
     "email": "samson.cirocco@gmail.com",
