@@ -6,10 +6,10 @@ import { useState, useEffect } from 'react';
 
 const NAV_ITEMS = [
   { href: '/', icon: 'home', label: 'Home', fill: true },
-  { href: '/tasks', icon: 'checklist', label: 'Tasks' },
-  { href: '/chat', icon: 'chat_bubble', label: 'Chat' },
-  { href: '/commands', icon: 'bolt', label: 'Commands' },
-  { href: '/agents', icon: 'smart_toy', label: 'Agents' },
+  { href: '/tasks', icon: 'checklist', label: 'Tasks', fill: true },
+  { href: '/chat', icon: 'chat_bubble', label: 'Chat', fill: true },
+  { href: '/commands', icon: 'bolt', label: 'Commands', fill: true },
+  { href: '/agents', icon: 'smart_toy', label: 'Agents', fill: true },
 ];
 
 const SIDEBAR_LINKS = [
@@ -121,7 +121,7 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
         <div className="flex items-center justify-between px-6 pt-3 pb-safe max-w-md mx-auto">
           {NAV_ITEMS.map((item, idx) => {
             const active = isActive(item.href);
-            // Center "Brain" button
+            // Center elevated button
             if (idx === 2) {
               return (
                 <Link key={item.href} href={item.href} className="flex flex-col items-center -mt-8">
@@ -134,11 +134,11 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
                       className={`material-symbols-outlined font-bold ${active ? 'text-bg-dark' : 'text-primary'}`}
                       style={{ fontSize: 28 }}
                     >
-                      chat_bubble
+                      {item.icon}
                     </span>
                   </div>
                   <span className={`text-[10px] font-bold uppercase tracking-tighter mt-1 ${active ? 'text-primary' : 'text-foreground-muted'}`}>
-                    Chat
+                    {item.label}
                   </span>
                 </Link>
               );

@@ -45,7 +45,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className="antialiased overflow-x-hidden font-[--font-display]">
+      <body className="antialiased overflow-x-hidden font-display">
         <NotificationProvider>
           <NavShell>{children}</NavShell>
           <ServiceWorkerRegistrar />

@@ -210,7 +210,7 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-screen max-h-screen">
       {/* Header */}
-      <div className="shrink-0 border-b border-border-subtle px-4 md:px-6 py-3">
+      <div className="shrink-0 border-b border-border-subtle bg-bg-dark/80 backdrop-blur-md px-4 md:px-6 py-3">
         <div className="flex items-center gap-3">
           <div className="size-10 bg-secondary-dark/60 border border-primary/20 rounded-full flex items-center justify-center">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 22 }}>
@@ -220,7 +220,7 @@ export default function ChatPage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h1 className="text-base font-bold text-foreground">Paul</h1>
-              <div className="size-2 rounded-full bg-green-500 animate-pulse" />
+              <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
             <p className="text-[11px] text-foreground-muted">
               Your AI assistant · Second Brain

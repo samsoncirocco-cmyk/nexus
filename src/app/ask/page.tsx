@@ -93,7 +93,7 @@ export default function AskPage() {
   return (
     <div className="flex flex-col h-screen max-h-screen">
       {/* Header */}
-      <div className="shrink-0 border-b border-border-subtle px-6 py-4">
+      <div className="shrink-0 border-b border-border-subtle bg-bg-dark/80 backdrop-blur-md px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="size-10 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-center">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>
@@ -107,7 +107,7 @@ export default function AskPage() {
             </p>
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <div className="size-2 rounded-full bg-green-500 animate-pulse" />
+            <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-xs text-foreground-muted">Gemini 2.0 Flash</span>
           </div>
         </div>
@@ -231,7 +231,7 @@ export default function AskPage() {
       </div>
 
       {/* Input */}
-      <div className="shrink-0 border-t border-border-subtle px-4 md:px-6 py-4 bg-bg-dark/80 backdrop-blur-xl">
+      <div className="shrink-0 border-t border-border-subtle px-4 md:px-6 py-4 bg-bg-dark/90 backdrop-blur-xl">
         <form onSubmit={handleSubmit} className="flex items-center gap-3 max-w-4xl mx-auto">
           <div className="flex-1 relative">
             <input

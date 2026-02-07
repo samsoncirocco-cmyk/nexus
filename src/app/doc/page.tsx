@@ -26,7 +26,7 @@ export default function DocsIndexPage() {
         {/* Header */}
         <div className="mb-8">
           <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Knowledge Base</span>
-          <h1 className="text-3xl font-bold tracking-tight mt-1">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
             Documents <span className="text-primary">.</span>
           </h1>
           <p className="text-foreground-muted text-sm mt-2">{allDocs.length} documents across {Object.keys(documentsByCategory).length} categories</p>

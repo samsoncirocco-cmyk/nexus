@@ -109,6 +109,7 @@ export default function SettingsPage() {
           <span className="material-symbols-outlined text-primary" style={{ fontSize: 26 }}>settings</span>
         </div>
         <div>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Configuration</span>
           <h1 className="text-2xl font-bold text-foreground tracking-tight">Settings</h1>
           <p className="text-foreground-muted text-sm">Configure your Second Brain</p>
         </div>

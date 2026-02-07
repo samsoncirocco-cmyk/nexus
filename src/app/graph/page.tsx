@@ -566,8 +566,9 @@ export default function GraphPage() {
   return (
     <div className="relative w-full h-screen overflow-hidden" style={{ background: '#0a0f0c' }}>
       {/* Header */}
-      <div className="absolute top-0 left-0 right-0 z-20 px-6 py-4 flex items-center justify-between pointer-events-none">
+      <div className="absolute top-0 left-0 right-0 z-20 px-6 py-4 flex items-center justify-between pointer-events-none bg-gradient-to-b from-bg-dark/80 to-transparent">
         <div className="pointer-events-auto">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Interactive</span>
           <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>hub</span>
             Knowledge Graph
