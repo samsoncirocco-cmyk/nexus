@@ -14,6 +14,7 @@ const NAV_ITEMS = [
 
 const SIDEBAR_LINKS = [
   { href: '/', icon: 'home', label: 'Dashboard' },
+  { href: '/commands', icon: 'bolt', label: 'Commands' },
   { href: '/ask', icon: 'neurology', label: 'Ask Brain' },
   { href: '/tasks', icon: 'checklist', label: 'Task Board' },
   { href: '/activity', icon: 'data_usage', label: 'Activity Feed' },

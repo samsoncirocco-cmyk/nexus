@@ -2,8 +2,10 @@ import { getDocumentsByCategory, getAllDocuments } from '@/lib/documents';
 import { getActivity } from '@/app/actions/activity';
 import { getTasks } from '@/app/actions/tasks';
 import { getDeals } from '@/app/actions/deals';
+import { getCommands } from '@/app/actions/commands';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
+import CommandBar from '@/components/CommandBar';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,9 +22,11 @@ export default async function Home() {
   const activity = await getActivity();
   const tasks = await getTasks();
   const deals = await getDeals();
+  const commands = await getCommands();
 
   const activeTasks = tasks.filter(t => t.column !== 'Done').length;
   const activeDeals = deals.filter(d => d.stage !== 'Closed Won' && d.stage !== 'Closed Lost').length;
+  const pendingCommands = commands.filter(c => c.status === 'pending').length;
   const recentActivity = activity.slice(0, 4);
 
   const activityIcons: Record<string, string> = {
@@ -30,9 +34,8 @@ export default async function Home() {
     started: 'sync',
     alert: 'warning',
     note: 'draw',
+    command: 'bolt',
   };
-
-  const docGrowthPercent = Math.min(99, Math.round(allDocs.length * 1.2));
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -55,8 +58,20 @@ export default async function Home() {
         </div>
       </div>
 
+      {/* Command Bar Card — prominent at the top */}
+      <div className="px-6 mt-4 mb-2">
+        <CommandBar placeholder="What should Paul work on?" variant="full" />
+      </div>
+
       {/* Quick Stats Cards */}
       <div className="flex gap-3 p-6 overflow-x-auto hide-scrollbar">
+        <Link href="/commands" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+          <span className="material-symbols-outlined text-primary" style={{ fontSize: 24, fontVariationSettings: "'FILL' 1" }}>bolt</span>
+          <div>
+            <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Commands</p>
+            <p className="text-white tracking-tight text-3xl font-bold">{pendingCommands}</p>
+          </div>
+        </Link>
         <Link href="/tasks" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
           <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>task_alt</span>
           <div>
@@ -69,13 +84,6 @@ export default async function Home() {
           <div>
             <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Deals</p>
             <p className="text-white tracking-tight text-3xl font-bold">{activeDeals}</p>
-          </div>
-        </Link>
-        <Link href="/doc" className="flex min-w-[120px] flex-1 flex-col gap-3 rounded-xl p-5 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: 24 }}>description</span>
-          <div>
-            <p className="text-primary/60 text-xs font-medium uppercase tracking-wider">Docs</p>
-            <p className="text-white tracking-tight text-3xl font-bold">{allDocs.length}</p>
           </div>
         </Link>
       </div>
@@ -111,15 +119,30 @@ export default async function Home() {
           recentActivity.map((entry) => (
             <div
               key={entry.id}
-              className="flex items-center gap-4 bg-secondary-dark/40 border border-primary/5 px-4 py-4 rounded-xl"
+              className={`flex items-center gap-4 border px-4 py-4 rounded-xl ${
+                entry.type === 'command'
+                  ? 'bg-primary/5 border-primary/20'
+                  : 'bg-secondary-dark/40 border-primary/5'
+              }`}
             >
-              <div className="text-primary flex items-center justify-center rounded-lg bg-secondary-dark shrink-0 size-11 border border-primary/20">
-                <span className="material-symbols-outlined">
+              <div className={`flex items-center justify-center rounded-lg shrink-0 size-11 border ${
+                entry.type === 'command'
+                  ? 'text-primary bg-primary/15 border-primary/30'
+                  : 'text-primary bg-secondary-dark border-primary/20'
+              }`}>
+                <span className="material-symbols-outlined" style={entry.type === 'command' ? { fontVariationSettings: "'FILL' 1" } : undefined}>
                   {activityIcons[entry.type] || 'info'}
                 </span>
               </div>
               <div className="flex flex-col justify-center flex-1 min-w-0">
-                <p className="text-white text-sm font-semibold leading-tight truncate">{entry.title}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-white text-sm font-semibold leading-tight truncate">{entry.title}</p>
+                  {entry.type === 'command' && (
+                    <span className="shrink-0 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[9px] font-bold tracking-wider border border-primary/20">
+                      CMD
+                    </span>
+                  )}
+                </div>
                 <p className="text-primary/50 text-xs font-normal leading-normal truncate">{entry.summary}</p>
               </div>
               <div className="shrink-0">

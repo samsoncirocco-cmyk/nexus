@@ -10,7 +10,7 @@ export interface ActivityEntry {
   id: string;
   timestamp: string;
   agent: string;
-  type: 'completed' | 'started' | 'alert' | 'note';
+  type: 'completed' | 'started' | 'alert' | 'note' | 'command' | string;
   title: string;
   summary: string;
   output?: string[];

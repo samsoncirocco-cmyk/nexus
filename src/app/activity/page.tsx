@@ -1,11 +1,18 @@
 import { getActivity } from '@/app/actions/activity';
 import { format, formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
+import CommandBar from '@/components/CommandBar';
 
 export const dynamic = 'force-dynamic';
 
-function getAgentBadge(agent: string): { label: string; borderColor: string; dotColor: string; bgColor: string; textColor: string } {
+function getAgentBadge(agent: string, type?: string): { label: string; borderColor: string; dotColor: string; bgColor: string; textColor: string } {
+  // Command type gets special gold badge
+  if (type === 'command') {
+    return { label: 'COMMAND', borderColor: 'border-primary', dotColor: 'bg-primary', bgColor: 'bg-primary/15', textColor: 'text-primary' };
+  }
   const a = agent.toLowerCase();
+  if (a.includes('samson'))
+    return { label: 'SAMSON', borderColor: 'border-primary', dotColor: 'bg-primary', bgColor: 'bg-primary/15', textColor: 'text-primary' };
   if (a.includes('workhorse') || a.includes('paul'))
     return { label: a.includes('paul') ? 'PAUL' : 'WORKHORSE', borderColor: 'border-primary', dotColor: 'bg-primary', bgColor: 'bg-secondary-dark', textColor: 'text-emerald-400' };
   if (a.includes('system'))
@@ -19,7 +26,22 @@ function getActionVerb(type: string): string {
     case 'started': return 'INITIATED';
     case 'alert': return 'FLAGGED';
     case 'note': return 'LOGGED';
+    case 'command': return 'COMMANDED';
     default: return 'PROCESSED';
+  }
+}
+
+function getCommandStatusBadge(status?: string) {
+  if (!status) return null;
+  switch (status) {
+    case 'pending':
+      return { label: 'PENDING', cls: 'bg-primary/15 text-primary border-primary/30' };
+    case 'processing':
+      return { label: 'PROCESSING', cls: 'bg-blue-500/15 text-blue-400 border-blue-500/30' };
+    case 'done':
+      return { label: 'DONE', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' };
+    default:
+      return null;
   }
 }
 
@@ -30,17 +52,23 @@ export default async function ActivityPage() {
     <div className="w-full max-w-2xl mx-auto flex flex-col min-h-screen">
       {/* Top App Bar */}
       <header className="sticky top-0 z-20 bg-bg-dark/80 backdrop-blur-md pt-6 md:pt-8 pb-4 px-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Protocol Active</span>
             <h1 className="text-2xl font-bold tracking-tight">Activity Feed</h1>
           </div>
           <Link
-            href="/api/activity"
-            className="w-10 h-10 rounded-full bg-card-dark flex items-center justify-center hover:bg-secondary-dark transition-colors"
+            href="/commands"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-colors"
           >
-            <span className="material-symbols-outlined text-xl">search</span>
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: 16 }}>bolt</span>
+            <span className="text-primary text-xs font-bold">Commands</span>
           </Link>
+        </div>
+
+        {/* Command Bar */}
+        <div className="mb-4">
+          <CommandBar placeholder="Give Paul a command..." variant="compact" />
         </div>
 
         {/* Filter Tabs */}
@@ -71,25 +99,35 @@ export default async function ActivityPage() {
 
             <div className="space-y-10">
               {activity.map((entry) => {
-                const badge = getAgentBadge(entry.agent);
+                const badge = getAgentBadge(entry.agent, entry.type);
+                const isCommand = entry.type === 'command';
+                const cmdStatus = isCommand ? getCommandStatusBadge(entry.status) : null;
+
                 return (
                   <div key={entry.id} className="relative pl-10">
                     {/* Timeline Node */}
                     <div className={`absolute left-0 top-1.5 w-[24px] h-[24px] rounded-full bg-bg-dark ${badge.borderColor} border-2 flex items-center justify-center z-10`}>
-                      {entry.type === 'completed' ? (
+                      {isCommand ? (
+                        <span className="material-symbols-outlined text-primary" style={{ fontSize: 14, fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                      ) : entry.type === 'completed' ? (
                         <span className="material-symbols-outlined text-emerald-500" style={{ fontSize: 14 }}>check_circle</span>
                       ) : (
                         <div className={`w-2 h-2 rounded-full ${badge.dotColor} ${entry.type === 'started' ? 'animate-pulse' : ''}`} />
                       )}
                     </div>
 
-                    <div className="flex flex-col gap-2">
+                    <div className={`flex flex-col gap-2 ${isCommand ? 'bg-primary/5 -mx-3 px-3 py-3 rounded-xl border border-primary/10' : ''}`}>
                       {/* Agent Badge + Time */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className={`${badge.bgColor} px-3 py-0.5 rounded-full text-[10px] font-bold ${badge.textColor} tracking-wider`}>
+                          <span className={`${badge.bgColor} px-3 py-0.5 rounded-full text-[10px] font-bold ${badge.textColor} tracking-wider border ${isCommand ? 'border-primary/30' : 'border-transparent'}`}>
                             {badge.label}
                           </span>
+                          {cmdStatus && (
+                            <span className={`${cmdStatus.cls} px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider border`}>
+                              {cmdStatus.label}
+                            </span>
+                          )}
                           <span className="text-xs text-foreground-muted font-medium" suppressHydrationWarning>
                             {(() => { try { return format(new Date(entry.timestamp), 'HH:mm'); } catch { return ''; } })()}
                           </span>
@@ -105,7 +143,7 @@ export default async function ActivityPage() {
                       </h3>
 
                       {/* Summary */}
-                      <p className="text-base leading-relaxed text-zinc-200">
+                      <p className={`text-base leading-relaxed ${isCommand ? 'text-primary/90 font-medium' : 'text-zinc-200'}`}>
                         {entry.summary || entry.title}
                       </p>
 
