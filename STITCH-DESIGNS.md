@@ -33,7 +33,7 @@ All at `/home/samson/stitch-designs/`:
 5. Dark theme only (no light mode toggle needed)
 6. Mobile-first, responsive
 7. Space Grotesk font from Google Fonts
-8. Deploy command: `npx vercel --token Ky2iLb5fYUa4hXPFtEal6WgT --scope team_J8oAAeW3ck0OxWkCMRALUdTE --prod --yes`
+8. Deploy command: `npx vercel --token $VERCEL_TOKEN --scope team_J8oAAeW3ck0OxWkCMRALUdTE --prod --yes`
 
 ## Pages to Build
 - `/` — Home dashboard (home-screen.html)

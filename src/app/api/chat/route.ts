@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { getContext, getRecentEvents } from '@/app/actions/datalake';
 
 const VAULT_DIR = join(process.cwd(), 'vault');
 const QUEUE_PATH = join(VAULT_DIR, 'chat-queue.json');
@@ -12,6 +14,12 @@ interface ChatMessage {
   from: 'user' | 'paul';
   timestamp: string;
   status: 'sent' | 'delivered' | 'read';
+}
+
+interface ContextMetadata {
+  emailCount: number;
+  calendarCount: number;
+  taskCount: number;
 }
 
 function readJSON(path: string): ChatMessage[] {
@@ -30,6 +38,107 @@ function writeJSON(path: string, data: ChatMessage[]) {
 
 function generateId(): string {
   return `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+async function buildSystemPrompt(): Promise<{ prompt: string; metadata: ContextMetadata }> {
+  const now = new Date();
+  const timeStr = now.toLocaleString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  });
+
+  // Fetch context from BigQuery
+  const [context, events] = await Promise.all([
+    getContext(),
+    getRecentEvents(undefined, 24),
+  ]);
+
+  const metadata: ContextMetadata = {
+    emailCount: context.recentEmails?.length || 0,
+    calendarCount: 0,
+    taskCount: context.openTasks?.length || 0,
+  };
+
+  // Build the system prompt
+  let prompt = `You are Paul, Samson's AI assistant. You're direct, practical, and get things done. You have opinions, not corporate fluff.
+
+CURRENT TIME: ${timeStr}
+
+=== SAMSON'S CURRENT STATE ===
+
+`;
+
+  // Recent emails
+  if (context.recentEmails && context.recentEmails.length > 0) {
+    prompt += `📧 RECENT EMAILS (last ${context.recentEmails.length}):\n`;
+    context.recentEmails.forEach((email: any) => {
+      const subject = email.subject || '(no subject)';
+      const sender = email.sender || email.from || 'Unknown';
+      const timestamp = email.timestamp || email.sent_at;
+      prompt += `  • "${subject}" from ${sender}${timestamp ? ` (${new Date(timestamp).toLocaleDateString()})` : ''}\n`;
+    });
+    prompt += '\n';
+  }
+
+  // Calendar events (from recent events)
+  const calendarEvents = events.events.filter((e: any) => 
+    e.source === 'calendar' || e.event_type === 'calendar'
+  );
+  if (calendarEvents.length > 0) {
+    metadata.calendarCount = calendarEvents.length;
+    prompt += `📅 UPCOMING CALENDAR (next 24h):\n`;
+    calendarEvents.slice(0, 10).forEach((event: any) => {
+      const title = event.title || event.subject || 'Untitled';
+      const start = event.start_time || event.timestamp;
+      prompt += `  • ${title}${start ? ` at ${new Date(start).toLocaleString()}` : ''}\n`;
+    });
+    prompt += '\n';
+  }
+
+  // Open tasks
+  if (context.openTasks && context.openTasks.length > 0) {
+    prompt += `✅ OPEN TASKS (${context.openTasks.length}):\n`;
+    context.openTasks.slice(0, 15).forEach((task: any) => {
+      const title = task.title || task.task || 'Untitled';
+      const priority = task.priority ? ` [${task.priority}]` : '';
+      prompt += `  • ${title}${priority}\n`;
+    });
+    prompt += '\n';
+  }
+
+  // Recent analyses
+  if (context.recentAnalyses && context.recentAnalyses.length > 0) {
+    prompt += `🔍 RECENT AGENT ACTIVITY:\n`;
+    context.recentAnalyses.slice(0, 5).forEach((analysis: any) => {
+      const topic = analysis.topic || analysis.title || 'Analysis';
+      const timestamp = analysis.timestamp || analysis.created_at;
+      prompt += `  • ${topic}${timestamp ? ` (${new Date(timestamp).toLocaleDateString()})` : ''}\n`;
+    });
+    prompt += '\n';
+  }
+
+  // Contacts
+  if (context.contacts && context.contacts.length > 0) {
+    prompt += `👥 KEY CONTACTS: ${context.contacts.map((c: any) => c.name || c.email).join(', ')}\n\n`;
+  }
+
+  prompt += `=== YOUR ROLE ===
+
+- You have full visibility into Samson's current state (emails, tasks, calendar)
+- You can reference specific emails, events, or tasks by name
+- Be proactive: if you notice something needs attention, mention it
+- Keep responses concise and actionable
+- When you don't know something, say so directly
+- You're a partner, not a servant — have opinions and push back when needed
+
+Answer questions naturally, referencing the context above when relevant.`;
+
+  return { prompt, metadata };
 }
 
 // GET — return merged chat history (queue + responses), sorted by timestamp
@@ -65,13 +174,21 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST — add user message, get instant AI response via /api/ask, store both
+// POST — context-aware conversational chat with Gemini 2.0 Flash
 export async function POST(request: NextRequest) {
   try {
-    const { text } = await request.json();
+    const { text, messages: conversationHistory } = await request.json();
 
     if (!text || typeof text !== 'string' || !text.trim()) {
       return NextResponse.json({ error: 'Missing "text" field' }, { status: 400 });
+    }
+
+    const apiKey = process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'GOOGLE_API_KEY environment variable not set' },
+        { status: 500 }
+      );
     }
 
     const now = new Date().toISOString();
@@ -88,47 +205,56 @@ export async function POST(request: NextRequest) {
     queue.push(userMessage);
     writeJSON(QUEUE_PATH, queue);
 
-    // Call /api/ask for instant AI response
-    let aiResponse: ChatMessage;
-    try {
-      const origin = request.nextUrl.origin;
-      const askRes = await fetch(`${origin}/api/ask`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: text.trim() }),
+    // Build system prompt with current context
+    const { prompt: systemPrompt, metadata } = await buildSystemPrompt();
+
+    // Initialize Gemini
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+
+    // Build conversation history for Gemini
+    const history: Array<{ role: 'user' | 'model'; parts: string }> = [];
+    
+    if (conversationHistory && Array.isArray(conversationHistory)) {
+      // Take last 10 messages to avoid token limits
+      const recentHistory = conversationHistory.slice(-10);
+      recentHistory.forEach((msg: ChatMessage) => {
+        history.push({
+          role: msg.from === 'user' ? 'user' : 'model',
+          parts: msg.text,
+        });
       });
-
-      const askData = await askRes.json();
-
-      if (askData.error) {
-        aiResponse = {
-          id: generateId(),
-          text: `I couldn't process that right now: ${askData.error}`,
-          from: 'paul',
-          timestamp: new Date().toISOString(),
-          status: 'delivered',
-        };
-      } else {
-        const sources = askData.sources?.length
-          ? `\n\n📎 Sources: ${askData.sources.map((s: string) => `[${s}]`).join(', ')}`
-          : '';
-        aiResponse = {
-          id: generateId(),
-          text: askData.answer + sources,
-          from: 'paul',
-          timestamp: new Date().toISOString(),
-          status: 'delivered',
-        };
-      }
-    } catch {
-      aiResponse = {
-        id: generateId(),
-        text: "I'm having trouble connecting to the vault right now. I'll catch up on this during my next heartbeat. 🦆",
-        from: 'paul',
-        timestamp: new Date().toISOString(),
-        status: 'delivered',
-      };
     }
+
+    // Create chat session
+    const chat = model.startChat({
+      history,
+      generationConfig: {
+        temperature: 0.9,
+        topP: 0.95,
+        topK: 40,
+        maxOutputTokens: 2048,
+      },
+    });
+
+    // Generate response
+    let aiResponseText: string;
+    try {
+      const result = await chat.sendMessage(`${systemPrompt}\n\nUser: ${text.trim()}`);
+      const response = result.response;
+      aiResponseText = response.text();
+    } catch (aiError: unknown) {
+      console.error('Gemini API error:', aiError);
+      aiResponseText = "I'm having trouble thinking right now. Give me a sec and try again. 🦆";
+    }
+
+    const aiResponse: ChatMessage = {
+      id: generateId(),
+      text: aiResponseText,
+      from: 'paul',
+      timestamp: new Date().toISOString(),
+      status: 'delivered',
+    };
 
     // Write AI response to responses file
     const responses = readJSON(RESPONSES_PATH);
@@ -138,6 +264,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       userMessage,
       aiResponse,
+      metadata, // Include context metadata for UI
     });
   } catch (error: unknown) {
     console.error('Chat POST error:', error);

@@ -1,9 +1,26 @@
-import { getActivity } from '@/app/actions/activity';
+import { getActivity, type ActivityEntry } from '@/app/actions/activity';
 import { format, formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
+import ActivityFilters from '@/components/ActivityFilters';
 
 export const dynamic = 'force-dynamic';
+
+function getSourceBadge(source?: string): { emoji: string; label: string; borderColor: string; bgColor: string; textColor: string } {
+  switch (source) {
+    case 'gmail':
+      return { emoji: '📧', label: 'EMAIL', borderColor: 'border-blue-500/30', bgColor: 'bg-blue-500/15', textColor: 'text-blue-400' };
+    case 'calendar':
+      return { emoji: '📅', label: 'CALENDAR', borderColor: 'border-purple-500/30', bgColor: 'bg-purple-500/15', textColor: 'text-purple-400' };
+    case 'drive':
+      return { emoji: '📁', label: 'DRIVE', borderColor: 'border-green-500/30', bgColor: 'bg-green-500/15', textColor: 'text-green-400' };
+    case 'agent':
+      return { emoji: '🤖', label: 'AGENT', borderColor: 'border-primary/30', bgColor: 'bg-primary/15', textColor: 'text-primary' };
+    case 'manual':
+    default:
+      return { emoji: '📝', label: 'NOTE', borderColor: 'border-zinc-700/30', bgColor: 'bg-zinc-700/15', textColor: 'text-zinc-400' };
+  }
+}
 
 function getAgentBadge(agent: string, type?: string): { label: string; borderColor: string; dotColor: string; bgColor: string; textColor: string } {
   // Command type gets special gold badge
@@ -71,13 +88,8 @@ export default async function ActivityPage() {
           <CommandBar placeholder="Give Paul a command..." variant="compact" />
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
-          <button className="px-5 py-2 rounded-full bg-primary text-bg-dark text-sm font-bold whitespace-nowrap">All</button>
-          <button className="px-5 py-2 rounded-full bg-card-dark text-sm font-medium whitespace-nowrap hover:bg-secondary-dark/60 transition-colors">Paul</button>
-          <button className="px-5 py-2 rounded-full bg-card-dark text-sm font-medium whitespace-nowrap hover:bg-secondary-dark/60 transition-colors">Workhorse</button>
-          <button className="px-5 py-2 rounded-full bg-card-dark text-sm font-medium whitespace-nowrap hover:bg-secondary-dark/60 transition-colors">System</button>
-        </div>
+        {/* Source Filter Pills */}
+        <ActivityFilters activity={activity} />
       </header>
 
       {/* Timeline Feed */}

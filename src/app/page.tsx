@@ -4,6 +4,7 @@ import { getTasks } from '@/app/actions/tasks';
 import { getDeals } from '@/app/actions/deals';
 import { getCommands } from '@/app/actions/commands';
 import { getRunningAgents, getAgents } from '@/app/actions/agents';
+import { getRecentEvents, getInsights } from '@/app/actions/datalake';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
@@ -26,6 +27,10 @@ export default async function Home() {
   const commands = await getCommands();
   const agents = await getAgents();
   const runningAgents = await getRunningAgents();
+  
+  // Fetch BigQuery data lake insights
+  const eventsData = await getRecentEvents(undefined, 48); // Last 48 hours
+  const insightsData = await getInsights();
 
   const activeTasks = tasks.filter(t => t.column !== 'Done').length;
   const activeDeals = deals.filter(d => d.stage !== 'Closed Won' && d.stage !== 'Closed Lost').length;
@@ -33,6 +38,16 @@ export default async function Home() {
   const totalAgents = agents.length;
   const totalCommands = commands.length;
   const recentActivity = activity.slice(0, 3);
+  
+  // Data Lake status and processing
+  const dataLakeConnected = !eventsData.error && !insightsData.error;
+  const eventCountBySource: Record<string, number> = {};
+  eventsData.events.forEach((event) => {
+    const source = (event.source as string) || 'unknown';
+    eventCountBySource[source] = (eventCountBySource[source] || 0) + 1;
+  });
+  const recentEvents = eventsData.events.slice(0, 5);
+  const recentAnalyses = insightsData.analyses.slice(0, 3);
 
   const activityIcons: Record<string, string> = {
     completed: 'check_circle',
@@ -176,6 +191,159 @@ export default async function Home() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Live Insights — BigQuery Data Lake */}
+      <div className="px-6 mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <h3 className="text-primary text-lg font-bold tracking-tight">Live Insights</h3>
+            {dataLakeConnected ? (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                <div className="relative">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                </div>
+                <span className="text-emerald-400 text-[9px] font-bold uppercase tracking-wider">Connected</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                <span className="text-red-400 text-[9px] font-bold uppercase tracking-wider">Offline</span>
+              </div>
+            )}
+          </div>
+          <Link href="/analytics" className="text-primary/60 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors">
+            Analytics
+          </Link>
+        </div>
+
+        {dataLakeConnected ? (
+          <div className="space-y-4">
+            {/* Event Count by Source */}
+            {Object.keys(eventCountBySource).length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(eventCountBySource).map(([source, count]) => {
+                  const sourceIcons: Record<string, string> = {
+                    email: 'mail',
+                    calendar: 'event',
+                    drive: 'folder',
+                    github: 'code',
+                    slack: 'chat',
+                  };
+                  return (
+                    <div
+                      key={source}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary-dark/60 border border-primary/10"
+                    >
+                      <span className="material-symbols-outlined text-primary" style={{ fontSize: 16 }}>
+                        {sourceIcons[source.toLowerCase()] || 'data_usage'}
+                      </span>
+                      <span className="text-white text-sm font-semibold capitalize">{source}</span>
+                      <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-bold">
+                        {count}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Recent Events */}
+            {recentEvents.length > 0 && (
+              <div className="bg-secondary-dark/40 border border-primary/5 rounded-xl p-4">
+                <h4 className="text-primary/70 text-xs font-bold uppercase tracking-wider mb-3">Recent Events</h4>
+                <div className="space-y-2">
+                  {recentEvents.map((event, idx) => {
+                    const timestamp = event.timestamp as string;
+                    const source = (event.source as string) || 'unknown';
+                    const summary = (event.summary as string) || (event.title as string) || 'No summary';
+                    
+                    return (
+                      <div key={idx} className="flex items-start gap-3 pb-2 border-b border-primary/5 last:border-0 last:pb-0">
+                        <div className="flex items-center justify-center rounded-lg shrink-0 size-8 bg-primary/10 border border-primary/15 mt-0.5">
+                          <span className="material-symbols-outlined text-primary" style={{ fontSize: 14 }}>
+                            {source === 'email' ? 'mail' : source === 'calendar' ? 'event' : source === 'drive' ? 'folder' : 'data_usage'}
+                          </span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white text-xs font-medium leading-tight truncate">{summary}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-primary/40 text-[10px] font-medium uppercase">{source}</span>
+                            <span className="text-primary/30 text-[10px]">•</span>
+                            <p className="text-primary/40 text-[10px]" suppressHydrationWarning>
+                              {(() => { 
+                                try { 
+                                  return formatDistanceToNow(new Date(timestamp), { addSuffix: true }); 
+                                } catch { 
+                                  return timestamp; 
+                                } 
+                              })()}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* AI Analysis Summaries */}
+            {recentAnalyses.length > 0 && (
+              <div className="bg-gradient-to-br from-primary/5 to-transparent border border-primary/10 rounded-xl p-4">
+                <h4 className="text-primary/70 text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined" style={{ fontSize: 14 }}>neurology</span>
+                  AI Analysis
+                </h4>
+                <div className="space-y-3">
+                  {recentAnalyses.map((analysis, idx) => {
+                    const summary = (analysis.summary as string) || (analysis.insight as string) || 'No summary available';
+                    const timestamp = analysis.timestamp as string;
+                    
+                    return (
+                      <div key={idx} className="flex items-start gap-3">
+                        <div className="size-1.5 rounded-full bg-primary mt-2 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-primary/80 text-xs leading-relaxed">{summary}</p>
+                          {timestamp && (
+                            <p className="text-primary/30 text-[9px] mt-1" suppressHydrationWarning>
+                              {(() => { 
+                                try { 
+                                  return formatDistanceToNow(new Date(timestamp), { addSuffix: true }); 
+                                } catch { 
+                                  return ''; 
+                                } 
+                              })()}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Empty state when no events or insights */}
+            {recentEvents.length === 0 && recentAnalyses.length === 0 && (
+              <div className="text-center py-8 bg-secondary-dark/20 border border-primary/5 rounded-xl">
+                <span className="material-symbols-outlined text-primary/30 mb-2" style={{ fontSize: 32 }}>
+                  insights
+                </span>
+                <p className="text-primary/40 text-sm">No recent insights available</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="bg-secondary-dark/40 border border-red-500/20 rounded-xl p-6 text-center">
+            <span className="material-symbols-outlined text-red-400 mb-2" style={{ fontSize: 32 }}>
+              cloud_off
+            </span>
+            <p className="text-red-400/80 text-sm font-medium mb-1">Data Lake Offline</p>
+            <p className="text-primary/40 text-xs">Falling back to local vault data</p>
+          </div>
+        )}
       </div>
 
       {/* What's New — 3 most recent activity entries */}

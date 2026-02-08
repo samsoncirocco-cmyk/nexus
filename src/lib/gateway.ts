@@ -15,8 +15,8 @@ import path from 'path';
 
 const execAsync = promisify(exec);
 
-const GATEWAY_URL = process.env.OPENCLAW_GATEWAY_URL || 'http://192.168.0.39:18789';
-const GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN || 'openclaw-admin-token-123';
+const GATEWAY_URL = process.env.OPENCLAW_GATEWAY_URL || '';
+const GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN || '';
 
 const VAULT_PATH = path.join(process.cwd(), 'vault');
 const AGENTS_FILE = path.join(VAULT_PATH, 'agents.json');
