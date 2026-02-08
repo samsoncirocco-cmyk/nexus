@@ -634,5 +634,13 @@
       "infra",
       "second-brain"
     ]
+  },
+  {
+    "title": "Test task validation",
+    "column": "Backlog",
+    "priority": "low",
+    "tags": [
+      "test"
+    ]
   }
 ]
