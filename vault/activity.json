@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T03:18:13Z",
+    "type": "completed",
+    "agent": "agents-fix",
+    "message": "Fixed /agents to use vault data instead of requiring gateway tunnel"
+  },
+  {
     "timestamp": "2026-02-08T03:16:35Z",
     "type": "completed",
     "agent": "commands-fix",
