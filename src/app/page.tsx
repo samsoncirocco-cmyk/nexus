@@ -32,7 +32,7 @@ export default async function Home() {
   const eventsData = await getRecentEvents(undefined, 48); // Last 48 hours
   const insightsData = await getInsights();
 
-  const activeTasks = tasks.filter(t => t.column !== 'Done').length;
+  const activeTasks = tasks.filter(t => t.column !== 'done').length;
   const activeDeals = deals.filter(d => d.stage !== 'Closed Won' && d.stage !== 'Closed Lost').length;
   const totalActivity = activity.length;
   const totalAgents = agents.length;
