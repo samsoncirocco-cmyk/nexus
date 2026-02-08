@@ -47,6 +47,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   intel: '#06b6d4',
   reports: '#ef4444',
   root: '#9ca3af',
+  'data-source': '#10b981',
 };
 
 const CATEGORY_GLOW: Record<string, string> = {
@@ -58,6 +59,7 @@ const CATEGORY_GLOW: Record<string, string> = {
   intel: 'rgba(6,182,212,0.4)',
   reports: 'rgba(239,68,68,0.4)',
   root: 'rgba(156,163,175,0.4)',
+  'data-source': 'rgba(16,185,129,0.4)',
 };
 
 function getColor(cat: string) {

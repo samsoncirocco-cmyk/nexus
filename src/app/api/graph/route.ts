@@ -110,6 +110,47 @@ export async function GET() {
   try {
     const docs = loadVaultDocs(true);
     const graph = buildGraph(docs);
+
+    // Add synthetic data source nodes
+    const dataSources = [
+      { id: 'data-source:gmail', title: 'Gmail', category: 'data-source', tags: ['email', 'data'], connections: 0 },
+      { id: 'data-source:bigquery', title: 'BigQuery', category: 'data-source', tags: ['data', 'events', 'memory'], connections: 0 },
+      { id: 'data-source:calendar', title: 'Calendar', category: 'data-source', tags: ['calendar', 'data'], connections: 0 },
+      { id: 'data-source:agents', title: 'Agents', category: 'data-source', tags: ['agents', 'automation'], connections: 0 },
+    ];
+
+    // Connect data sources to relevant docs
+    const journalDocs = docs.filter(d => d.category === 'journal').map(d => d.slug);
+    const projectDocs = docs.filter(d => d.category === 'project').map(d => d.slug);
+
+    // Gmail connects to journal docs
+    for (const slug of journalDocs.slice(0, 5)) { // limit connections to avoid clutter
+      graph.edges.push({ source: 'data-source:gmail', target: slug, type: 'reference' });
+      dataSources[0].connections++;
+    }
+
+    // BigQuery connects to bigquery-datalake concept doc if exists
+    const bqDoc = docs.find(d => d.slug.includes('bigquery'));
+    if (bqDoc) {
+      graph.edges.push({ source: 'data-source:bigquery', target: bqDoc.slug, type: 'reference' });
+      dataSources[1].connections++;
+    }
+
+    // Calendar connects to journal docs
+    for (const slug of journalDocs.slice(0, 3)) {
+      graph.edges.push({ source: 'data-source:calendar', target: slug, type: 'reference' });
+      dataSources[2].connections++;
+    }
+
+    // Agents connects to all project docs
+    for (const slug of projectDocs) {
+      graph.edges.push({ source: 'data-source:agents', target: slug, type: 'reference' });
+      dataSources[3].connections++;
+    }
+
+    // Add data source nodes to graph
+    graph.nodes.push(...dataSources);
+
     return NextResponse.json(graph);
   } catch (error) {
     console.error('Graph API error:', error);
