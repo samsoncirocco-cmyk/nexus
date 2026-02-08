@@ -31,10 +31,10 @@
     "id": "102",
     "title": "🔥 Review 3 Fortinet E-Rate outreach emails",
     "description": "SAMSON DO THIS:\n1. Open the Google Drive folder below\n2. Review all 3 emails + research summary\n3. Ogallala NE — FortiGate 600F, deadline Feb 24\n4. Parkston SD — FortiGate 70G, deadline Feb 26\n5. Deshler NE — 43x FortiSwitch, deadline Mar 3\n6. Add your personal touch / war stories\n7. Tell Paul to send or create Outlook drafts\n\n~$120-170K total revenue across all 3 deals.",
-    "column": "todo",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "sled",
       "erate",
@@ -72,10 +72,10 @@
     "id": "104",
     "title": "🔥 YC Application — draft complete, needs Samson review",
     "description": "SAMSON DO THIS:\n1. Open the YC Prep folder in Google Drive (link below)\n2. Read 02-tatt-vs-irl-analysis.md (TatT wins 10-0)\n3. Read 04-draft-yc-application.md — first draft ready for your personal details\n4. Read 03-tatt-market-analysis.md for market sizing\n5. Pick which product to submit\n6. ⚠️ S26 deadline may be Feb 9 @ 8pm PT — verify!",
-    "column": "in-progress",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "yc",
       "founder"
@@ -146,10 +146,10 @@
     "id": "201",
     "title": "TatT — make demo-ready for investors",
     "description": "Review codebase, fix bugs, polish UX, landing page, core flow, mobile. Opus sub-agent working on this.",
-    "column": "in-progress",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T15:00:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "yc",
       "tatt",
@@ -172,10 +172,10 @@
     "id": "202",
     "title": "TatT — pitch deck v1",
     "description": "YC-style pitch deck: problem, solution, market size, traction, team, ask.",
-    "column": "todo",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "yc",
       "tatt"
@@ -192,10 +192,10 @@
     "id": "203",
     "title": "TatT — financial model / unit economics",
     "description": "Revenue projections, CAC/LTV, marketplace take rate, subscription tiers, path to $1M ARR.",
-    "column": "todo",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "yc",
       "tatt"
@@ -206,10 +206,10 @@
     "id": "204",
     "title": "LinkedIn CreatorBuddy — market research",
     "description": "Research CreatorBuddy.io model, LinkedIn content tools landscape, build MVP spec for LinkedIn-focused AI content tool.",
-    "column": "todo",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T15:13:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "founder",
       "linkedin",
@@ -227,10 +227,10 @@
     "id": "300",
     "title": "E-Rate — outreach for remaining 52 leads",
     "description": "Build templates for 52 validated territory leads grouped by state and deadline.",
-    "column": "todo",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T14:52:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "sled",
       "erate"
@@ -267,10 +267,10 @@
     "id": "302",
     "title": "E-Rate — contact enrichment for all 55 leads",
     "description": "Google-search based research for decision-maker contacts at each account.",
-    "column": "todo",
+    "column": "done",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "sled",
       "erate"
@@ -338,10 +338,10 @@
     "id": "501",
     "title": "Second Brain — add search, mobile, vault nav",
     "description": "Full-text search, better mobile responsiveness, improved vault browsing.",
-    "column": "todo",
+    "column": "done",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "dev",
       "second-brain"
@@ -399,10 +399,10 @@
     "id": "701",
     "title": "Daily morning briefing automation",
     "description": "Auto-summary of Samson's day: meetings, deadlines, urgent emails, weather.",
-    "column": "todo",
+    "column": "done",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00",
     "tags": [
       "automation",
       "quality-of-life"
@@ -580,19 +580,21 @@
   },
   {
     "title": "🔧 TatT: Error boundaries + demo mode (agent running)",
-    "column": "in-progress",
+    "column": "done",
     "priority": "critical",
     "tags": [
       "tatt"
-    ]
+    ],
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00"
   },
   {
     "title": "🔧 TatT: /pitch investor page (agent running)",
-    "column": "in-progress",
+    "column": "done",
     "priority": "high",
     "tags": [
       "tatt"
-    ]
+    ],
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00"
   },
   {
     "title": "📄 YC market analysis complete",
@@ -612,11 +614,12 @@
   },
   {
     "title": "🔑 Get new Google API key (Samson)",
-    "column": "todo",
+    "column": "done",
     "priority": "medium",
     "tags": [
       "security"
-    ]
+    ],
+    "updatedAt": "2026-02-08T05:58:31.564062+00:00"
   },
   {
     "title": "🔑 Rotate OpenRouter key (Samson)",

@@ -31,6 +31,19 @@ export default async function Home() {
   // Fetch BigQuery data lake insights
   const eventsData = await getRecentEvents(undefined, 48); // Last 48 hours
   const insightsData = await getInsights();
+  
+  // Fetch heartbeat status
+  let heartbeatStatus = null;
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/heartbeat-status`, {
+      cache: 'no-store'
+    });
+    if (res.ok) {
+      heartbeatStatus = await res.json();
+    }
+  } catch (error) {
+    console.error('Failed to fetch heartbeat status:', error);
+  }
 
   const activeTasks = tasks.filter(t => t.column !== 'done').length;
   const activeDeals = deals.filter(d => d.stage !== 'Closed Won' && d.stage !== 'Closed Lost').length;
@@ -195,6 +208,98 @@ export default async function Home() {
           </div>
         </div>
       </div>
+
+      {/* System Status — Heartbeat Monitoring */}
+      {heartbeatStatus && (
+        <div className="px-4 md:px-6 mb-6">
+          <div className="bg-gradient-to-br from-secondary-dark to-bg-dark rounded-xl p-5 border border-primary/20 relative overflow-hidden">
+            <div className="absolute -right-4 -top-4 size-24 bg-primary/10 rounded-full blur-2xl" />
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary" style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}>monitor_heart</span>
+                  <h4 className="text-primary font-bold text-lg">System Status</h4>
+                </div>
+                {heartbeatStatus.lastHeartbeat && (
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="relative">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                    </div>
+                    <span className="text-emerald-400 text-[9px] font-bold uppercase tracking-wider">Active</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-secondary-dark/40 border border-primary/5 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="material-symbols-outlined text-primary/70" style={{ fontSize: 16 }}>schedule</span>
+                    <p className="text-primary/50 text-[10px] font-bold uppercase tracking-wider">Last Heartbeat</p>
+                  </div>
+                  <p className="text-white text-sm font-semibold" suppressHydrationWarning>
+                    {heartbeatStatus.lastHeartbeat 
+                      ? (() => { 
+                          try { 
+                            return formatDistanceToNow(new Date(heartbeatStatus.lastHeartbeat), { addSuffix: true }); 
+                          } catch { 
+                            return 'Unknown'; 
+                          } 
+                        })()
+                      : 'Not yet run'
+                    }
+                  </p>
+                </div>
+
+                <div className="bg-secondary-dark/40 border border-primary/5 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="material-symbols-outlined text-primary/70" style={{ fontSize: 16 }}>sync</span>
+                    <p className="text-primary/50 text-[10px] font-bold uppercase tracking-wider">Tasks Auto-Closed</p>
+                  </div>
+                  <p className="text-white text-sm font-semibold">
+                    {heartbeatStatus.tasksMovedToDone || 0}
+                  </p>
+                </div>
+
+                <div className="bg-secondary-dark/40 border border-primary/5 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="material-symbols-outlined text-primary/70" style={{ fontSize: 16 }}>checklist</span>
+                    <p className="text-primary/50 text-[10px] font-bold uppercase tracking-wider">Last Checks</p>
+                  </div>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {heartbeatStatus.lastChecks && heartbeatStatus.lastChecks.length > 0 ? (
+                      heartbeatStatus.lastChecks.map((check: string, idx: number) => (
+                        <span key={idx} className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[9px] font-medium">
+                          {check}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-primary/40 text-xs">None</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-secondary-dark/40 border border-primary/5 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="material-symbols-outlined text-primary/70" style={{ fontSize: 16 }}>
+                      {heartbeatStatus.staleTasks > 0 ? 'warning' : 'check_circle'}
+                    </span>
+                    <p className="text-primary/50 text-[10px] font-bold uppercase tracking-wider">Stale Tasks</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <p className={`text-sm font-semibold ${heartbeatStatus.staleTasks > 0 ? 'text-yellow-400' : 'text-white'}`}>
+                      {heartbeatStatus.staleTasks || 0}
+                    </p>
+                    {heartbeatStatus.staleTasks > 0 && (
+                      <span className="text-yellow-400/60 text-[9px] font-medium">&gt;3 days old</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Live Insights — BigQuery Data Lake */}
       <div className="px-4 md:px-6 mb-6">

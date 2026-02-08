@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-08T06:01:56Z",
+    "type": "completed",
+    "agent": "heartbeat-sync",
+    "message": "Wired heartbeats into Second Brain: task auto-sync, heartbeat status dashboard widget, stale task detection"
+  },
+  {
+    "timestamp": "2026-02-08T05:44:55Z",
+    "type": "completed",
+    "agent": "vercel-fix",
+    "message": "Fixed EROFS error on Vercel \u2014 vault writes now go to /tmp in serverless"
+  },
+  {
     "timestamp": "2026-02-08T05:34:21Z",
     "type": "completed",
     "agent": "memory-archival",
