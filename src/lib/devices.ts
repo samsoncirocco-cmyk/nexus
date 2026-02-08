@@ -217,7 +217,7 @@ export async function getLatestScan(deviceId: string): Promise<ScanResult | null
   }
 
   try {
-    const latest = await readJsonFile<ScanResult>(scanFiles[0], null);
+    const latest = await readJsonFile<ScanResult | null>(scanFiles[0], null);
     return latest;
   } catch (error) {
     console.error('Failed to read latest scan:', error);
@@ -234,8 +234,8 @@ export async function getScanHistory(deviceId: string): Promise<ScanResult[]> {
 
   for (const file of scanFiles) {
     try {
-      const scan = await readJsonFile<ScanResult>(file, null);
-      if (scan) {
+      const scan = await readJsonFile<ScanResult | null>(file, null);
+      if (scan !== null) {
         scans.push(scan);
       }
     } catch (error) {
@@ -280,7 +280,7 @@ export async function getRecommendations(deviceId: string): Promise<Recommendati
   const recPath = path.join(getDeviceDir(deviceId), 'recommendations.json');
 
   try {
-    const data = await readJsonFile<RecommendationsData>(recPath, null);
+    const data = await readJsonFile<RecommendationsData | null>(recPath, null);
     return data?.recommendations || [];
   } catch (error) {
     return [];
