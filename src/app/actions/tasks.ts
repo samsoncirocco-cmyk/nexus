@@ -3,8 +3,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { revalidatePath } from 'next/cache';
+import { VAULT_PATH, WRITABLE_VAULT, writablePath, readWithFallback } from '@/lib/paths';
 
-const VAULT_PATH = path.join(process.cwd(), 'vault');
 const TASKS_FILE = path.join(VAULT_PATH, 'tasks.json');
 
 export type Priority = 'low' | 'medium' | 'high';
@@ -25,9 +25,9 @@ export interface Task {
 // Ensure vault directory exists
 async function ensureVault() {
   try {
-    await fs.access(VAULT_PATH);
+    await fs.access(WRITABLE_VAULT);
   } catch {
-    await fs.mkdir(VAULT_PATH, { recursive: true });
+    await fs.mkdir(WRITABLE_VAULT, { recursive: true });
   }
 }
 
@@ -35,7 +35,7 @@ async function ensureVault() {
 export async function getTasks(): Promise<Task[]> {
   await ensureVault();
   try {
-    const data = await fs.readFile(TASKS_FILE, 'utf-8');
+    const data = await readWithFallback(TASKS_FILE, '[]');
     return JSON.parse(data);
   } catch (error) {
     return [];
@@ -45,7 +45,7 @@ export async function getTasks(): Promise<Task[]> {
 // Save tasks
 export async function saveTasks(tasks: Task[]): Promise<void> {
   await ensureVault();
-  await fs.writeFile(TASKS_FILE, JSON.stringify(tasks, null, 2), 'utf-8');
+  await fs.writeFile(writablePath(TASKS_FILE), JSON.stringify(tasks, null, 2), 'utf-8');
   revalidatePath('/tasks');
 }
 

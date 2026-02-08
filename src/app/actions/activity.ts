@@ -3,8 +3,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { getRecentEvents } from './datalake';
+import { VAULT_PATH, WRITABLE_VAULT, writablePath, readWithFallback } from '@/lib/paths';
 
-const VAULT_PATH = path.join(process.cwd(), 'vault');
 const ACTIVITY_FILE = path.join(VAULT_PATH, 'activity.json');
 
 export interface ActivityEntry {
@@ -22,16 +22,16 @@ export interface ActivityEntry {
 
 async function ensureVault() {
   try {
-    await fs.access(VAULT_PATH);
+    await fs.access(WRITABLE_VAULT);
   } catch {
-    await fs.mkdir(VAULT_PATH, { recursive: true });
+    await fs.mkdir(WRITABLE_VAULT, { recursive: true });
   }
 }
 
 async function getVaultActivity(): Promise<ActivityEntry[]> {
   await ensureVault();
   try {
-    const data = await fs.readFile(ACTIVITY_FILE, 'utf-8');
+    const data = await readWithFallback(ACTIVITY_FILE, '[]');
     const entries: ActivityEntry[] = JSON.parse(data);
     // Tag vault entries as 'manual' source if not already set
     return entries.map(e => ({ ...e, source: e.source || 'manual' }));
@@ -82,6 +82,6 @@ export async function addActivity(entry: Omit<ActivityEntry, 'id'>): Promise<Act
     id: `act-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
   };
   entries.push(newEntry);
-  await fs.writeFile(ACTIVITY_FILE, JSON.stringify(entries, null, 2), 'utf-8');
+  await fs.writeFile(writablePath(ACTIVITY_FILE), JSON.stringify(entries, null, 2), 'utf-8');
   return newEntry;
 }

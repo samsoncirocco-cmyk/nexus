@@ -2,8 +2,8 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { VAULT_PATH, WRITABLE_VAULT, writablePath, readWithFallback } from '@/lib/paths';
 
-const VAULT_PATH = path.join(process.cwd(), 'vault');
 const AGENTS_FILE = path.join(VAULT_PATH, 'agents.json');
 
 export interface AgentEntry {
@@ -19,16 +19,16 @@ export interface AgentEntry {
 
 async function ensureVault() {
   try {
-    await fs.access(VAULT_PATH);
+    await fs.access(WRITABLE_VAULT);
   } catch {
-    await fs.mkdir(VAULT_PATH, { recursive: true });
+    await fs.mkdir(WRITABLE_VAULT, { recursive: true });
   }
 }
 
 export async function getAgents(): Promise<AgentEntry[]> {
   await ensureVault();
   try {
-    const data = await fs.readFile(AGENTS_FILE, 'utf-8');
+    const data = await readWithFallback(AGENTS_FILE, '[]');
     return JSON.parse(data);
   } catch {
     return [];

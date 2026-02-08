@@ -3,8 +3,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { semanticSearch, queryDatalake, logAction } from '../../../openclaw/skills';
+import { VAULT_PATH, WRITABLE_VAULT, writablePath, readWithFallback } from '@/lib/paths';
 
-const VAULT_PATH = path.join(process.cwd(), 'vault');
 const COMMANDS_FILE = path.join(VAULT_PATH, 'commands.json');
 const QUEUE_FILE = path.join(VAULT_PATH, 'commands-queue.json');
 
@@ -36,7 +36,7 @@ interface ExecuteResult {
 
 export async function getCommands(): Promise<CommandEntry[]> {
   try {
-    const data = await fs.readFile(COMMANDS_FILE, 'utf-8');
+    const data = await readWithFallback(COMMANDS_FILE, '[]');
     const commands: CommandEntry[] = JSON.parse(data);
     return commands.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   } catch {
@@ -48,10 +48,10 @@ export async function getCommands(): Promise<CommandEntry[]> {
 
 async function saveCommand(command: CommandEntry): Promise<void> {
   try {
-    await fs.mkdir(VAULT_PATH, { recursive: true });
+    await fs.mkdir(WRITABLE_VAULT, { recursive: true });
     const commands = await getCommands();
     commands.push(command);
-    await fs.writeFile(COMMANDS_FILE, JSON.stringify(commands, null, 2), 'utf-8');
+    await fs.writeFile(writablePath(COMMANDS_FILE), JSON.stringify(commands, null, 2), 'utf-8');
   } catch (err) {
     console.error('Failed to save command:', err);
   }
@@ -61,18 +61,18 @@ async function saveCommand(command: CommandEntry): Promise<void> {
 
 async function queueCommand(command: QueuedCommand): Promise<void> {
   try {
-    await fs.mkdir(VAULT_PATH, { recursive: true });
+    await fs.mkdir(WRITABLE_VAULT, { recursive: true });
     let queue: QueuedCommand[] = [];
     
     try {
-      const data = await fs.readFile(QUEUE_FILE, 'utf-8');
+      const data = await readWithFallback(QUEUE_FILE, '[]');
       queue = JSON.parse(data);
     } catch {
       // File doesn't exist, start with empty queue
     }
     
     queue.push(command);
-    await fs.writeFile(QUEUE_FILE, JSON.stringify(queue, null, 2), 'utf-8');
+    await fs.writeFile(writablePath(QUEUE_FILE), JSON.stringify(queue, null, 2), 'utf-8');
   } catch (err) {
     console.error('Failed to queue command:', err);
   }

@@ -3,8 +3,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
 import { revalidatePath } from 'next/cache';
+import { VAULT_PATH, WRITABLE_VAULT, writablePath } from '@/lib/paths';
 
-const vaultPath = path.join(process.cwd(), 'vault');
+const vaultPath = VAULT_PATH;
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,11 +36,12 @@ export async function POST(req: NextRequest) {
 
     const fullContent = matter.stringify(content || '', yamlData);
 
-    // Ensure directory exists
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
+    // Ensure directory exists (use WRITABLE_VAULT for the base)
+    const writableFilePath = writablePath(filePath);
+    await fs.mkdir(path.dirname(writableFilePath), { recursive: true });
 
     // Write to file
-    await fs.writeFile(filePath, fullContent, 'utf8');
+    await fs.writeFile(writableFilePath, fullContent, 'utf8');
 
     // Revalidate the doc page and category pages
     revalidatePath(`/doc/${slug}`);

@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { VAULT_PATH, writablePath, readWithFallback } from '@/lib/paths';
 
-const VAULT_PATH = path.join(process.cwd(), 'vault');
 const ACTIVITY_FILE = path.join(VAULT_PATH, 'activity.json');
 
 export async function GET() {
   try {
-    const data = await fs.readFile(ACTIVITY_FILE, 'utf-8');
+    const data = await readWithFallback(ACTIVITY_FILE, '[]');
     const entries = JSON.parse(data);
     entries.sort((a: { timestamp: string }, b: { timestamp: string }) =>
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     
     let entries = [];
     try {
-      const data = await fs.readFile(ACTIVITY_FILE, 'utf-8');
+      const data = await readWithFallback(ACTIVITY_FILE, '[]');
       entries = JSON.parse(data);
     } catch {
       // File doesn't exist yet
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     };
     
     entries.push(newEntry);
-    await fs.writeFile(ACTIVITY_FILE, JSON.stringify(entries, null, 2), 'utf-8');
+    await fs.writeFile(writablePath(ACTIVITY_FILE), JSON.stringify(entries, null, 2), 'utf-8');
     
     return NextResponse.json(newEntry, { status: 201 });
   } catch (error) {

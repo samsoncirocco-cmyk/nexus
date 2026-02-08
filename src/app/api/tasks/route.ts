@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import fs from 'fs/promises';
 import path from 'path';
+import { VAULT_PATH, writablePath, readWithFallback } from '@/lib/paths';
 
-const TASKS_FILE = path.join(process.cwd(), 'vault', 'tasks.json');
+const TASKS_FILE = path.join(VAULT_PATH, 'tasks.json');
 
 export type Priority = 'low' | 'medium' | 'high';
 export type Column = 'todo' | 'in-progress' | 'done';
@@ -22,7 +23,7 @@ export interface Task {
 
 async function readTasks(): Promise<Task[]> {
   try {
-    const data = await fs.readFile(TASKS_FILE, 'utf-8');
+    const data = await readWithFallback(TASKS_FILE, '[]');
     return JSON.parse(data);
   } catch {
     return [];
@@ -30,7 +31,7 @@ async function readTasks(): Promise<Task[]> {
 }
 
 async function writeTasks(tasks: Task[]): Promise<void> {
-  await fs.writeFile(TASKS_FILE, JSON.stringify(tasks, null, 2), 'utf-8');
+  await fs.writeFile(writablePath(TASKS_FILE), JSON.stringify(tasks, null, 2), 'utf-8');
 }
 
 // GET: Return all tasks grouped by column

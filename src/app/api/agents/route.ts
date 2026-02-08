@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { getEnrichedSessions, type EnrichedSession } from '@/lib/gateway';
+import { VAULT_PATH, writablePath, readWithFallback } from '@/lib/paths';
 
-const VAULT_PATH = path.join(process.cwd(), 'vault');
 const ACTIVITY_FILE = path.join(VAULT_PATH, 'activity.json');
 const TASKS_FILE = path.join(VAULT_PATH, 'tasks.json');
 
@@ -45,13 +45,13 @@ interface Task {
 async function getAgentsFromVault(): Promise<AgentEntry[]> {
   try {
     // Read activity log
-    const activityData = await fs.readFile(ACTIVITY_FILE, 'utf-8');
+    const activityData = await readWithFallback(ACTIVITY_FILE, '[]');
     const activities: ActivityEntry[] = JSON.parse(activityData);
 
     // Read tasks
     let tasks: Task[] = [];
     try {
-      const tasksData = await fs.readFile(TASKS_FILE, 'utf-8');
+      const tasksData = await readWithFallback(TASKS_FILE, '[]');
       tasks = JSON.parse(tasksData);
     } catch {
       // Tasks file optional
@@ -252,7 +252,7 @@ export async function POST(req: NextRequest) {
     // Read existing activity
     let activities: ActivityEntry[] = [];
     try {
-      const data = await fs.readFile(ACTIVITY_FILE, 'utf-8');
+      const data = await readWithFallback(ACTIVITY_FILE, '[]');
       activities = JSON.parse(data);
     } catch {
       activities = [];
@@ -273,7 +273,7 @@ export async function POST(req: NextRequest) {
       activities = activities.slice(0, 1000);
     }
 
-    await fs.writeFile(ACTIVITY_FILE, JSON.stringify(activities, null, 2), 'utf-8');
+    await fs.writeFile(writablePath(ACTIVITY_FILE), JSON.stringify(activities, null, 2), 'utf-8');
 
     return NextResponse.json(newActivity, { status: 201 });
   } catch (error) {
