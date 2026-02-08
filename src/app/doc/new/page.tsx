@@ -21,6 +21,7 @@ export default function NewDocumentPage() {
   const [category, setCategory] = useState('concepts');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [tags, setTags] = useState('');
   const [initialContent, setInitialContent] = useState('');
   const [creating, setCreating] = useState(false);
 
@@ -42,10 +43,16 @@ export default function NewDocumentPage() {
     try {
       const slug = `${category}/${slugify(title)}`;
       
+      const tagArray = tags
+        .split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0);
+
       const frontmatter = {
         title: title.trim(),
         ...(description.trim() && { description: description.trim() }),
         date: new Date().toISOString().split('T')[0],
+        ...(tagArray.length > 0 && { tags: tagArray }),
       };
 
       const res = await fetch('/api/vault/write', {
@@ -149,6 +156,36 @@ export default function NewDocumentPage() {
               className="w-full px-4 py-3 bg-card-dark border border-white/10 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               placeholder="Brief description of the document"
             />
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className="block text-sm font-bold text-foreground-muted uppercase tracking-wider mb-2">
+              Tags <span className="text-xs font-normal">(optional, comma-separated)</span>
+            </label>
+            <input
+              type="text"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              className="w-full px-4 py-3 bg-card-dark border border-white/10 rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              placeholder="e.g. sales, fortinet, strategy"
+            />
+            {tags && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {tags.split(',').map((tag, i) => {
+                  const trimmed = tag.trim();
+                  if (!trimmed) return null;
+                  return (
+                    <span
+                      key={i}
+                      className="px-2 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs"
+                    >
+                      {trimmed}
+                    </span>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Initial Content */}

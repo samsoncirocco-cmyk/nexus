@@ -116,6 +116,7 @@ export default async function Home() {
   };
 
   const QUICK_LINKS = [
+    { href: '/doc/new', icon: 'note_add', label: 'New Document', desc: 'Create new doc', gradient: 'from-primary/10 to-secondary-dark/30' },
     { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul', desc: 'Talk to your AI', gradient: 'from-primary/10 to-secondary-dark/30' },
     { href: '/tasks', icon: 'checklist', label: 'Task Board', desc: `${activeTasks} active`, gradient: 'from-emerald-900/20 to-secondary-dark/30' },
     { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet', desc: `${runningAgents.length} running`, gradient: 'from-teal-900/20 to-secondary-dark/30' },

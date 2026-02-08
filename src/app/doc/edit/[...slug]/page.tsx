@@ -26,6 +26,12 @@ export default function DocumentEditPage() {
   // Load the document
   useEffect(() => {
     async function loadDocument() {
+      if (!slug) {
+        setLoading(false);
+        setError('No document slug provided');
+        return;
+      }
+
       try {
         const res = await fetch(`/api/vault/read?slug=${encodeURIComponent(slug)}`);
         
@@ -44,9 +50,7 @@ export default function DocumentEditPage() {
       }
     }
 
-    if (slug) {
-      loadDocument();
-    }
+    loadDocument();
   }, [slug]);
 
   async function handleSave() {
@@ -133,7 +137,7 @@ export default function DocumentEditPage() {
                   Editing
                 </span>
                 <h1 className="text-lg md:text-xl font-bold tracking-tight truncate">
-                  {frontmatter.title || slug.split('/').pop()}
+                  {frontmatter.title || slug?.split('/').pop() || 'Untitled'}
                 </h1>
               </div>
             </div>
