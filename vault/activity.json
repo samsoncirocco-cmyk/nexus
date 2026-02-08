@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-08T15:18:39Z",
+    "type": "completed",
+    "agent": "insight-extraction",
+    "message": "Second Brain: insight extraction widget on home page"
+  },
+  {
+    "timestamp": "2026-02-08T15:18:21Z",
+    "type": "completed",
+    "agent": "calendar-widget",
+    "message": "Second Brain: calendar widget on home page"
+  },
+  {
     "timestamp": "2026-02-08T15:17:52Z",
     "type": "completed",
     "agent": "email-digest",
