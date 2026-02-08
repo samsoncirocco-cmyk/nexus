@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-08T06:55:00Z",
+    "type": "completed",
+    "agent": "what-matters-widget",
+    "message": "What Matters Now widget: hot topics, action items, stale alerts on homepage"
+  },
+  {
+    "timestamp": "2026-02-08T06:52:09Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
     "timestamp": "2026-02-08T06:44:53Z",
     "type": "completed",
     "agent": "tool-upgrade",
