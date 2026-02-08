@@ -35,7 +35,7 @@ export default function SearchPage() {
   const [totalDocs, setTotalDocs] = useState(0);
   const [hasSearched, setHasSearched] = useState(!!initialQuery);
   const inputRef = useRef<HTMLInputElement>(null);
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Auto-focus input on mount
   useEffect(() => {

@@ -5,15 +5,23 @@ const REVALIDATE_SECRET = process.env.REVALIDATE_SECRET || process.env.OPENCLAW_
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization');
-    const token = authHeader?.replace('Bearer ', '');
+    // Allow internal calls (from same origin) without auth
+    const origin = request.headers.get('origin');
+    const referer = request.headers.get('referer');
+    const isInternalCall = origin === process.env.NEXT_PUBLIC_APP_URL || referer?.includes(request.nextUrl.origin);
     
-    if (!token || token !== REVALIDATE_SECRET) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // For external calls, require auth
+    if (!isInternalCall) {
+      const authHeader = request.headers.get('authorization');
+      const token = authHeader?.replace('Bearer ', '');
+      
+      if (!token || token !== REVALIDATE_SECRET) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
     }
 
     const body = await request.json().catch(() => ({}));
-    const paths = body.paths || ['/', '/activity', '/tasks', '/agents', '/commands'];
+    const paths = body.paths || ['/', '/activity', '/tasks', '/agents', '/commands', '/settings'];
     
     for (const path of paths) {
       revalidatePath(path);

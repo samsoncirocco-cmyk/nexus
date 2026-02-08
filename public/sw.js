@@ -1,58 +1,75 @@
+// Second Brain Service Worker
 const CACHE_NAME = 'second-brain-v1';
-const SHELL_ASSETS = [
+const OFFLINE_URL = '/offline.html';
+
+const STATIC_ASSETS = [
   '/',
-  '/manifest.json',
+  '/offline.html',
   '/icon-192.png',
   '/icon-512.png',
+  '/manifest.json',
 ];
 
-// Install — cache app shell
+// Install event - cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_ASSETS))
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('[SW] Caching static assets');
+      return cache.addAll(STATIC_ASSETS).catch((err) => {
+        console.warn('[SW] Failed to cache some assets:', err);
+      });
+    })
   );
   self.skipWaiting();
 });
 
-// Activate — clean old caches
+// Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
-      )
-    )
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => {
+            console.log('[SW] Deleting old cache:', name);
+            return caches.delete(name);
+          })
+      );
+    })
   );
   self.clients.claim();
 });
 
-// Fetch — network first, cache fallback
+// Fetch event - network first, fallback to cache
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET and chrome-extension requests
+  // Skip non-GET requests
   if (event.request.method !== 'GET') return;
-  if (event.request.url.startsWith('chrome-extension://')) return;
+
+  // Skip chrome-extension and other non-http(s) requests
+  if (!event.request.url.startsWith('http')) return;
 
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Cache successful responses
-        if (response.status === 200) {
-          const clone = response.clone();
+        // Clone the response and cache it
+        if (response && response.status === 200) {
+          const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, clone);
+            cache.put(event.request, responseClone);
           });
         }
         return response;
       })
       .catch(() => {
-        // Offline — serve from cache
-        return caches.match(event.request).then((cached) => {
-          if (cached) return cached;
-          // For navigation requests, serve cached index
-          if (event.request.mode === 'navigate') {
-            return caches.match('/');
+        // Network failed, try cache
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
           }
-          return new Response('Offline', { status: 503, statusText: 'Offline' });
+          // Return offline page for navigation requests
+          if (event.request.mode === 'navigate') {
+            return caches.match(OFFLINE_URL);
+          }
         });
       })
   );

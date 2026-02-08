@@ -19,6 +19,7 @@ const SIDEBAR_LINKS = [
   { href: '/analytics', icon: 'analytics', label: 'Analytics' },
   { href: '/commands', icon: 'bolt', label: 'Commands' },
   { href: '/ask', icon: 'neurology', label: 'Ask Brain' },
+  { href: '/search', icon: 'search', label: 'Search' },
   { href: '/tasks', icon: 'checklist', label: 'Task Board' },
   { href: '/activity', icon: 'data_usage', label: 'Activity Feed' },
   { href: '/deals', icon: 'rocket_launch', label: 'Sales Pipeline' },
