@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 166
-- **Files:** 35484
+- **Total Commits:** 172
+- **Files:** 35498
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> feature/device-knowledge-graph)T06ca7cd0df2b994cd5f2d310c2cf02e09caeca4d:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> feature/device-knowledge-graph, origin/feature/device-knowledge-graph)Tff149c4cbb97750a3017bf8532f602656b6bbbab:%M:HEADZ
 
 ## Recent Commits
-- 06ca7cd auto: vault data update 2026-02-08T19:44:46Z
-- 0a3a507 auto: update vault/activity.json
-- bf9ca18 feat(devices): Phase 1 — Device scanner script + data model
-- 002248b feat: GSD project init — Device Knowledge Graph spec
-- f0323ea auto: vault data update 2026-02-08T19:13:55Z
+- ff149c4 auto: update 12 files (src/app/devices/[id]/page.tsx,src/app/devices/loading.tsx,src/app/devices/page.tsx)
+- 860e5e8 docs: Add Phase 2 completion summary
+- 68c6b16 docs: Update STATE.md - Phase 2 complete
+- bfbe551 fix(devices): TypeScript null handling in readJsonFile calls
+- 01fc232 feat(devices): Phase 2 — Vault integration + sync API endpoint
 
 ## Status
-Last commit: `06ca7cd auto: vault data update 2026-02-08T19:44:46Z`
+Last commit: `ff149c4 auto: update 12 files (src/app/devices/[id]/page.tsx,src/app/devices/loading.tsx,src/app/devices/page.tsx)`
