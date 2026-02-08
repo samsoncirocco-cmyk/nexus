@@ -268,7 +268,7 @@ function SearchPageContent() {
   );
 }
 
-function SearchPageContent() {
+export default function SearchPage() {
   return (
     <Suspense fallback={
       <div className="flex items-center justify-center h-screen">
