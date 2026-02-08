@@ -213,7 +213,7 @@ export async function POST(request: NextRequest) {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
 
     // Build conversation history for Gemini
-    const history: Array<{ role: 'user' | 'model'; parts: string }> = [];
+    const history: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
     
     if (conversationHistory && Array.isArray(conversationHistory)) {
       // Take last 10 messages to avoid token limits
@@ -221,7 +221,7 @@ export async function POST(request: NextRequest) {
       recentHistory.forEach((msg: ChatMessage) => {
         history.push({
           role: msg.from === 'user' ? 'user' : 'model',
-          parts: msg.text,
+          parts: [{ text: msg.text }],
         });
       });
     }
