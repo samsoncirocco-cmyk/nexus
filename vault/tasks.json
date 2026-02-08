@@ -572,11 +572,12 @@
   },
   {
     "title": "🔧 TatT: Fix 20 broken imports (agent running)",
-    "column": "in-progress",
+    "column": "done",
     "priority": "critical",
     "tags": [
       "tatt"
-    ]
+    ],
+    "updatedAt": "2026-02-08T15:17:59.997912+00:00"
   },
   {
     "title": "🔧 TatT: Error boundaries + demo mode (agent running)",
