@@ -16,8 +16,14 @@ interface ContextMetadata {
   taskCount: number;
 }
 
+interface GatewayStatus {
+  connected: boolean;
+  mode: 'gateway' | 'gemini-fallback';
+}
+
 const STORAGE_KEY = 'second-brain-chat-history';
 const POLL_INTERVAL = 5000;
+const STATUS_CHECK_INTERVAL = 30000; // Check gateway status every 30s
 
 function formatTime(ts: string): string {
   const d = new Date(ts);
@@ -53,6 +59,7 @@ export default function ChatPage() {
   const [loaded, setLoaded] = useState(false);
   const [contextMetadata, setContextMetadata] = useState<ContextMetadata | null>(null);
   const [showContext, setShowContext] = useState(false);
+  const [gatewayStatus, setGatewayStatus] = useState<GatewayStatus | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -100,6 +107,16 @@ export default function ChatPage() {
     inputRef.current?.focus();
   }, []);
 
+  // Check gateway status
+  const checkGatewayStatus = useCallback(async () => {
+    try {
+      const res = await fetch('/api/chat');
+      if (!res.ok) return;
+      const data: GatewayStatus = await res.json();
+      setGatewayStatus(data);
+    } catch { /* silent */ }
+  }, []);
+
   // Poll for new messages
   const pollMessages = useCallback(async () => {
     try {
@@ -130,6 +147,13 @@ export default function ChatPage() {
     const interval = setInterval(pollMessages, POLL_INTERVAL);
     return () => clearInterval(interval);
   }, [pollMessages]);
+
+  // Check gateway status on mount and periodically
+  useEffect(() => {
+    checkGatewayStatus();
+    const interval = setInterval(checkGatewayStatus, STATUS_CHECK_INTERVAL);
+    return () => clearInterval(interval);
+  }, [checkGatewayStatus]);
 
   const handleSend = async () => {
     const text = input.trim();
@@ -177,6 +201,11 @@ export default function ChatPage() {
         // Update context metadata if provided
         if (data.metadata) {
           setContextMetadata(data.metadata);
+        }
+
+        // Update gateway status if provided
+        if (data.gatewayStatus) {
+          setGatewayStatus(data.gatewayStatus);
         }
 
         // Replace temp with real messages
@@ -237,10 +266,18 @@ export default function ChatPage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h1 className="text-base font-bold text-foreground">Paul</h1>
-              <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <div className={`size-2 rounded-full ${
+                gatewayStatus?.connected 
+                  ? 'bg-emerald-500 animate-pulse' 
+                  : 'bg-amber-500'
+              }`} />
             </div>
             <p className="text-[11px] text-foreground-muted">
-              Your AI assistant · Context-aware
+              {gatewayStatus?.connected 
+                ? 'Connected via OpenClaw Gateway' 
+                : gatewayStatus?.mode === 'gemini-fallback'
+                ? 'Fallback mode (Gemini)'
+                : 'Connecting...'}
             </p>
           </div>
           <button
@@ -476,7 +513,9 @@ export default function ChatPage() {
         </div>
         <div className="text-center mt-1.5">
           <span className="text-[10px] text-foreground-muted/25">
-            Powered by Gemini 2.0 Flash · Context-aware AI
+            {gatewayStatus?.connected 
+              ? 'Connected to Paul via OpenClaw · Full context & tools'
+              : 'Fallback mode: Gemini 2.0 Flash · Limited context'}
           </span>
         </div>
       </div>

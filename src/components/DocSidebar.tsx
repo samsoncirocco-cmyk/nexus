@@ -162,7 +162,8 @@ export default function DocSidebar({ documents, activeSlug }: DocSidebarProps) {
       {/* Mobile toggle button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 left-4 z-40 lg:hidden size-10 bg-card-dark border border-white/10 rounded-full flex items-center justify-center"
+        className="fixed top-4 left-4 z-40 lg:hidden size-11 bg-card-dark border border-white/10 rounded-full flex items-center justify-center hover:bg-card-dark/80 hover:border-primary/30 transition-colors"
+        aria-label="Open document menu"
       >
         <span className="material-symbols-outlined" style={{ fontSize: 20 }}>menu</span>
       </button>

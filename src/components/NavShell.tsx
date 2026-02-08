@@ -122,15 +122,15 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
       </main>
 
       {/* ==================== MOBILE BOTTOM NAV ==================== */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-bg-dark/90 backdrop-blur-xl border-t border-primary/10">
-        <div className="flex items-center justify-between px-6 pt-3 pb-safe max-w-md mx-auto">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-bg-dark/90 backdrop-blur-xl border-t border-primary/10 pb-safe">
+        <div className="flex items-center justify-between px-4 pt-3 pb-2 max-w-md mx-auto">
           {NAV_ITEMS.map((item, idx) => {
             const active = isActive(item.href);
             // Center elevated button
             if (idx === 2) {
               return (
-                <Link key={item.href} href={item.href} className="flex flex-col items-center -mt-8">
-                  <div className={`size-14 rounded-full flex items-center justify-center border-4 border-bg-dark shadow-xl transition-transform hover:scale-105 ${
+                <Link key={item.href} href={item.href} className="flex flex-col items-center -mt-8 min-h-[44px]">
+                  <div className={`size-16 rounded-full flex items-center justify-center border-4 border-bg-dark shadow-xl transition-transform hover:scale-105 ${
                     active
                       ? 'bg-primary shadow-[0_0_20px_rgba(250,222,41,0.4)]'
                       : 'bg-secondary-dark border-primary/30'
@@ -153,7 +153,7 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center gap-1 group transition-opacity ${
+                className={`flex flex-col items-center gap-1 group transition-opacity min-h-[44px] justify-center ${
                   active ? 'opacity-100' : 'opacity-40 hover:opacity-100'
                 }`}
               >
