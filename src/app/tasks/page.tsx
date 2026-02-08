@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { getTaskAge, getAgeBorderClass, getAgeTextClass } from '@/lib/tasks';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -936,6 +937,7 @@ export default function TasksPage() {
                           const isDone = col === 'Done';
                           const dueBadge = getDueBadge(task.dueDate, task.column);
                           const isSelected = selectedIds.has(task.id);
+                          const taskAge = getTaskAge(task, task.column);
                           return (
                             <Draggable key={task.id} draggableId={task.id} index={idx} isDragDisabled={batchMode}>
                               {(provided, snapshot) => (
@@ -944,7 +946,8 @@ export default function TasksPage() {
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
                                   onClick={batchMode ? () => toggleSelect(task.id) : undefined}
-                                  className={`relative rounded-xl border border-l-4 ${priorityStripe[task.priority]} bg-bg-dark p-4 group animate-slide-up ${batchMode ? 'cursor-pointer' : 'cursor-grab active:cursor-grabbing'} ${isSelected ? 'border-primary/50 ring-1 ring-primary/30' : 'border-white/10'} ${snapshot.isDragging ? 'shadow-2xl shadow-primary/20 scale-105 rotate-2' : 'card-hover'} transition-all ${idx === 0 ? '' : idx === 1 ? 'delay-1' : idx === 2 ? 'delay-2' : idx === 3 ? 'delay-3' : idx === 4 ? 'delay-4' : 'delay-5'}`}
+                                  className={`relative rounded-xl border border-l-4 bg-bg-dark p-4 group animate-slide-up ${batchMode ? 'cursor-pointer' : 'cursor-grab active:cursor-grabbing'} ${isSelected ? 'border-primary/50 ring-1 ring-primary/30' : 'border-white/10'} ${snapshot.isDragging ? 'shadow-2xl shadow-primary/20 scale-105 rotate-2' : 'card-hover'} transition-all ${idx === 0 ? '' : idx === 1 ? 'delay-1' : idx === 2 ? 'delay-2' : idx === 3 ? 'delay-3' : idx === 4 ? 'delay-4' : 'delay-5'}`}
+                                  style={{ borderLeftColor: taskAge.borderColor }}
                                 >
                                   {/* Drag handle (mobile visual indicator) + Selection checkbox + Priority badge + due date + edit */}
                                   <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -960,6 +963,12 @@ export default function TasksPage() {
                                     )}
                                     <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${getPriorityStyles(task.priority)}`}>
                                       {task.priority}
+                                    </span>
+                                    {/* Task age indicator */}
+                                    <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${getAgeTextClass(taskAge)} bg-opacity-15`} style={{ backgroundColor: `${taskAge.color}20` }}>
+                                      <span className="material-symbols-outlined" style={{ fontSize: 11 }}>schedule</span>
+                                      <span className="hidden sm:inline">{taskAge.label} in {task.column}</span>
+                                      <span className="sm:hidden">{taskAge.label}</span>
                                     </span>
                                     {dueBadge}
                                     {task.assignedTo && (
