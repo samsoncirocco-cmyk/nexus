@@ -1,5 +1,33 @@
 [
   {
+    "id": "backfill-38-20526",
+    "timestamp": "2026-02-08T15:30:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Nexus: All 9 spec docs pushed to GitHub (9,139 lines)",
+    "title": "Nexus: All 9 spec docs pushed to GitHub (9,139 lines)",
+    "summary": "Nexus: All 9 spec docs pushed to GitHub (9,139 lines)",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-37-78827",
+    "timestamp": "2026-02-08T15:29:00Z",
+    "agent": "paul",
+    "type": "deployed",
+    "message": "Second Brain: All 21 NIGHTSHIFT features deployed to brain.6eyes.dev",
+    "title": "Second Brain: All 21 NIGHTSHIFT features deployed to brain.6eyes.dev",
+    "summary": "Second Brain: All 21 NIGHTSHIFT features deployed to brain.6eyes.dev",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T15:23:38Z",
     "type": "completed",
     "agent": "insight-extraction-fix",
@@ -10,6 +38,20 @@
     "type": "completed",
     "agent": "calendar-widget-fix",
     "message": "Calendar widget already implemented and committed - verified implementation matches all requirements (API route with mock data, themed widget component with calendar_today icon, integrated into home page)"
+  },
+  {
+    "id": "backfill-36-49267",
+    "timestamp": "2026-02-08T15:20:00Z",
+    "agent": "email-digest-v2",
+    "type": "completed",
+    "message": "Second Brain: Email digest widget \u2014 Gmail + NAU unread on home page",
+    "title": "Second Brain: Email digest widget \u2014 Gmail + NAU unread on home page",
+    "summary": "Second Brain: Email digest widget \u2014 Gmail + NAU unread on home page",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T15:19:59Z",
@@ -30,6 +72,20 @@
     "message": "Second Brain build FAILED"
   },
   {
+    "id": "backfill-35-8685",
+    "timestamp": "2026-02-08T15:19:00Z",
+    "agent": "insight-extraction",
+    "type": "completed",
+    "message": "Second Brain: Insight extraction widget \u2014 auto-surfaces patterns from activity feed",
+    "title": "Second Brain: Insight extraction widget \u2014 auto-surfaces patterns from activity feed",
+    "summary": "Second Brain: Insight extraction widget \u2014 auto-surfaces patterns from activity feed",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T15:18:39Z",
     "type": "completed",
     "agent": "insight-extraction",
@@ -40,6 +96,20 @@
     "type": "completed",
     "agent": "calendar-widget",
     "message": "Second Brain: calendar widget on home page"
+  },
+  {
+    "id": "backfill-34-86902",
+    "timestamp": "2026-02-08T15:18:00Z",
+    "agent": "calendar-widget",
+    "type": "completed",
+    "message": "Second Brain: Calendar widget on home page \u2014 next 48h events grouped by day",
+    "title": "Second Brain: Calendar widget on home page \u2014 next 48h events grouped by day",
+    "summary": "Second Brain: Calendar widget on home page \u2014 next 48h events grouped by day",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T15:17:52Z",
@@ -54,6 +124,34 @@
     "message": "Second Brain: smooth page transitions"
   },
   {
+    "id": "backfill-33-88712",
+    "timestamp": "2026-02-08T08:27:00Z",
+    "agent": "nexus-pricing",
+    "type": "completed",
+    "message": "Nexus: PRICING.md spec \u2014 3 tiers, Stripe integration, revenue projections",
+    "title": "Nexus: PRICING.md spec \u2014 3 tiers, Stripe integration, revenue projections",
+    "summary": "Nexus: PRICING.md spec \u2014 3 tiers, Stripe integration, revenue projections",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-27-64744",
+    "timestamp": "2026-02-08T08:25:00Z",
+    "agent": "page-transitions",
+    "type": "completed",
+    "message": "Second Brain: Smooth page transitions (fade/slide, 250ms ease-out)",
+    "title": "Second Brain: Smooth page transitions (fade/slide, 250ms ease-out)",
+    "summary": "Second Brain: Smooth page transitions (fade/slide, 250ms ease-out)",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T08:23:48Z",
     "type": "completed",
     "agent": "nexus-api-spec",
@@ -64,6 +162,34 @@
     "type": "completed",
     "agent": "offline-indicator",
     "message": "Offline indicator: Show banner when app is offline, cache critical pages for PWA. Uses navigator.onLine API, Material Symbols icons, theme colors (#154733, #FEE123). Enhanced SW to cache /memory, /vault, /tasks routes."
+  },
+  {
+    "id": "backfill-26-81750",
+    "timestamp": "2026-02-08T08:20:00Z",
+    "agent": "offline-indicator",
+    "type": "completed",
+    "message": "Second Brain: Offline indicator + service worker caching (v3)",
+    "title": "Second Brain: Offline indicator + service worker caching (v3)",
+    "summary": "Second Brain: Offline indicator + service worker caching (v3)",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-32-86805",
+    "timestamp": "2026-02-08T08:20:00Z",
+    "agent": "nexus-specs",
+    "type": "completed",
+    "message": "Nexus: INTEGRATIONS.md spec \u2014 LinkedIn, X, Substack, Medium, IG, TikTok APIs",
+    "title": "Nexus: INTEGRATIONS.md spec \u2014 LinkedIn, X, Substack, Medium, IG, TikTok APIs",
+    "summary": "Nexus: INTEGRATIONS.md spec \u2014 LinkedIn, X, Substack, Medium, IG, TikTok APIs",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T08:19:20Z",
@@ -84,6 +210,34 @@
     "message": "Implemented skeleton loaders across all Second Brain pages - Created reusable Skeleton component system with shimmer/pulse animations - Added page-specific skeletons (TaskCard, ActivityItem, StatCard, EmailItem, QuickLink) - Created loading.tsx files for dashboard, tasks, activity, inbox, deals, agents, and docs - Updated inbox page with improved skeleton loader - All skeletons match theme (dark green #154733, gold #FEE123) - Mobile-first responsive design - Build passes successfully"
   },
   {
+    "id": "backfill-25-91075",
+    "timestamp": "2026-02-08T08:15:00Z",
+    "agent": "mobile-bottom-nav",
+    "type": "completed",
+    "message": "Second Brain: Mobile bottom navigation bar for PWA",
+    "title": "Second Brain: Mobile bottom navigation bar for PWA",
+    "summary": "Second Brain: Mobile bottom navigation bar for PWA",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-31-96953",
+    "timestamp": "2026-02-08T08:15:00Z",
+    "agent": "nexus-specs",
+    "type": "completed",
+    "message": "Nexus: PROMPTS.md spec \u2014 AI prompt templates for multi-platform adaptation",
+    "title": "Nexus: PROMPTS.md spec \u2014 AI prompt templates for multi-platform adaptation",
+    "summary": "Nexus: PROMPTS.md spec \u2014 AI prompt templates for multi-platform adaptation",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T08:14:17Z",
     "type": "completed",
     "agent": "command-palette",
@@ -94,6 +248,34 @@
     "type": "completed",
     "agent": "breadcrumb-nav",
     "message": "Enhanced breadcrumb navigation - Now shows actual document titles with icons, handles dynamic routes properly, mobile-first design with theme colors"
+  },
+  {
+    "id": "backfill-24-62986",
+    "timestamp": "2026-02-08T08:10:00Z",
+    "agent": "error-boundaries",
+    "type": "completed",
+    "message": "Second Brain: Error boundaries \u2014 themed error pages instead of white screens",
+    "title": "Second Brain: Error boundaries \u2014 themed error pages instead of white screens",
+    "summary": "Second Brain: Error boundaries \u2014 themed error pages instead of white screens",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-30-18392",
+    "timestamp": "2026-02-08T08:10:00Z",
+    "agent": "nexus-specs",
+    "type": "completed",
+    "message": "Nexus: API.md spec \u2014 52KB, all endpoints with request/response shapes",
+    "title": "Nexus: API.md spec \u2014 52KB, all endpoints with request/response shapes",
+    "summary": "Nexus: API.md spec \u2014 52KB, all endpoints with request/response shapes",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T08:07:32Z",
@@ -108,16 +290,72 @@
     "message": "Nexus: built compose flow with platform previews and AI adaptation"
   },
   {
+    "id": "backfill-23-34605",
+    "timestamp": "2026-02-08T08:05:00Z",
+    "agent": "loading-skeletons",
+    "type": "completed",
+    "message": "Second Brain: Loading skeletons on all 7 pages \u2014 gold shimmer on dark green",
+    "title": "Second Brain: Loading skeletons on all 7 pages \u2014 gold shimmer on dark green",
+    "summary": "Second Brain: Loading skeletons on all 7 pages \u2014 gold shimmer on dark green",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-29-40200",
+    "timestamp": "2026-02-08T08:05:00Z",
+    "agent": "nexus-specs",
+    "type": "completed",
+    "message": "Nexus: DATABASE.md spec \u2014 10 tables, RLS policies, vector support",
+    "title": "Nexus: DATABASE.md spec \u2014 10 tables, RLS policies, vector support",
+    "summary": "Nexus: DATABASE.md spec \u2014 10 tables, RLS policies, vector support",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T08:04:58Z",
     "type": "completed",
     "agent": "vault-doc-creation",
     "message": "Vault doc creation UI complete: New doc button on dashboard + tags field on creation form. Build passes. Deploy blocked by rate limit (100/day) - will auto-deploy on next push."
   },
   {
+    "id": "backfill-22-33910",
+    "timestamp": "2026-02-08T08:00:00Z",
+    "agent": "command-palette",
+    "type": "completed",
+    "message": "Second Brain: Command palette (Cmd+K) \u2014 searches docs, tasks, and pages",
+    "title": "Second Brain: Command palette (Cmd+K) \u2014 searches docs, tasks, and pages",
+    "summary": "Second Brain: Command palette (Cmd+K) \u2014 searches docs, tasks, and pages",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T07:58:38Z",
     "type": "completed",
     "agent": "related-notes-sidebar",
     "message": "Related Notes sidebar deployed \u2014 Shows related vault docs on activity items, and related activity on vault docs. Fixed edit route structure (/doc/edit/[...slug]). Live at brain.6eyes.dev"
+  },
+  {
+    "id": "backfill-21-42530",
+    "timestamp": "2026-02-08T07:50:00Z",
+    "agent": "breadcrumb-nav",
+    "type": "completed",
+    "message": "Second Brain: Breadcrumb navigation with document titles and category icons",
+    "title": "Second Brain: Breadcrumb navigation with document titles and category icons",
+    "summary": "Second Brain: Breadcrumb navigation with document titles and category icons",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T07:48:06Z",
@@ -138,10 +376,80 @@
     "message": "Task board drag-and-drop \u2014 tasks can now be moved between columns"
   },
   {
+    "id": "backfill-20-75357",
+    "timestamp": "2026-02-08T07:40:00Z",
+    "agent": "task-age",
+    "type": "completed",
+    "message": "Second Brain: Task age indicators \u2014 color-coded by staleness",
+    "title": "Second Brain: Task age indicators \u2014 color-coded by staleness",
+    "summary": "Second Brain: Task age indicators \u2014 color-coded by staleness",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-19-18831",
+    "timestamp": "2026-02-08T07:35:00Z",
+    "agent": "task-create",
+    "type": "completed",
+    "message": "Second Brain: Task creation UI with modal form",
+    "title": "Second Brain: Task creation UI with modal form",
+    "summary": "Second Brain: Task creation UI with modal form",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T07:31:46Z",
     "type": "completed",
     "agent": "live-agent-status",
     "message": "Live agent status on /agents page \u2014 shows running agents with elapsed time"
+  },
+  {
+    "id": "backfill-18-283",
+    "timestamp": "2026-02-08T07:30:00Z",
+    "agent": "task-dnd",
+    "type": "completed",
+    "message": "Second Brain: Task board drag-and-drop between columns",
+    "title": "Second Brain: Task board drag-and-drop between columns",
+    "summary": "Second Brain: Task board drag-and-drop between columns",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-17-70870",
+    "timestamp": "2026-02-08T07:25:00Z",
+    "agent": "vault-creation",
+    "type": "completed",
+    "message": "Second Brain: Vault doc creation from dashboard \u2014 New Doc button with frontmatter",
+    "title": "Second Brain: Vault doc creation from dashboard \u2014 New Doc button with frontmatter",
+    "summary": "Second Brain: Vault doc creation from dashboard \u2014 New Doc button with frontmatter",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-16-31522",
+    "timestamp": "2026-02-08T07:20:00Z",
+    "agent": "doc-edit-route",
+    "type": "completed",
+    "message": "Second Brain: Doc edit route restored for in-browser editing",
+    "title": "Second Brain: Doc edit route restored for in-browser editing",
+    "summary": "Second Brain: Doc edit route restored for in-browser editing",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T07:19:18Z",
@@ -156,10 +464,66 @@
     "message": "Second Brain build FAILED"
   },
   {
+    "id": "backfill-15-83904",
+    "timestamp": "2026-02-08T07:15:00Z",
+    "agent": "related-notes-v2",
+    "type": "completed",
+    "message": "Second Brain: Related Notes sidebar on activity feed and vault docs",
+    "title": "Second Brain: Related Notes sidebar on activity feed and vault docs",
+    "summary": "Second Brain: Related Notes sidebar on activity feed and vault docs",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T07:13:04Z",
     "type": "alert",
     "agent": "auto-deploy",
     "message": "Second Brain build FAILED"
+  },
+  {
+    "id": "backfill-14-90998",
+    "timestamp": "2026-02-08T07:10:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: live agent status on /agents page",
+    "title": "Second Brain: live agent status on /agents page",
+    "summary": "Second Brain: live agent status on /agents page",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-13-59973",
+    "timestamp": "2026-02-08T07:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: Heartbeat \u2192 Brain sync \u2014 task auto-sync, dashboard widget",
+    "title": "Second Brain: Heartbeat \u2192 Brain sync \u2014 task auto-sync, dashboard widget",
+    "summary": "Second Brain: Heartbeat \u2192 Brain sync \u2014 task auto-sync, dashboard widget",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-28-12733",
+    "timestamp": "2026-02-08T07:00:00Z",
+    "agent": "nexus-auth",
+    "type": "completed",
+    "message": "Nexus: Auth + database foundation \u2014 Supabase schema, signup/login, dashboard layout",
+    "title": "Nexus: Auth + database foundation \u2014 Supabase schema, signup/login, dashboard layout",
+    "summary": "Nexus: Auth + database foundation \u2014 Supabase schema, signup/login, dashboard layout",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T06:55:00Z",
@@ -198,6 +562,20 @@
     "message": "Unified Search Page built: search bar with debounce, source filter pills (Notes/Email/Tasks/Agents), result cards with highlighting and relevance scores, loading skeletons, empty states, and Cmd+K global keyboard shortcut. Mock data ready for API swap."
   },
   {
+    "id": "backfill-12-83297",
+    "timestamp": "2026-02-08T06:30:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: 'What Matters Now' widget \u2014 hot topics, action items, stale alerts",
+    "title": "Second Brain: 'What Matters Now' widget \u2014 hot topics, action items, stale alerts",
+    "summary": "Second Brain: 'What Matters Now' widget \u2014 hot topics, action items, stale alerts",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T06:27:04Z",
     "type": "alert",
     "agent": "auto-deploy",
@@ -222,6 +600,20 @@
     "message": "Wired heartbeats into Second Brain: task auto-sync, heartbeat status dashboard widget, stale task detection"
   },
   {
+    "id": "backfill-11-47904",
+    "timestamp": "2026-02-08T06:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: semantic search API deployed via Cloud Function",
+    "title": "Second Brain: semantic search API deployed via Cloud Function",
+    "summary": "Second Brain: semantic search API deployed via Cloud Function",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T05:44:55Z",
     "type": "completed",
     "agent": "vercel-fix",
@@ -232,6 +624,20 @@
     "type": "completed",
     "agent": "memory-archival",
     "message": "MEMORY.md archival: slimmed from 315 to 140 lines, created archive system with 5 topic files"
+  },
+  {
+    "id": "backfill-10-4542",
+    "timestamp": "2026-02-08T05:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: Wire all APIs \u2014 BigQuery analytics, context-aware chat, live dashboard insights",
+    "title": "Second Brain: Wire all APIs \u2014 BigQuery analytics, context-aware chat, live dashboard insights",
+    "summary": "Second Brain: Wire all APIs \u2014 BigQuery analytics, context-aware chat, live dashboard insights",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T04:51:34Z",
@@ -528,6 +934,48 @@
     "message": "Rotated all API keys \u2014 scrubbed hardcoded secrets from 3 source files and 11 docs. New gateway + hook tokens deployed."
   },
   {
+    "id": "backfill-9-89223",
+    "timestamp": "2026-02-07T23:45:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: mobile PWA polish + functional settings page",
+    "title": "Second Brain: mobile PWA polish + functional settings page",
+    "summary": "Second Brain: mobile PWA polish + functional settings page",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-8-80485",
+    "timestamp": "2026-02-07T23:30:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: full-text vault search + smart command bar",
+    "title": "Second Brain: full-text vault search + smart command bar",
+    "summary": "Second Brain: full-text vault search + smart command bar",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-7-75603",
+    "timestamp": "2026-02-07T23:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: route chat through OpenClaw gateway for real Paul access",
+    "title": "Second Brain: route chat through OpenClaw gateway for real Paul access",
+    "summary": "Second Brain: route chat through OpenClaw gateway for real Paul access",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "id": "9288eb4f",
     "timestamp": "2026-02-07T22:45:54Z",
     "agent": "Book Chapters 1-4 deep edit \u2014 tightened, cut redundancy, improved transitions",
@@ -561,6 +1009,34 @@
     "status": "done"
   },
   {
+    "id": "backfill-6-2120",
+    "timestamp": "2026-02-07T22:30:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: interactive Kanban task board",
+    "title": "Second Brain: interactive Kanban task board",
+    "summary": "Second Brain: interactive Kanban task board",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-5-3872",
+    "timestamp": "2026-02-07T22:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: live agent dashboard with gateway session data",
+    "title": "Second Brain: live agent dashboard with gateway session data",
+    "summary": "Second Brain: live agent dashboard with gateway session data",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "id": "17a08208",
     "timestamp": "2026-02-07T21:46:09Z",
     "agent": "Nexus multi-platform upgrade complete \u2014 all 7 features now platform-aware for LinkedIn, X, Substack, Medium, Instagram, TikTok. Platform intelligence engine, per-platform voice profiles, comparison view, platform command center.",
@@ -581,6 +1057,20 @@
     "output": [],
     "tags": [],
     "status": "done"
+  },
+  {
+    "id": "backfill-4-85607",
+    "timestamp": "2026-02-07T21:30:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: in-browser vault document editor with live preview",
+    "title": "Second Brain: in-browser vault document editor with live preview",
+    "summary": "Second Brain: in-browser vault document editor with live preview",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "id": "e83a1da4",
@@ -625,6 +1115,20 @@
     "output": [],
     "tags": [],
     "status": "done"
+  },
+  {
+    "id": "backfill-3-16766",
+    "timestamp": "2026-02-07T21:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: resolve build conflicts from 12 parallel agents, deploy to production",
+    "title": "Second Brain: resolve build conflicts from 12 parallel agents, deploy to production",
+    "summary": "Second Brain: resolve build conflicts from 12 parallel agents, deploy to production",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "id": "174cf2bc",
@@ -737,6 +1241,20 @@
     "status": "done"
   },
   {
+    "id": "backfill-2-74543",
+    "timestamp": "2026-02-07T20:30:00Z",
+    "agent": "paul",
+    "type": "fixed",
+    "message": "Second Brain: EROFS fix \u2014 vault writes redirected to /tmp on Vercel",
+    "title": "Second Brain: EROFS fix \u2014 vault writes redirected to /tmp on Vercel",
+    "summary": "Second Brain: EROFS fix \u2014 vault writes redirected to /tmp on Vercel",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "id": "402bdf5c",
     "timestamp": "2026-02-07T20:24:56Z",
     "agent": "gateway-bridge",
@@ -812,6 +1330,34 @@
     "output": [],
     "tags": [],
     "status": "done"
+  },
+  {
+    "id": "backfill-1-61588",
+    "timestamp": "2026-02-07T20:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: unified search page with source filters",
+    "title": "Second Brain: unified search page with source filters",
+    "summary": "Second Brain: unified search page with source filters",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-0-55248",
+    "timestamp": "2026-02-07T19:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: 104+ features via 5-agent parallel rewrite (11 pages rebuilt)",
+    "title": "Second Brain: 104+ features via 5-agent parallel rewrite (11 pages rebuilt)",
+    "summary": "Second Brain: 104+ features via 5-agent parallel rewrite (11 pages rebuilt)",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "id": "e00a3d16",
