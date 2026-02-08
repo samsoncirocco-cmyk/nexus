@@ -7,6 +7,7 @@ import { NotificationProvider } from "@/components/NotificationBanner";
 import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 import GlobalSearchShortcut from "@/components/GlobalSearchShortcut";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
 
 export const metadata: Metadata = {
   title: "Second Brain",
@@ -59,6 +60,7 @@ export default function RootLayout({
       <body className="antialiased overflow-x-hidden font-body">
         <ErrorBoundary>
           <NotificationProvider>
+            <OfflineIndicator />
             <NavigationProgress />
             <CommandPalette />
             <NavShell>{children}</NavShell>
