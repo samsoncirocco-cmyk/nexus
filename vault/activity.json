@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T07:13:04Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
     "timestamp": "2026-02-08T06:55:00Z",
     "type": "completed",
     "agent": "what-matters-widget",

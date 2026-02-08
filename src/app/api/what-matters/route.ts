@@ -184,7 +184,7 @@ export async function GET(request: NextRequest) {
 
     // 3. Get tasks
     const tasks = await getTasks();
-    const activeTasks = tasks.filter(t => t.column === 'todo' || t.column === 'in-progress');
+    const activeTasks = tasks.filter(t => t.column === 'Backlog' || t.column === 'In Progress' || t.column === 'Waiting on Samson');
 
     // Calculate task age in days
     const tasksWithAge = activeTasks.map(task => {
@@ -205,9 +205,9 @@ export async function GET(request: NextRequest) {
         priority: task.priority,
       }));
 
-    // 5. Stale alerts (in-progress for >3 days)
+    // 5. Stale alerts (In Progress for >3 days)
     const staleAlerts: StaleAlert[] = tasksWithAge
-      .filter(task => task.column === 'in-progress' && task.age > 3)
+      .filter(task => task.column === 'In Progress' && task.age > 3)
       .map(task => ({
         id: task.id,
         title: task.title,

@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
 
       // Title word overlap (medium score)
       const docTitleWords = extractKeywords(doc.title);
-      const titleOverlap = titleWords.filter(w => docTitleWords.has(w));
+      const titleOverlap = [...titleWords].filter(w => docTitleWords.has(w));
       if (titleOverlap.length > 0) {
         score += titleOverlap.length * 5;
         if (matchReasons.length === 0) {
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
 
       // Content keyword overlap (low score) - only check if we have some score already
       if (score > 0) {
-        const contentOverlap = contentWords.filter(w => {
+        const contentOverlap = [...contentWords].filter(w => {
           const docTitleLower = doc.title.toLowerCase();
           return docTitleLower.includes(w);
         });
