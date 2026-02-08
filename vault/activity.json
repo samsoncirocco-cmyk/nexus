@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T03:15:46Z",
+    "type": "note",
+    "agent": "test-agent",
+    "message": "Test activity post"
+  },
+  {
     "timestamp": "2026-02-08T03:00:15Z",
     "type": "deployed",
     "agent": "repo-sync",
