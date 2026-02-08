@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 121
-- **Files:** 33813
+- **Total Commits:** 139
+- **Files:** 35341
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main)T086e059a21ab486269238226b778ba841db5db13:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)Tf8c4e0fa48168c1b8a164dff3acececaff768551:%M:HEADZ
 
 ## Recent Commits
-- 086e059 auto: update 3 files (src/lib/semantic-search.ts,vault/activity.json,vault/heartbeat-status.json)
-- 3d0d428 auto: vault data update 2026-02-08T07:16:33Z
-- cbb4c88 auto: update 4 files (src/app/api/related/route.ts,src/app/api/what-matters/route.ts,vault/activity.json)
-- 48add5f auto: vault data update 2026-02-08T07:13:02Z
-- 30dd9ae auto: update 5 files (src/app/api/related/route.ts,src/app/doc/[...slug]/page.tsx,src/components/RelatedNotes.tsx)
+- f8c4e0f auto: update 8 files (src/app/api/calendar/route.ts,src/app/api/email-digest/route.ts,src/app/api/insights/route.ts)
+- 86f31ae feat: implement offline indicator with PWA caching
+- 841e5bf feat: Add offline indicator banner with PWA caching
+- 271233f Add comprehensive error boundaries with themed UI
+- 901d49d docs: Add loading skeletons completion report
 
 ## Status
-Last commit: `086e059 auto: update 3 files (src/lib/semantic-search.ts,vault/activity.json,vault/heartbeat-status.json)`
+Last commit: `f8c4e0f auto: update 8 files (src/app/api/calendar/route.ts,src/app/api/email-digest/route.ts,src/app/api/insights/route.ts)`
