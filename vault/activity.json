@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-08T15:19:32Z",
+    "type": "completed",
+    "agent": "email-digest-v2",
+    "message": "Second Brain: email digest widget on home page"
+  },
+  {
+    "timestamp": "2026-02-08T15:19:14Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
     "timestamp": "2026-02-08T15:18:39Z",
     "type": "completed",
     "agent": "insight-extraction",
