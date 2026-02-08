@@ -16,8 +16,76 @@ interface ContextMetadata {
   taskCount: number;
 }
 
+interface GatewayStatus {
+  connected: boolean;
+  mode: 'gateway' | 'gemini-fallback';
+}
+
+const GATEWAY_URL = 'http://localhost:18789';
+const GATEWAY_TOKEN = 'bf5106005bcbef582601fd5d0b325f2b106f6dc965d7c260';
+
 function generateId(): string {
   return `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+async function checkGatewayHealth(): Promise<boolean> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    
+    const response = await fetch(`${GATEWAY_URL}/health`, {
+      signal: controller.signal,
+      headers: {
+        'Authorization': `Bearer ${GATEWAY_TOKEN}`,
+      },
+    });
+    
+    clearTimeout(timeoutId);
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function sendToGateway(text: string): Promise<string> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+  try {
+    const response = await fetch(`${GATEWAY_URL}/hooks/agent`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${GATEWAY_TOKEN}`,
+      },
+      body: JSON.stringify({
+        text,
+        from: 'web-chat',
+      }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Gateway responded with ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Gateway may return the response in different formats
+    // Try to extract the text response
+    if (typeof data === 'string') return data;
+    if (data.text) return data.text;
+    if (data.response) return data.response;
+    if (data.message) return data.message;
+    
+    // If we got a structured response, stringify it
+    return JSON.stringify(data);
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
 }
 
 async function buildSystemPrompt(): Promise<{ prompt: string; metadata: ContextMetadata }> {
@@ -108,26 +176,67 @@ Answer questions naturally, referencing the context above when relevant.`;
   return { prompt, metadata };
 }
 
-// GET — return empty (chat history is client-side only on Vercel)
-export async function GET() {
-  return NextResponse.json({ messages: [] });
+async function fallbackToGemini(text: string, conversationHistory: ChatMessage[]): Promise<string> {
+  const apiKey = process.env.GOOGLE_API_KEY;
+  if (!apiKey) {
+    return "I'm having trouble connecting. The gateway is down and Gemini API key is missing. 🦆";
+  }
+
+  const { prompt: systemPrompt } = await buildSystemPrompt();
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+  const history: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+  
+  if (conversationHistory && Array.isArray(conversationHistory)) {
+    const recentHistory = conversationHistory.slice(-10);
+    recentHistory.forEach((msg: ChatMessage) => {
+      history.push({
+        role: msg.from === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.text }],
+      });
+    });
+  }
+
+  const chat = model.startChat({
+    history,
+    generationConfig: {
+      temperature: 0.9,
+      topP: 0.95,
+      topK: 40,
+      maxOutputTokens: 2048,
+    },
+  });
+
+  try {
+    const result = await chat.sendMessage(`${systemPrompt}\n\nUser: ${text.trim()}`);
+    return result.response.text();
+  } catch (aiError: unknown) {
+    console.error('Gemini API error:', aiError);
+    return "I'm having trouble thinking right now. Give me a sec and try again. 🦆";
+  }
 }
 
-// POST — context-aware conversational chat with Gemini
+// GET — return connection status
+export async function GET() {
+  const gatewayConnected = await checkGatewayHealth();
+  
+  const status: GatewayStatus = {
+    connected: gatewayConnected,
+    mode: gatewayConnected ? 'gateway' : 'gemini-fallback',
+  };
+  
+  return NextResponse.json(status);
+}
+
+// POST — route through OpenClaw gateway with Gemini fallback
 export async function POST(request: NextRequest) {
   try {
     const { text, messages: conversationHistory } = await request.json();
 
     if (!text || typeof text !== 'string' || !text.trim()) {
       return NextResponse.json({ error: 'Missing "text" field' }, { status: 400 });
-    }
-
-    const apiKey = process.env.GOOGLE_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: 'GOOGLE_API_KEY environment variable not set' },
-        { status: 500 }
-      );
     }
 
     const now = new Date().toISOString();
@@ -139,41 +248,25 @@ export async function POST(request: NextRequest) {
       status: 'sent',
     };
 
-    const { prompt: systemPrompt, metadata } = await buildSystemPrompt();
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
-    const history: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
-    
-    if (conversationHistory && Array.isArray(conversationHistory)) {
-      const recentHistory = conversationHistory.slice(-10);
-      recentHistory.forEach((msg: ChatMessage) => {
-        history.push({
-          role: msg.from === 'user' ? 'user' : 'model',
-          parts: [{ text: msg.text }],
-        });
-      });
-    }
-
-    const chat = model.startChat({
-      history,
-      generationConfig: {
-        temperature: 0.9,
-        topP: 0.95,
-        topK: 40,
-        maxOutputTokens: 2048,
-      },
-    });
-
+    // Try gateway first
+    const gatewayConnected = await checkGatewayHealth();
     let aiResponseText: string;
-    try {
-      const result = await chat.sendMessage(`${systemPrompt}\n\nUser: ${text.trim()}`);
-      aiResponseText = result.response.text();
-    } catch (aiError: unknown) {
-      console.error('Gemini API error:', aiError);
-      aiResponseText = "I'm having trouble thinking right now. Give me a sec and try again. 🦆";
+    let mode: 'gateway' | 'gemini-fallback' = 'gemini-fallback';
+
+    if (gatewayConnected) {
+      try {
+        aiResponseText = await sendToGateway(text.trim());
+        mode = 'gateway';
+      } catch (gatewayError) {
+        console.error('Gateway request failed, falling back to Gemini:', gatewayError);
+        aiResponseText = await fallbackToGemini(text.trim(), conversationHistory || []);
+      }
+    } else {
+      console.log('Gateway not reachable, using Gemini fallback');
+      aiResponseText = await fallbackToGemini(text.trim(), conversationHistory || []);
     }
+
+    const { metadata } = await buildSystemPrompt();
 
     const aiResponse: ChatMessage = {
       id: generateId(),
@@ -187,6 +280,10 @@ export async function POST(request: NextRequest) {
       userMessage,
       aiResponse,
       metadata,
+      gatewayStatus: {
+        connected: gatewayConnected,
+        mode,
+      },
     });
   } catch (error: unknown) {
     console.error('Chat POST error:', error);
