@@ -48,6 +48,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   reports: '#ef4444',
   root: '#9ca3af',
   'data-source': '#10b981',
+  repos: '#f59e0b',
 };
 
 const CATEGORY_GLOW: Record<string, string> = {
@@ -60,6 +61,7 @@ const CATEGORY_GLOW: Record<string, string> = {
   reports: 'rgba(239,68,68,0.4)',
   root: 'rgba(156,163,175,0.4)',
   'data-source': 'rgba(16,185,129,0.4)',
+  repos: 'rgba(245,158,11,0.4)',
 };
 
 function getColor(cat: string) {
