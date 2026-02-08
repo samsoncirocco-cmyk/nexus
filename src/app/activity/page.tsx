@@ -112,6 +112,7 @@ export default async function ActivityPage() {
             <div className="space-y-10">
               {activity.map((entry) => {
                 const badge = getAgentBadge(entry.agent, entry.type);
+                const sourceBadge = getSourceBadge(entry.source);
                 const isCommand = entry.type === 'command';
                 const cmdStatus = isCommand ? getCommandStatusBadge(entry.status) : null;
 
@@ -129,9 +130,13 @@ export default async function ActivityPage() {
                     </div>
 
                     <div className={`flex flex-col gap-2 ${isCommand ? 'bg-primary/5 -mx-3 px-3 py-3 rounded-xl border border-primary/10' : ''}`}>
-                      {/* Agent Badge + Time */}
+                      {/* Source + Agent Badge + Time */}
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
+                          <span className={`${sourceBadge.bgColor} px-2.5 py-0.5 rounded-full text-[10px] font-bold ${sourceBadge.textColor} tracking-wider border ${sourceBadge.borderColor} flex items-center gap-1`}>
+                            <span>{sourceBadge.emoji}</span>
+                            <span>{sourceBadge.label}</span>
+                          </span>
                           <span className={`${badge.bgColor} px-3 py-0.5 rounded-full text-[10px] font-bold ${badge.textColor} tracking-wider border ${isCommand ? 'border-primary/30' : 'border-transparent'}`}>
                             {badge.label}
                           </span>
