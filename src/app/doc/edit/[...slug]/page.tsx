@@ -8,7 +8,7 @@ import html from 'remark-html';
 export default function EditDocumentPage() {
   const router = useRouter();
   const params = useParams();
-  const slug = Array.isArray(params.slug) ? params.slug.join('/') : params.slug;
+  const slug = Array.isArray(params.slug) ? params.slug.join('/') : (params.slug || '');
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');

@@ -25,11 +25,22 @@ export default function DocsIndexPage() {
       <div className="flex-1 max-w-2xl mx-auto px-4 pt-8 pb-24">
         {/* Header */}
         <div className="mb-8">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Knowledge Base</span>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
-            Documents <span className="text-primary">.</span>
-          </h1>
-          <p className="text-foreground-muted text-sm mt-2">{allDocs.length} documents across {Object.keys(documentsByCategory).length} categories</p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Knowledge Base</span>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
+                Documents <span className="text-primary">.</span>
+              </h1>
+              <p className="text-foreground-muted text-sm mt-2">{allDocs.length} documents across {Object.keys(documentsByCategory).length} categories</p>
+            </div>
+            <Link
+              href="/doc/new"
+              className="shrink-0 px-4 py-2 bg-primary text-bg-dark rounded-lg font-bold text-sm hover:bg-primary/90 transition-colors flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-sm">add</span>
+              <span className="hidden sm:inline">New Document</span>
+            </Link>
+          </div>
         </div>
 
         {/* Categories Grid */}

@@ -2,20 +2,13 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { revalidatePath } from 'next/cache';
 
-// Fix: The vault is at projects/second-brain/vault, which is parallel to src/
-// process.cwd() in Next.js usually points to the project root (projects/second-brain)
 const VAULT_PATH = path.join(process.cwd(), 'vault');
 const TASKS_FILE = path.join(VAULT_PATH, 'tasks.json');
 
 export type Priority = 'low' | 'medium' | 'high';
-export type Column = 'Backlog' | 'In Progress' | 'Waiting on Samson' | 'Done';
-
-export interface TaskLink {
-  label: string;
-  url: string;
-  type: 'drive' | 'brain' | 'file' | 'external';
-}
+export type Column = 'todo' | 'in-progress' | 'done';
 
 export interface Task {
   id: string;
@@ -23,10 +16,10 @@ export interface Task {
   description: string;
   column: Column;
   priority: Priority;
+  assignee?: string;
+  tags: string[];
   createdAt: string;
   updatedAt: string;
-  tags: string[];
-  links?: TaskLink[];
 }
 
 // Ensure vault directory exists
@@ -45,7 +38,6 @@ export async function getTasks(): Promise<Task[]> {
     const data = await fs.readFile(TASKS_FILE, 'utf-8');
     return JSON.parse(data);
   } catch (error) {
-    // Return empty if file doesn't exist or is invalid
     return [];
   }
 }
@@ -54,6 +46,7 @@ export async function getTasks(): Promise<Task[]> {
 export async function saveTasks(tasks: Task[]): Promise<void> {
   await ensureVault();
   await fs.writeFile(TASKS_FILE, JSON.stringify(tasks, null, 2), 'utf-8');
+  revalidatePath('/tasks');
 }
 
 // Create a new task
@@ -61,7 +54,7 @@ export async function createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedA
   const tasks = await getTasks();
   const newTask: Task = {
     ...task,
-    id: Math.random().toString(36).substring(2, 9),
+    id: Math.random().toString(36).substring(2, 11),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -71,18 +64,44 @@ export async function createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedA
 }
 
 // Update a task
-export async function updateTask(updatedTask: Task): Promise<void> {
+export async function updateTask(id: string, updates: Partial<Task>): Promise<Task | null> {
   const tasks = await getTasks();
-  const index = tasks.findIndex((t) => t.id === updatedTask.id);
-  if (index !== -1) {
-    tasks[index] = { ...updatedTask, updatedAt: new Date().toISOString() };
-    await saveTasks(tasks);
+  const index = tasks.findIndex((t) => t.id === id);
+  
+  if (index === -1) {
+    return null;
   }
+  
+  const updatedTask: Task = {
+    ...tasks[index],
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+  
+  tasks[index] = updatedTask;
+  await saveTasks(tasks);
+  return updatedTask;
 }
 
 // Delete a task
-export async function deleteTask(id: string): Promise<void> {
+export async function deleteTask(id: string): Promise<boolean> {
   const tasks = await getTasks();
   const filtered = tasks.filter((t) => t.id !== id);
+  
+  if (filtered.length === tasks.length) {
+    return false;
+  }
+  
   await saveTasks(filtered);
+  return true;
+}
+
+// Get tasks grouped by column
+export async function getTasksByColumn(): Promise<Record<Column, Task[]>> {
+  const tasks = await getTasks();
+  return {
+    todo: tasks.filter(t => t.column === 'todo'),
+    'in-progress': tasks.filter(t => t.column === 'in-progress'),
+    done: tasks.filter(t => t.column === 'done'),
+  };
 }
