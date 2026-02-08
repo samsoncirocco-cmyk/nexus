@@ -16,7 +16,15 @@ interface ActivityEntry {
   output?: string[];
   tags: string[];
   status: 'done' | 'in-progress' | 'failed' | 'info';
+  source?: 'vault' | 'gmail' | 'drive' | 'calendar';
 }
+
+/* ─── Source badge config ─── */
+const SOURCE_BADGES: Record<string, { icon: string; label: string; cls: string }> = {
+  gmail: { icon: 'mail', label: 'Gmail', cls: 'bg-red-500/15 text-red-400 border-red-500/30' },
+  drive: { icon: 'folder', label: 'Drive', cls: 'bg-blue-500/15 text-blue-400 border-blue-500/30' },
+  calendar: { icon: 'calendar_month', label: 'Calendar', cls: 'bg-purple-500/15 text-purple-400 border-purple-500/30' },
+};
 
 /* ─── Helpers (preserved from original) ─── */
 function getAgentBadge(agent: string, type?: string) {
@@ -81,14 +89,19 @@ function groupByDate(entries: ActivityEntry[]): { group: DateGroup; entries: Act
 }
 
 /* ─── Filter tabs ─── */
-const FILTERS = ['All', 'Paul', 'Workhorse', 'System'] as const;
+const FILTERS = ['All', 'Paul', 'Workhorse', 'System', 'Gmail', 'Drive', 'Calendar'] as const;
 type Filter = (typeof FILTERS)[number];
 
 function matchesFilter(entry: ActivityEntry, filter: Filter): boolean {
   if (filter === 'All') return true;
+  // Source-based filters
+  const fl = filter.toLowerCase();
+  if (fl === 'gmail' || fl === 'drive' || fl === 'calendar') {
+    return entry.source === fl;
+  }
+  // Agent-based filters
   const a = entry.agent.toLowerCase();
-  const f = filter.toLowerCase();
-  return a.includes(f);
+  return a.includes(fl);
 }
 
 function matchesSearch(entry: ActivityEntry, query: string): boolean {
@@ -98,6 +111,7 @@ function matchesSearch(entry: ActivityEntry, query: string): boolean {
     (entry.title?.toLowerCase().includes(q)) ||
     (entry.summary?.toLowerCase().includes(q)) ||
     (entry.agent?.toLowerCase().includes(q)) ||
+    (entry.source?.toLowerCase().includes(q)) ||
     (entry.tags?.some(t => t.toLowerCase().includes(q)))
   );
 }
@@ -105,13 +119,14 @@ function matchesSearch(entry: ActivityEntry, query: string): boolean {
 /* ─── Export ─── */
 function exportActivityLog(entries: ActivityEntry[]) {
   const rows = [
-    ['ID', 'Timestamp', 'Agent', 'Type', 'Status', 'Title', 'Summary', 'Tags', 'Output'].join('\t'),
+    ['ID', 'Timestamp', 'Agent', 'Type', 'Status', 'Source', 'Title', 'Summary', 'Tags', 'Output'].join('\t'),
     ...entries.map(e => [
       e.id,
       e.timestamp,
       e.agent,
       e.type,
       e.status,
+      e.source || 'vault',
       (e.title || '').replace(/\t/g, ' '),
       (e.summary || '').replace(/\t/g, ' '),
       (e.tags || []).join(', '),
@@ -404,12 +419,18 @@ export default function ActivityFeed({ initialEntries }: { initialEntries: Activ
                               : 'hover:bg-card-dark/30 -mx-1 px-1 py-1'
                           }`}
                         >
-                          {/* Agent Badge + Time */}
+                          {/* Agent Badge + Source Badge + Time */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <span className={`${badge.bgColor} px-3 py-0.5 rounded-full text-[10px] font-bold ${badge.textColor} tracking-wider border ${isCommand ? 'border-primary/30' : 'border-transparent'}`}>
                                 {badge.label}
                               </span>
+                              {entry.source && SOURCE_BADGES[entry.source] && (
+                                <span className={`${SOURCE_BADGES[entry.source].cls} px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider border inline-flex items-center gap-1`}>
+                                  <span className="material-symbols-outlined" style={{ fontSize: 12 }}>{SOURCE_BADGES[entry.source].icon}</span>
+                                  {SOURCE_BADGES[entry.source].label}
+                                </span>
+                              )}
                               {cmdStatus && (
                                 <span className={`${cmdStatus.cls} px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider border`}>
                                   {cmdStatus.label}
@@ -461,6 +482,14 @@ export default function ActivityFeed({ initialEntries }: { initialEntries: Activ
                                 <span className="text-[10px] uppercase tracking-wider text-foreground-muted font-bold">Agent</span>
                                 <p className="text-sm text-zinc-300 mt-0.5">{entry.agent}</p>
                               </div>
+
+                              {/* Source */}
+                              {entry.source && entry.source !== 'vault' && (
+                                <div>
+                                  <span className="text-[10px] uppercase tracking-wider text-foreground-muted font-bold">Source</span>
+                                  <p className="text-sm text-zinc-300 mt-0.5 capitalize">{entry.source}</p>
+                                </div>
+                              )}
 
                               {/* Status */}
                               <div>

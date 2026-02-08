@@ -4,6 +4,7 @@ import { getTasks } from '@/app/actions/tasks';
 import { getDeals } from '@/app/actions/deals';
 import { getCommands } from '@/app/actions/commands';
 import { getRunningAgents, getAgents } from '@/app/actions/agents';
+import { getInsights, getRecentEvents } from '@/app/actions/datalake';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
@@ -16,6 +17,8 @@ import {
   NeuralNetworkSVG,
   Sparkline,
   QuickActionsFAB,
+  InsightsCard,
+  DatalakeEventsBadge,
 } from '@/components/DashboardClient';
 
 export const dynamic = 'force-dynamic';
@@ -23,12 +26,17 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   const allDocs = getAllDocuments();
   const documentsByCategory = getDocumentsByCategory();
-  const activity = await getActivity();
-  const tasks = await getTasks();
-  const deals = await getDeals();
-  const commands = await getCommands();
-  const agents = await getAgents();
-  const runningAgents = await getRunningAgents();
+  const [activity, tasks, deals, commands, agents, runningAgents, insights, recentEvents] =
+    await Promise.all([
+      getActivity(),
+      getTasks(),
+      getDeals(),
+      getCommands(),
+      getAgents(),
+      getRunningAgents(),
+      getInsights().catch(() => ({ analyses: [], observations: [], counts: { analyses: 0, observations: 0 }, filters: { days: 7, limit: 20 } })),
+      getRecentEvents(undefined, 24).catch(() => ({ events: [], count: 0, filters: { source: null, hours: 24, limit: 50 } })),
+    ]);
 
   const activeTasks = tasks.filter(t => t.column !== 'Done').length;
   const activeDeals = deals.filter(d => d.stage !== 'Closed Won' && d.stage !== 'Closed Lost').length;
@@ -37,6 +45,20 @@ export default async function Home() {
   const totalCommands = commands.length;
   const pendingCommands = commands.filter(c => c.status === 'pending').length;
   const recentActivity = activity.slice(0, 4);
+
+  // Datalake cross-source event counts
+  const datalakeEventCount = recentEvents.count || 0;
+  const eventSourceCounts: Record<string, number> = {};
+  if (recentEvents.events) {
+    for (const evt of recentEvents.events) {
+      const src = String(evt.source || 'unknown');
+      eventSourceCounts[src] = (eventSourceCounts[src] || 0) + 1;
+    }
+  }
+
+  // AI insights for display
+  const insightAnalyses = (insights.analyses || []).slice(0, 3);
+  const insightObservations = (insights.observations || []).slice(0, 3);
 
   // Generate sparkline trend data from activity timestamps (last 7 data points)
   const activitySparkline = (() => {
@@ -165,7 +187,12 @@ export default async function Home() {
             </p>
             <Sparkline data={activitySparkline} color="var(--color-primary)" />
           </div>
-          <p className="text-primary/50 text-[10px] font-medium">Total entries</p>
+          <div className="flex items-center gap-1">
+            <p className="text-primary/50 text-[10px] font-medium">Total entries</p>
+            {datalakeEventCount > 0 && (
+              <DatalakeEventsBadge count={datalakeEventCount} sourceCounts={eventSourceCounts} />
+            )}
+          </div>
         </Link>
         <Link href="/tasks" className="card-hover animate-slide-up delay-2 flex flex-col gap-2 rounded-xl p-4 bg-gradient-to-br from-secondary-dark to-emerald-900/20 border border-primary/10 shadow-lg group">
           <div className="flex items-center justify-between">
@@ -266,6 +293,11 @@ export default async function Home() {
           </div>
         </div>
       </div>
+
+      {/* AI Insights from Datalake */}
+      {(insightAnalyses.length > 0 || insightObservations.length > 0) && (
+        <InsightsCard analyses={insightAnalyses} observations={insightObservations} />
+      )}
 
       {/* What's New */}
       <div className="px-6 mb-6">

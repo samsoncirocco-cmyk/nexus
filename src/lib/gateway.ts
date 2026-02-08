@@ -14,7 +14,7 @@ import { getVaultFilePath, readJsonFile } from '@/lib/vault-io';
 
 const execAsync = promisify(exec);
 
-const GATEWAY_URL = process.env.OPENCLAW_GATEWAY_URL || 'http://localhost:18789';
+const GATEWAY_URL = process.env.OPENCLAW_GATEWAY_URL || 'http://localhost:1991';
 const GATEWAY_TOKEN = process.env.OPENCLAW_GATEWAY_TOKEN;
 
 const AGENTS_FILE = getVaultFilePath('agents.json');

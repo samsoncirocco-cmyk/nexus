@@ -64,4 +64,10 @@ deploy_pubsub_function "gmail_enricher"  "enrich_gmail_event"  "${PUBSUB_TOPIC}"
 deploy_pubsub_function "event_router"    "route_event"         "${PUBSUB_TOPIC}"
 deploy_pubsub_function "orchestrator"    "orchestrate_event"   "${PUBSUB_TOPIC}"
 
+# Phase 4-5: Moonshot functions
+deploy_pubsub_function "speech_transcriber"  "speech_transcriber"  "${PUBSUB_TOPIC}"
+deploy_pubsub_function "geo_enricher"        "geo_enricher"        "${PUBSUB_TOPIC}"
+deploy_http_function   "pattern_predictor"   "pattern_predictor"
+deploy_http_function   "auto_organizer"      "auto_organizer"
+
 echo "=== Cloud Functions deployment complete ==="

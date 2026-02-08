@@ -60,6 +60,11 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [tappedIdx, setTappedIdx] = useState<number | null>(null);
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    setIsMac(/Mac/.test(navigator.userAgent));
+  }, []);
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -164,8 +169,8 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
           >
             <span className="material-symbols-outlined" style={{ fontSize: 16 }}>search</span>
             <span className="flex-1 text-left">Search...</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-border text-[10px] font-mono">
-              {typeof navigator !== 'undefined' && /Mac/.test(navigator.userAgent) ? '⌘' : 'Ctrl'}K
+            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-border text-[10px] font-mono" suppressHydrationWarning>
+              {isMac ? '⌘' : 'Ctrl'}K
             </kbd>
           </button>
         )}

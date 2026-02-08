@@ -38,9 +38,22 @@ backend/.env
 backend/*.json
 openclaw/credentials/
 
+# openclaw skill build artifacts
+openclaw/skills/*/node_modules/
+openclaw/skills/*/dist/
+
+# openclaw workspace files (live in ~/.openclaw/workspace/, not repo)
+/AGENTS.md
+/HEARTBEAT.md
+/IDENTITY.md
+/SOUL.md
+/TOOLS.md
+/USER.md
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.env*.local

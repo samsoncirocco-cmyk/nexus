@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { buildVaultContext } from '@/lib/vault-index';
 import { readJsonFile, writeJsonFile, getVaultFilePath } from '@/lib/vault-io';
+import { buildContext, ContextSnapshot } from '../../../../../openclaw/skills/context-awareness/index';
 
 const QUEUE_PATH = getVaultFilePath('chat-queue.json');
 const RESPONSES_PATH = getVaultFilePath('chat-responses.json');
@@ -31,6 +32,40 @@ RULES:
 
 function generateId(): string {
   return `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function formatContextSnapshot(snapshot: ContextSnapshot): string {
+  const sections: string[] = [];
+
+  if (snapshot.recentEmails.length > 0) {
+    const emailLines = snapshot.recentEmails.map(
+      (e) => `- [${e.timestamp}] From: ${e.from || 'unknown'} — "${e.subject || '(no subject)'}"`
+    );
+    sections.push(`RECENT EMAILS (${snapshot.recentEmails.length}):\n${emailLines.join('\n')}`);
+  }
+
+  if (snapshot.openTasks.length > 0) {
+    const taskLines = snapshot.openTasks.map(
+      (t) => `- [${t.status}] ${t.title} (assigned: ${t.assignee}, due: ${t.dueDate || 'none'})`
+    );
+    sections.push(`OPEN TASKS (${snapshot.openTasks.length}):\n${taskLines.join('\n')}`);
+  }
+
+  if (snapshot.contacts.length > 0) {
+    const contactLines = snapshot.contacts.map(
+      (c) => `- ${c.name} <${c.email}> — ${c.role}${c.notes ? ` (${c.notes})` : ''}`
+    );
+    sections.push(`CONTACTS (${snapshot.contacts.length}):\n${contactLines.join('\n')}`);
+  }
+
+  if (snapshot.recentAnalyses.length > 0) {
+    const analysisLines = snapshot.recentAnalyses.map(
+      (a) => `- [${a.timestamp}] ${a.analysisType}: ${a.inputSummary} (confidence: ${a.confidence})`
+    );
+    sections.push(`RECENT AI ANALYSES (${snapshot.recentAnalyses.length}):\n${analysisLines.join('\n')}`);
+  }
+
+  return sections.join('\n\n');
 }
 
 /**
@@ -74,19 +109,34 @@ export async function POST(request: NextRequest) {
     queue.push(userMessage);
     await writeJsonFile(QUEUE_PATH, queue);
 
-    // Build prompt
+    // Build vault context
     const { context, docNames } = buildVaultContext();
+
+    // Build live context from OpenClaw (emails, tasks, contacts) with graceful fallback
+    let liveContextSection = '';
+    try {
+      const snapshot = await buildContext({ agentId: 'second-brain-chat', emailCount: 10, taskCount: 20 });
+      if (!snapshot.error) {
+        const formatted = formatContextSnapshot(snapshot);
+        if (formatted) {
+          liveContextSection = `\n=== LIVE CONTEXT (as of ${snapshot.timestamp}) ===\n\n${formatted}\n\n=== END LIVE CONTEXT ===\n`;
+        }
+      }
+    } catch {
+      // Graceful fallback: continue with vault-only context
+    }
+
     const prompt = `${SYSTEM_PROMPT}
 
 === KNOWLEDGE VAULT (${docNames.length} documents) ===
 
 ${context}
 
-=== END VAULT ===
+=== END VAULT ===${liveContextSection}
 
 USER QUESTION: ${text.trim()}
 
-Answer the question based on the vault content above. Cite documents by their file path in brackets like [path/to/doc.md].`;
+Answer the question based on the vault content and live context above. Cite documents by their file path in brackets like [path/to/doc.md].`;
 
     // Initialize Gemini streaming
     const genAI = new GoogleGenerativeAI(apiKey);

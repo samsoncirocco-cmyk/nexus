@@ -327,6 +327,165 @@ export function Sparkline({
   );
 }
 
+/* ─── Datalake Events Badge ─── */
+export function DatalakeEventsBadge({
+  count,
+  sourceCounts,
+}: {
+  count: number;
+  sourceCounts: Record<string, number>;
+}) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const sourceLabels = Object.entries(sourceCounts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 4)
+    .map(([src, n]) => `${n} ${src}`)
+    .join(', ');
+
+  return (
+    <span
+      className="relative cursor-default"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-blue-500/15 border border-blue-500/20 text-blue-300 text-[9px] font-bold">
+        <span className="material-symbols-outlined" style={{ fontSize: 10 }}>cloud</span>
+        +{count}
+      </span>
+      {showTooltip && sourceLabels && (
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded-lg bg-bg-dark border border-primary/20 text-primary/70 text-[10px] whitespace-nowrap shadow-lg z-20">
+          Today: {sourceLabels}
+        </span>
+      )}
+    </span>
+  );
+}
+
+/* ─── AI Insights Card ─── */
+const insightTypeIcons: Record<string, string> = {
+  pattern_detection: 'pattern',
+  sentiment: 'mood',
+  classification: 'category',
+  summarization: 'summarize',
+  extraction: 'data_object',
+};
+
+const observationTypeIcons: Record<string, string> = {
+  status_change: 'swap_horiz',
+  anomaly: 'error_outline',
+  trend: 'trending_up',
+  milestone: 'flag',
+};
+
+export function InsightsCard({
+  analyses,
+  observations,
+}: {
+  analyses: Record<string, unknown>[];
+  observations: Record<string, unknown>[];
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const total = analyses.length + observations.length;
+
+  if (total === 0) return null;
+
+  const visibleAnalyses = expanded ? analyses : analyses.slice(0, 2);
+  const visibleObservations = expanded ? observations : observations.slice(0, 2);
+
+  return (
+    <div className="px-6 mb-6 animate-slide-up delay-4">
+      <div className="bg-gradient-to-br from-purple-900/20 to-bg-dark rounded-xl p-5 border border-purple-500/15 relative overflow-hidden">
+        <div className="absolute -right-6 -top-6 size-24 bg-purple-500/10 rounded-full blur-2xl" />
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-purple-400" style={{ fontSize: 20 }}>neurology</span>
+              <h4 className="text-purple-400 font-bold text-sm uppercase tracking-wider">AI Insights</h4>
+              <span className="text-purple-400/50 text-xs">({total})</span>
+            </div>
+            {total > 2 && (
+              <button
+                onClick={() => setExpanded(e => !e)}
+                className="text-purple-400/60 text-xs font-bold uppercase tracking-wider hover:text-purple-400 transition-colors"
+              >
+                {expanded ? 'Show less' : 'Show all'}
+              </button>
+            )}
+          </div>
+
+          <div className="space-y-2.5">
+            {visibleAnalyses.map((a, i) => {
+              const analysisType = String(a.analysis_type || 'analysis');
+              const icon = insightTypeIcons[analysisType] || 'psychology';
+              const confidence = typeof a.confidence === 'number' ? Math.round(a.confidence * 100) : null;
+              return (
+                <div
+                  key={String(a.analysis_id || i)}
+                  className="flex items-start gap-3 p-3 rounded-lg bg-purple-500/5 border border-purple-500/10"
+                >
+                  <div className="flex items-center justify-center size-8 rounded-lg bg-purple-500/10 border border-purple-500/15 shrink-0 mt-0.5">
+                    <span className="material-symbols-outlined text-purple-400" style={{ fontSize: 16 }}>{icon}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <p className="text-white text-xs font-semibold truncate">
+                        {String(a.input_summary || analysisType).slice(0, 80)}
+                      </p>
+                      {confidence !== null && (
+                        <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-purple-500/15 text-purple-300 text-[9px] font-bold">
+                          {confidence}%
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-purple-300/50 text-[11px] truncate">
+                      {String(a.output_raw || '').slice(0, 120)}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+
+            {visibleObservations.map((o, i) => {
+              const obsType = String(o.observation_type || 'observation');
+              const icon = observationTypeIcons[obsType] || 'visibility';
+              const confidence = typeof o.confidence === 'number' ? Math.round(o.confidence * 100) : null;
+              return (
+                <div
+                  key={String(o.observation_id || `obs-${i}`)}
+                  className="flex items-start gap-3 p-3 rounded-lg bg-blue-500/5 border border-blue-500/10"
+                >
+                  <div className="flex items-center justify-center size-8 rounded-lg bg-blue-500/10 border border-blue-500/15 shrink-0 mt-0.5">
+                    <span className="material-symbols-outlined text-blue-400" style={{ fontSize: 16 }}>{icon}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <p className="text-white text-xs font-semibold truncate">
+                        {String(o.entity_type || '')} {String(o.entity_id || '')}
+                      </p>
+                      <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-blue-500/15 text-blue-300 text-[9px] font-bold uppercase">
+                        {obsType.replace(/_/g, ' ')}
+                      </span>
+                      {confidence !== null && (
+                        <span className="shrink-0 text-blue-300/40 text-[9px] font-bold">
+                          {confidence}%
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-blue-300/50 text-[11px] truncate">
+                      {String(o.value || '').slice(0, 120)}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Quick Actions FAB (Mobile) ─── */
 const FAB_ACTIONS = [
   { href: '/chat', icon: 'chat_bubble', label: 'Chat' },

@@ -11,6 +11,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   sources?: string[];
+  datalakeSources?: string[];
   timestamp: string;
   pinned?: boolean;
   deepSearch?: boolean;
@@ -21,6 +22,7 @@ interface SavedAnswer {
   question: string;
   answer: string;
   sources?: string[];
+  datalakeSources?: string[];
   savedAt: string;
 }
 
@@ -418,6 +420,7 @@ export default function AskPage() {
       let buffer = '';
       let fullText = '';
       let sources: string[] = [];
+      let datalakeSources: string[] = [];
 
       while (true) {
         const { done, value } = await reader.read();
@@ -444,6 +447,7 @@ export default function AskPage() {
                   break;
                 case 'done':
                   sources = data.sources || [];
+                  datalakeSources = data.datalakeSources || [];
                   break;
                 case 'error':
                   throw new Error(data.error);
@@ -466,6 +470,7 @@ export default function AskPage() {
           role: 'assistant',
           content: fullText,
           sources,
+          datalakeSources: datalakeSources.length > 0 ? datalakeSources : undefined,
           timestamp: new Date().toISOString(),
           deepSearch,
         };
@@ -485,6 +490,7 @@ export default function AskPage() {
           role: 'assistant',
           content: data.error ? `Error: ${data.error}` : data.answer,
           sources: data.sources,
+          datalakeSources: data.datalakeSources?.length > 0 ? data.datalakeSources : undefined,
           timestamp: new Date().toISOString(),
         };
         setMessages((prev) => [...prev, aiMsg]);
@@ -519,6 +525,7 @@ export default function AskPage() {
       question: questionMsg?.role === 'user' ? questionMsg.content : 'Unknown question',
       answer: msg.content,
       sources: msg.sources,
+      datalakeSources: msg.datalakeSources,
       savedAt: new Date().toISOString(),
     };
     setSavedAnswers((prev) => [...prev, saved]);
@@ -538,7 +545,7 @@ export default function AskPage() {
     setMessages((prev) => [
       ...prev,
       { id: `u_${Date.now()}`, role: 'user', content: s.question, timestamp: new Date().toISOString() },
-      { id: `a_${Date.now()}`, role: 'assistant', content: s.answer, sources: s.sources, timestamp: new Date().toISOString(), pinned: true },
+      { id: `a_${Date.now()}`, role: 'assistant', content: s.answer, sources: s.sources, datalakeSources: s.datalakeSources, timestamp: new Date().toISOString(), pinned: true },
     ]);
     setSavedPanelOpen(false);
   };
@@ -583,7 +590,7 @@ export default function AskPage() {
       const j = seed % (i + 1);
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    return shuffled.slice(0, 6);
+    return shuffled.slice(0, 6).filter(Boolean);
   }, [ALL_SUGGESTIONS, suggestionSeed]);
 
   return (
@@ -609,7 +616,7 @@ export default function AskPage() {
               <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
             <p className="text-[11px] text-foreground-muted font-body">
-              {loading && streamingStatus ? streamingStatus : 'AI-powered search across your entire vault'}
+              {loading && streamingStatus ? streamingStatus : 'AI-powered search across your vault + datalake'}
             </p>
           </div>
           <button onClick={() => setSavedPanelOpen(true)}
@@ -644,8 +651,8 @@ export default function AskPage() {
             <div>
               <h2 className="text-xl font-bold text-foreground mb-2">Your Brain is Ready</h2>
               <p className="text-sm text-foreground-muted max-w-md font-body">
-                Ask anything about your vault — deals, accounts, projects, concepts, journal entries.
-                The AI will search all documents and give you answers with sources.
+                Ask anything about your vault and datalake — deals, accounts, projects, concepts, journal entries, events, and AI analyses.
+                The AI will search all documents and the BigQuery datalake, then give you answers with sources.
               </p>
             </div>
 
@@ -667,7 +674,7 @@ export default function AskPage() {
                   className="group text-left text-xs px-3.5 py-3 rounded-xl border border-border hover:border-primary/30 hover:bg-primary/5 hover:shadow-[0_0_16px_rgba(250,222,41,0.06)] text-foreground-muted hover:text-foreground transition-all animate-slide-up font-body"
                   style={{ animationDelay: `${idx * 60 + 100}ms` }}>
                   <div className="flex items-start gap-2">
-                    <span className={`material-symbols-outlined ${q.color} group-hover:text-primary transition-colors shrink-0`} style={{ fontSize: 16 }}>
+                    <span className={`material-symbols-outlined ${q?.color || 'text-primary/60'} group-hover:text-primary transition-colors shrink-0`} style={{ fontSize: 16 }}>
                       {q.icon}
                     </span>
                     <span>{q.text}</span>
@@ -742,16 +749,16 @@ export default function AskPage() {
                 )}
 
                 {/* Sources */}
-                {msg.sources && msg.sources.length > 0 && (
+                {((msg.sources && msg.sources.length > 0) || (msg.datalakeSources && msg.datalakeSources.length > 0)) && (
                   <div className="mt-3 pt-3 border-t border-border-subtle">
                     <div className="flex items-center gap-1.5 mb-2">
                       <span className="material-symbols-outlined text-foreground-muted/50" style={{ fontSize: 14 }}>source</span>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-foreground-muted/50 font-display">
-                        {msg.sources.length} Source{msg.sources.length !== 1 ? 's' : ''}
+                        {(msg.sources?.length || 0) + (msg.datalakeSources?.length || 0)} Source{((msg.sources?.length || 0) + (msg.datalakeSources?.length || 0)) !== 1 ? 's' : ''}
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
-                      {msg.sources.map((src) => {
+                      {msg.sources?.map((src) => {
                         const name = src.replace(/\.md$/, '').split('/').pop() || src;
                         const category = src.split('/')[0] || '';
                         return (
@@ -765,6 +772,24 @@ export default function AskPage() {
                               )}
                             </div>
                           </a>
+                        );
+                      })}
+                      {msg.datalakeSources?.map((src) => {
+                        const label = src.replace(/^datalake:/, '');
+                        const parts = label.split('/');
+                        const source = parts[0] || label;
+                        const eventType = parts.slice(1).join('/') || '';
+                        return (
+                          <span key={src}
+                            className="group/src inline-flex items-center gap-1.5 text-[11px] pl-2 pr-2.5 py-1.5 rounded-lg bg-sky-500/5 border border-sky-400/15 hover:border-sky-400/30 hover:bg-sky-400/10 transition-all font-body">
+                            <span className="material-symbols-outlined text-sky-400/60 group-hover/src:text-sky-400" style={{ fontSize: 14 }}>database</span>
+                            <div>
+                              <div className="text-foreground/80 group-hover/src:text-foreground font-medium">{source}</div>
+                              {eventType && (
+                                <div className="text-[9px] text-foreground-muted/40">{eventType}</div>
+                              )}
+                            </div>
+                          </span>
                         );
                       })}
                     </div>

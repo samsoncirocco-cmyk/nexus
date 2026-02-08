@@ -16,6 +16,7 @@ SQL_FILES=(
   "bigquery_semantic_tables.sql"
   "bigquery_vision_tables.sql"
   "bigquery_calendar_views.sql"
+  "bigquery_phase4_5_setup.sql"
 )
 
 for sql_file in "${SQL_FILES[@]}"; do

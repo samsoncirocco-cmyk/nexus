@@ -1,36 +1,66 @@
 import { NextRequest } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { buildVaultContext } from '@/lib/vault-index';
+import { semanticSearch, type SemanticSearchResult } from '../../../../../openclaw/skills';
 
 const SYSTEM_PROMPT = `You are the Second Brain AI assistant for Samson Cirocco.
 
 You have access to his personal knowledge vault containing accounts, deals, projects, concepts, journal entries, E-Rate leads, competitive intel, and sales playbooks.
+You also have access to a BigQuery datalake with events, NLP enrichment, and AI analyses.
 
 RULES:
-- Answer questions based on the vault content. Cite which documents you're referencing by their file path.
-- If the information isn't in the vault, say so clearly. Don't make things up.
+- Answer questions based on the vault content AND datalake results. Cite which documents you're referencing by their file path.
+- If datalake results are provided, incorporate relevant hits into your answer and cite them as [datalake:source/event_type].
+- If the information isn't in the vault or datalake, say so clearly. Don't make things up.
 - Be concise and direct. No corporate fluff.
-- When referencing documents, format citations as [document-path] so the UI can link them.
-- For questions about deals, accounts, or pipeline: reference the relevant vault docs.
+- When referencing vault documents, format citations as [document-path] so the UI can link them.
+- When referencing datalake results, format citations as [datalake:source/event_type].
+- For questions about deals, accounts, or pipeline: reference the relevant vault docs and datalake events.
 - For questions about concepts or strategies: synthesize from the relevant playbooks and frameworks.
-- You can cross-reference multiple documents to give comprehensive answers.
+- You can cross-reference multiple documents and datalake results to give comprehensive answers.
 - Use markdown formatting: **bold**, *italic*, \`code\`, code blocks with \`\`\`, lists, etc.`;
 
 const DEEP_SEARCH_PROMPT = `You are the Second Brain AI assistant for Samson Cirocco performing a DEEP SEARCH.
 
-You have access to his personal knowledge vault. Perform multi-step reasoning:
+You have access to his personal knowledge vault and a BigQuery datalake with events, NLP enrichment, and AI analyses. Perform multi-step reasoning:
 
-STEP 1: Identify all relevant documents and extract key facts.
-STEP 2: Cross-reference information across documents to find connections.
+STEP 1: Identify all relevant documents and datalake results, then extract key facts.
+STEP 2: Cross-reference information across documents and datalake hits to find connections.
 STEP 3: Synthesize a comprehensive answer with specific evidence.
 
 RULES:
-- Be thorough — check every relevant document.
+- Be thorough — check every relevant document and datalake result.
 - Show your reasoning by organizing the answer into clear sections.
-- Cite every claim with [document-path.md] references.
-- If information conflicts between documents, note the discrepancy.
+- Cite vault documents with [document-path.md] references.
+- Cite datalake results with [datalake:source/event_type] references.
+- If information conflicts between sources, note the discrepancy.
 - Provide actionable insights and recommendations when possible.
 - Use markdown formatting: **bold**, *italic*, \`code\`, code blocks, lists, headers.`;
+
+/**
+ * Attempt datalake semantic search with graceful fallback.
+ * Returns null if the datalake is unreachable or errors.
+ */
+async function tryDatalakeSearch(query: string): Promise<SemanticSearchResult | null> {
+  try {
+    const result = await semanticSearch({ query, maxResults: 10, timeRangeDays: 30 });
+    if (result.error) return null;
+    return result;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Format datalake hits into a context string for the Gemini prompt.
+ */
+function formatDatalakeContext(result: SemanticSearchResult): string {
+  if (result.hits.length === 0) return '';
+  const hitLines = result.hits.map((hit, i) =>
+    `[${i + 1}] source=${hit.source} type=${hit.eventType} time=${hit.timestamp} relevance=${hit.relevanceScore.toFixed(2)}\n    subject: ${hit.subject || '(none)'}\n    snippet: ${hit.snippet || '(none)'}`,
+  );
+  return `=== DATALAKE RESULTS (${result.totalHits} hits, searched: ${result.tablesSearched.join(', ')}) ===\n\n${hitLines.join('\n\n')}\n\n=== END DATALAKE ===`;
+}
 
 /**
  * POST /api/ask/stream
@@ -60,6 +90,13 @@ export async function POST(request: NextRequest) {
 
     const { context, docNames } = buildVaultContext();
 
+    // Datalake semantic search (run in parallel with vault context which is already built)
+    const datalakeResult = await tryDatalakeSearch(question.trim());
+    const datalakeContext = datalakeResult ? formatDatalakeContext(datalakeResult) : '';
+    const datalakeSources = datalakeResult
+      ? datalakeResult.hits.map((h) => `datalake:${h.source}/${h.eventType}`)
+      : [];
+
     // Build conversation history for follow-up context
     let conversationContext = '';
     if (Array.isArray(history) && history.length > 0) {
@@ -81,12 +118,12 @@ export async function POST(request: NextRequest) {
 ${context}
 
 === END VAULT ===
-${conversationContext}
+${datalakeContext ? '\n' + datalakeContext + '\n' : ''}${conversationContext}
 USER QUESTION: ${question.trim()}
 
 ${deepSearch
-  ? 'Perform a deep multi-step analysis. Be thorough and cross-reference multiple documents. Organize your response with clear sections.'
-  : 'Answer the question based on the vault content above. Cite documents by their file path in brackets like [path/to/doc.md].'}${
+  ? 'Perform a deep multi-step analysis. Be thorough and cross-reference multiple documents and datalake results. Organize your response with clear sections.'
+  : 'Answer the question based on the vault content and datalake results above. Cite vault documents by their file path in brackets like [path/to/doc.md]. Cite datalake results as [datalake:source/event_type].'}${
   conversationContext ? ' This is a follow-up question — reference the conversation history for context.' : ''
 }`;
 
@@ -101,8 +138,14 @@ ${deepSearch
         };
 
         try {
+          if (datalakeContext) {
+            send('status', { message: `Datalake: ${datalakeResult!.totalHits} results found` });
+          }
+
           if (deepSearch) {
-            send('status', { message: 'Scanning vault documents...' });
+            send('status', { message: datalakeContext ? 'Deep searching vault + datalake...' : 'Scanning vault documents...' });
+          } else if (datalakeContext) {
+            send('status', { message: 'Generating answer from vault + datalake...' });
           }
 
           const result = await model.generateContentStream(prompt);
@@ -120,7 +163,7 @@ ${deepSearch
             }
           }
 
-          // Extract source citations
+          // Extract vault source citations
           const citationRegex = /\[([^\]]+\.md)\]/g;
           const sources: string[] = [];
           let match;
@@ -131,7 +174,20 @@ ${deepSearch
             }
           }
 
-          send('done', { fullText, sources });
+          // Extract datalake citations from the response text
+          const dlCitationRegex = /\[datalake:([^\]]+)\]/g;
+          const referencedDlSources: string[] = [];
+          while ((match = dlCitationRegex.exec(fullText)) !== null) {
+            const src = `datalake:${match[1]}`;
+            if (!referencedDlSources.includes(src)) {
+              referencedDlSources.push(src);
+            }
+          }
+
+          // Merge: include any datalake sources from search results even if not explicitly cited
+          const allDlSources = [...new Set([...referencedDlSources, ...datalakeSources])];
+
+          send('done', { fullText, sources, datalakeSources: allDlSources });
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Streaming failed';
           send('error', { error: message });
