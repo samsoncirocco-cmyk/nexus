@@ -856,6 +856,8 @@ export default function TasksPage() {
   };
 
   if (loading) {
+    // Use Next.js loading.tsx (TasksLoading component)
+    // This fallback shouldn't normally show, but provides consistency
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-primary font-bold animate-pulse">Loading tasks...</div>

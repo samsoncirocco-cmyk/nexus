@@ -7,7 +7,23 @@ interface PaletteItem {
   href: string;
   icon: string;
   label: string;
-  section: 'navigation' | 'recent';
+  section: 'navigation' | 'recent' | 'docs' | 'tasks';
+  subtitle?: string;
+}
+
+interface VaultDoc {
+  slug: string;
+  title: string;
+  category: string;
+  description?: string;
+  tags?: string[];
+}
+
+interface Task {
+  id: string;
+  title: string;
+  column: string;
+  description: string;
 }
 
 const ALL_PAGES: PaletteItem[] = [
@@ -26,6 +42,7 @@ const ALL_PAGES: PaletteItem[] = [
 ];
 
 const RECENT_KEY = 'sb-recent-pages';
+const TASKS_KEY = 'second-brain-tasks';
 const MAX_RECENT = 5;
 
 function getRecentPages(): PaletteItem[] {
@@ -48,10 +65,22 @@ function addRecentPage(item: PaletteItem) {
   }
 }
 
+function getTasks(): Task[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(TASKS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
+  const [vaultDocs, setVaultDocs] = useState<VaultDoc[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -73,25 +102,94 @@ export default function CommandPalette() {
     if (open) {
       setQuery('');
       setActiveIndex(0);
+      setVaultDocs([]);
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [open]);
 
+  // Search vault docs when query changes
+  useEffect(() => {
+    const searchDocs = async () => {
+      if (!query.trim() || query.length < 2) {
+        setVaultDocs([]);
+        return;
+      }
+
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/palette-search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        setVaultDocs(data.docs || []);
+      } catch (error) {
+        console.error('Vault search error:', error);
+        setVaultDocs([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const timer = setTimeout(searchDocs, 200); // Debounce
+    return () => clearTimeout(timer);
+  }, [query]);
+
   // Build filtered list
   const recentPages = getRecentPages();
-  const filtered = query.trim()
+  const tasks = getTasks();
+
+  // Filter pages
+  const filteredPages = query.trim()
     ? ALL_PAGES.filter((p) =>
         p.label.toLowerCase().includes(query.toLowerCase())
       )
-    : [...recentPages.map((r) => ({ ...r, section: 'recent' as const })), ...ALL_PAGES];
+    : ALL_PAGES;
 
-  // Deduplicate (recent pages may overlap with nav)
+  // Filter tasks (only when searching)
+  const filteredTasks = query.trim()
+    ? tasks
+        .filter(
+          (t) =>
+            t.title.toLowerCase().includes(query.toLowerCase()) ||
+            t.description.toLowerCase().includes(query.toLowerCase())
+        )
+        .slice(0, 5) // Limit to 5 tasks
+        .map((t): PaletteItem => ({
+          href: `/tasks?highlight=${t.id}`,
+          icon: 'task_alt',
+          label: t.title,
+          subtitle: t.column,
+          section: 'tasks',
+        }))
+    : [];
+
+  // Convert vault docs to palette items
+  const docItems: PaletteItem[] = vaultDocs.map((doc) => ({
+    href: `/doc/${doc.slug}`,
+    icon: 'description',
+    label: doc.title,
+    subtitle: doc.category,
+    section: 'docs',
+  }));
+
+  // Combine all items
+  let items: PaletteItem[] = [];
+  if (!query.trim()) {
+    // Show recent pages when no query
+    items = [
+      ...recentPages.map((r) => ({ ...r, section: 'recent' as const })),
+      ...filteredPages,
+    ];
+  } else {
+    // Show search results when querying
+    items = [...docItems, ...filteredTasks, ...filteredPages];
+  }
+
+  // Deduplicate by href
   const seen = new Set<string>();
-  const items: PaletteItem[] = [];
-  for (const item of filtered) {
+  const uniqueItems: PaletteItem[] = [];
+  for (const item of items) {
     if (!seen.has(item.href)) {
       seen.add(item.href);
-      items.push(item);
+      uniqueItems.push(item);
     }
   }
 
@@ -110,20 +208,20 @@ export default function CommandPalette() {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setActiveIndex((i) => Math.min(i + 1, items.length - 1));
+        setActiveIndex((i) => Math.min(i + 1, uniqueItems.length - 1));
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         setActiveIndex((i) => Math.max(i - 1, 0));
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        if (items[activeIndex]) navigate(items[activeIndex]);
+        if (uniqueItems[activeIndex]) navigate(uniqueItems[activeIndex]);
       } else if (e.key === 'Escape') {
         setOpen(false);
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [open, activeIndex, items, navigate]);
+  }, [open, activeIndex, uniqueItems, navigate]);
 
   // Scroll active item into view
   useEffect(() => {
@@ -140,11 +238,13 @@ export default function CommandPalette() {
   if (!open) return null;
 
   // Group items by section for display
-  const recentItems = items.filter((i) => i.section === 'recent');
-  const navItems = items.filter((i) => i.section === 'navigation');
+  const recentItems = uniqueItems.filter((i) => i.section === 'recent');
+  const docResultItems = uniqueItems.filter((i) => i.section === 'docs');
+  const taskResultItems = uniqueItems.filter((i) => i.section === 'tasks');
+  const navItems = uniqueItems.filter((i) => i.section === 'navigation');
 
   return (
-    <div className="fixed inset-0 z-[9998] flex items-start justify-center pt-[15vh]" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div className="fixed inset-0 z-[9998] flex items-start justify-center pt-[15vh] px-4" role="dialog" aria-modal="true" aria-label="Command palette">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-bg-dark/80 backdrop-blur-sm palette-backdrop-in"
@@ -153,19 +253,19 @@ export default function CommandPalette() {
       />
 
       {/* Panel */}
-      <div className="relative w-[90vw] max-w-lg bg-bg-secondary border border-primary/20 rounded-2xl shadow-2xl shadow-primary/5 palette-panel-in overflow-hidden">
+      <div className="relative w-full max-w-2xl bg-bg-secondary border border-primary/20 rounded-2xl shadow-2xl shadow-primary/5 palette-panel-in overflow-hidden">
         {/* Search input */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-border-subtle">
           <span className="material-symbols-outlined text-primary" aria-hidden="true" style={{ fontSize: 20 }}>
-            search
+            {isSearching ? 'progress_activity' : 'search'}
           </span>
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search pages..."
-            aria-label="Search pages"
+            placeholder="Search pages, docs, and tasks..."
+            aria-label="Search pages, docs, and tasks"
             aria-autocomplete="list"
             role="combobox"
             aria-expanded="true"
@@ -177,97 +277,202 @@ export default function CommandPalette() {
         </div>
 
         {/* Results */}
-        <div ref={listRef} role="listbox" aria-label="Search results" className="max-h-[50vh] overflow-y-auto p-2">
-          {items.length === 0 && (
+        <div ref={listRef} role="listbox" aria-label="Search results" className="max-h-[60vh] overflow-y-auto p-2">
+          {uniqueItems.length === 0 && !isSearching && query.trim() && (
             <div className="px-4 py-8 text-center text-foreground-muted text-sm">
               No results for &ldquo;{query}&rdquo;
             </div>
           )}
 
-          {!query.trim() && recentItems.length > 0 && (
-            <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-foreground-muted/60 font-body">
-              Recent
+          {isSearching && (
+            <div className="px-4 py-8 text-center text-foreground-muted text-sm flex items-center justify-center gap-2">
+              <span className="material-symbols-outlined animate-spin" style={{ fontSize: 16 }}>
+                progress_activity
+              </span>
+              Searching...
             </div>
           )}
-          {recentItems.map((item) => {
-            const idx = items.indexOf(item);
-            return (
-              <button
-                key={`recent-${item.href}`}
-                role="option"
-                aria-selected={idx === activeIndex}
-                onClick={() => navigate(item)}
-                onMouseEnter={() => setActiveIndex(idx)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-colors font-body ${
-                  idx === activeIndex
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-foreground-muted hover:bg-white/5'
-                }`}
-              >
-                <span
-                  className={`material-symbols-outlined ${idx === activeIndex ? 'text-primary' : ''}`}
-                  style={{ fontSize: 18 }}
-                >
-                  {item.icon}
-                </span>
-                <span className="flex-1 font-medium">{item.label}</span>
-                {idx === activeIndex && (
-                  <span className="material-symbols-outlined text-primary/40" style={{ fontSize: 16 }}>
-                    keyboard_return
-                  </span>
-                )}
-              </button>
-            );
-          })}
 
-          {!query.trim() && recentItems.length > 0 && navItems.length > 0 && (
-            <div className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-foreground-muted/60 font-body">
-              All Pages
-            </div>
+          {/* Recent pages (no query) */}
+          {!query.trim() && recentItems.length > 0 && (
+            <>
+              <div className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-foreground-muted/60 font-body">
+                Recent
+              </div>
+              {recentItems.map((item) => {
+                const idx = uniqueItems.indexOf(item);
+                return (
+                  <button
+                    key={`recent-${item.href}`}
+                    role="option"
+                    aria-selected={idx === activeIndex}
+                    onClick={() => navigate(item)}
+                    onMouseEnter={() => setActiveIndex(idx)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-colors font-body ${
+                      idx === activeIndex
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground-muted hover:bg-white/5'
+                    }`}
+                  >
+                    <span
+                      className={`material-symbols-outlined ${idx === activeIndex ? 'text-primary' : ''}`}
+                      style={{ fontSize: 18 }}
+                    >
+                      {item.icon}
+                    </span>
+                    <span className="flex-1 font-medium">{item.label}</span>
+                    {idx === activeIndex && (
+                      <span className="material-symbols-outlined text-primary/40" style={{ fontSize: 16 }}>
+                        keyboard_return
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </>
           )}
-          {navItems.map((item) => {
-            const idx = items.indexOf(item);
-            return (
-              <button
-                key={item.href}
-                role="option"
-                aria-selected={idx === activeIndex}
-                onClick={() => navigate(item)}
-                onMouseEnter={() => setActiveIndex(idx)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-colors font-body ${
-                  idx === activeIndex
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-foreground-muted hover:bg-white/5'
-                }`}
-              >
-                <span
-                  className={`material-symbols-outlined ${idx === activeIndex ? 'text-primary' : ''}`}
-                  style={{ fontSize: 18 }}
-                >
-                  {item.icon}
-                </span>
-                <span className="flex-1 font-medium">{item.label}</span>
-                {idx === activeIndex && (
-                  <span className="material-symbols-outlined text-primary/40" style={{ fontSize: 16 }}>
-                    keyboard_return
-                  </span>
-                )}
-              </button>
-            );
-          })}
+
+          {/* Vault documents (when searching) */}
+          {query.trim() && docResultItems.length > 0 && (
+            <>
+              <div className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-foreground-muted/60 font-body">
+                Documents
+              </div>
+              {docResultItems.map((item) => {
+                const idx = uniqueItems.indexOf(item);
+                return (
+                  <button
+                    key={item.href}
+                    role="option"
+                    aria-selected={idx === activeIndex}
+                    onClick={() => navigate(item)}
+                    onMouseEnter={() => setActiveIndex(idx)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-colors font-body ${
+                      idx === activeIndex
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground-muted hover:bg-white/5'
+                    }`}
+                  >
+                    <span
+                      className={`material-symbols-outlined ${idx === activeIndex ? 'text-primary' : ''}`}
+                      style={{ fontSize: 18 }}
+                    >
+                      {item.icon}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{item.label}</div>
+                      {item.subtitle && (
+                        <div className="text-xs text-foreground-muted/60 truncate">{item.subtitle}</div>
+                      )}
+                    </div>
+                    {idx === activeIndex && (
+                      <span className="material-symbols-outlined text-primary/40 flex-shrink-0" style={{ fontSize: 16 }}>
+                        keyboard_return
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </>
+          )}
+
+          {/* Tasks (when searching) */}
+          {query.trim() && taskResultItems.length > 0 && (
+            <>
+              <div className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-foreground-muted/60 font-body">
+                Tasks
+              </div>
+              {taskResultItems.map((item) => {
+                const idx = uniqueItems.indexOf(item);
+                return (
+                  <button
+                    key={item.href}
+                    role="option"
+                    aria-selected={idx === activeIndex}
+                    onClick={() => navigate(item)}
+                    onMouseEnter={() => setActiveIndex(idx)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-colors font-body ${
+                      idx === activeIndex
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground-muted hover:bg-white/5'
+                    }`}
+                  >
+                    <span
+                      className={`material-symbols-outlined ${idx === activeIndex ? 'text-primary' : ''}`}
+                      style={{ fontSize: 18 }}
+                    >
+                      {item.icon}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{item.label}</div>
+                      {item.subtitle && (
+                        <div className="text-xs text-foreground-muted/60 truncate">{item.subtitle}</div>
+                      )}
+                    </div>
+                    {idx === activeIndex && (
+                      <span className="material-symbols-outlined text-primary/40 flex-shrink-0" style={{ fontSize: 16 }}>
+                        keyboard_return
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </>
+          )}
+
+          {/* Navigation pages */}
+          {navItems.length > 0 && (
+            <>
+              {(query.trim() || recentItems.length > 0) && (
+                <div className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-foreground-muted/60 font-body">
+                  {query.trim() ? 'Pages' : 'All Pages'}
+                </div>
+              )}
+              {navItems.map((item) => {
+                const idx = uniqueItems.indexOf(item);
+                return (
+                  <button
+                    key={item.href}
+                    role="option"
+                    aria-selected={idx === activeIndex}
+                    onClick={() => navigate(item)}
+                    onMouseEnter={() => setActiveIndex(idx)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-left transition-colors font-body ${
+                      idx === activeIndex
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground-muted hover:bg-white/5'
+                    }`}
+                  >
+                    <span
+                      className={`material-symbols-outlined ${idx === activeIndex ? 'text-primary' : ''}`}
+                      style={{ fontSize: 18 }}
+                    >
+                      {item.icon}
+                    </span>
+                    <span className="flex-1 font-medium">{item.label}</span>
+                    {idx === activeIndex && (
+                      <span className="material-symbols-outlined text-primary/40" style={{ fontSize: 16 }}>
+                        keyboard_return
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </>
+          )}
         </div>
 
         {/* Footer hints */}
-        <div className="flex items-center gap-4 px-4 py-2.5 border-t border-border-subtle text-[10px] text-foreground-muted/50">
-          <span className="flex items-center gap-1">
+        <div className="flex items-center gap-4 px-4 py-2.5 border-t border-border-subtle text-[10px] text-foreground-muted/50 overflow-x-auto">
+          <span className="flex items-center gap-1 whitespace-nowrap">
             <kbd className="px-1 py-0.5 rounded bg-white/5 border border-border font-mono">↑↓</kbd>
             navigate
           </span>
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 whitespace-nowrap">
             <kbd className="px-1 py-0.5 rounded bg-white/5 border border-border font-mono">↵</kbd>
             open
           </span>
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 whitespace-nowrap">
             <kbd className="px-1 py-0.5 rounded bg-white/5 border border-border font-mono">esc</kbd>
             close
           </span>
