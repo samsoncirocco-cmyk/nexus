@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 59
-- **Files:** 33938
+- **Total Commits:** 60
+- **Files:** 32931
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)Tc44f07c752c7bc08a5b397e705341901007a72d8:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)T46861ad23b318c4ca14996da3ed2b7e3507ce277:%M:HEADZ
 
 ## Recent Commits
+- 46861ad auto: update 15 files (public/apple-touch-icon.png,public/favicon.png,public/manifest.json)
 - c44f07c auto: update 7 files (src/app/api/search/route.ts,src/app/chat/page.tsx,src/app/search/page.tsx)
 - 0024c52 auto: vault data update 2026-02-08T04:01:47Z
 - e324c07 auto: update src/app/api/chat/route.ts
 - 52c90eb fix: align datalake API with actual BQ schema (event_type, payload, agent_id)
-- 89fae89 fix: properly escape BQ reserved words without template literal conflicts
 
 ## Status
-Last commit: `c44f07c auto: update 7 files (src/app/api/search/route.ts,src/app/chat/page.tsx,src/app/search/page.tsx)`
+Last commit: `46861ad auto: update 15 files (public/apple-touch-icon.png,public/favicon.png,public/manifest.json)`
