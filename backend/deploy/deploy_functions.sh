@@ -58,6 +58,7 @@ deploy_http_function "gmail_ingester"       "gmail_webhook"
 deploy_http_function "drive_watcher"        "drive_webhook"
 deploy_http_function "calendar_ingestor"    "calendar_webhook"
 deploy_http_function "sample_triage_agent"  "agent_handler"
+deploy_http_function "semantic_search_api"  "semantic_search_api"
 
 # Pub/Sub-triggered functions
 deploy_pubsub_function "gmail_enricher"  "enrich_gmail_event"  "${PUBSUB_TOPIC}"

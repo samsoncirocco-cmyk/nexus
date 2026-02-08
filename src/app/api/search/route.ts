@@ -1,44 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { searchDocuments, getAllDocuments } from '@/lib/documents';
+
+// Cloud Function endpoint for semantic search
+const SEARCH_API_URL = process.env.SEARCH_API_URL || 'https://us-central1-killuacode.cloudfunctions.net/semantic_search_api';
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const query = (searchParams.get('q') || '').slice(0, 200);
-  const tag = (searchParams.get('tag') || '').slice(0, 100);
-  const highlight = searchParams.get('highlight') === '1';
-
-  let results = query ? searchDocuments(query) : getAllDocuments();
-
-  if (tag) {
-    results = results.filter(doc => doc.tags?.includes(tag));
+  const searchParams = request.nextUrl.searchParams;
+  const q = searchParams.get('q');
+  
+  if (!q) {
+    return NextResponse.json({ error: 'Missing query parameter' }, { status: 400 });
   }
 
-  // Add highlight snippets if requested
-  if (highlight && query) {
-    const q = query.toLowerCase();
-    const highlighted = results.map(doc => {
-      const snippets: string[] = [];
-      // Highlight in title
-      if (doc.title.toLowerCase().includes(q)) {
-        snippets.push(highlightText(doc.title, query));
-      }
-      // Highlight in description
-      if (doc.description && doc.description.toLowerCase().includes(q)) {
-        snippets.push(highlightText(doc.description, query));
-      }
-      return { ...doc, snippets };
+  try {
+    // Proxy request to the backend Cloud Function
+    const res = await fetch(SEARCH_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        query: q,
+        // Pass through optional parameters if needed
+        top_k: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined,
+        source: searchParams.get('source') || undefined,
+      }),
     });
-    return NextResponse.json(highlighted);
+
+    if (!res.ok) {
+        const errorText = await res.text();
+        console.error(`Search API error: ${res.status} ${errorText}`);
+        return NextResponse.json({ error: `Backend error: ${res.status}` }, { status: res.status });
+    }
+
+    const data = await res.json();
+    
+    // The frontend expects { results: [...] }
+    // The backend returns { results: [...], ... } so we can just return data directly
+    return NextResponse.json(data);
+    
+  } catch (error: any) {
+    console.error('Search API Proxy Error:', error);
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
-
-  return NextResponse.json(results);
 }
 
-function highlightText(text: string, query: string): string {
-  const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
-  return text.replace(regex, '<mark>$1</mark>');
-}
-
-function escapeRegex(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}

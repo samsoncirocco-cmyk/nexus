@@ -16,6 +16,8 @@ import logging
 import math
 import uuid
 from datetime import datetime
+import glob
+import os
 
 from google.cloud import bigquery
 from google.auth import default
@@ -57,6 +59,14 @@ class SemanticLayer:
         """
         event_id = event_data.get("event_id", "unknown")
         text = self._extract_text(event_data)
+        
+        # Special handling for vault events which might not have "payload" dict structure
+        if not text and event_data.get("source") == "vault":
+            payload = event_data.get("payload", {})
+            if isinstance(payload, dict):
+                text = f"{payload.get('title', '')}\n\n{payload.get('text', '')}"
+            else:
+                text = str(payload)
 
         if not text:
             logger.info(f"No text content for event {event_id}, skipping embedding")
@@ -229,6 +239,42 @@ class SemanticLayer:
 
         results.sort(key=lambda r: r["similarity"], reverse=True)
         return results[:top_k]
+    
+    def embed_vault(self, vault_path):
+        """Index all markdown files in the vault."""
+
+        logger.info(f"Scanning vault at {vault_path}")
+        files = glob.glob(os.path.join(vault_path, "**/*.md"), recursive=True)
+        
+        indexed_count = 0
+        for file_path in files:
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                
+                rel_path = os.path.relpath(file_path, vault_path)
+                event_id = f"vault:{rel_path}"
+                
+                # Mock event structure for embed_event
+                event_data = {
+                    "event_id": event_id,
+                    "source": "vault",
+                    "timestamp": datetime.utcnow().isoformat() + "Z",
+                    "payload": {
+                        "title": rel_path,
+                        "text": content
+                    }
+                }
+                
+                result = self.embed_event(event_data)
+                if result:
+                    logger.info(f"Indexed {rel_path}")
+                    indexed_count += 1
+            except Exception as e:
+                logger.error(f"Failed to index {file_path}: {e}")
+                
+        logger.info(f"Vault indexing complete. Indexed {indexed_count} documents.")
+        return indexed_count
 
     def find_similar_events(self, event_id, top_k=5):
         """
