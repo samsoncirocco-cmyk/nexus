@@ -62,8 +62,18 @@ function getCommandStatusBadge(status?: string) {
   }
 }
 
-export default async function ActivityPage() {
-  const activity = await getActivity();
+export default async function ActivityPage({
+  searchParams,
+}: {
+  searchParams: { source?: string };
+}) {
+  const allActivity = await getActivity();
+  
+  // Filter by source if specified
+  const sourceFilter = searchParams.source;
+  const activity = sourceFilter && sourceFilter !== 'all'
+    ? allActivity.filter(entry => entry.source === sourceFilter)
+    : allActivity;
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col min-h-screen">
@@ -89,7 +99,7 @@ export default async function ActivityPage() {
         </div>
 
         {/* Source Filter Pills */}
-        <ActivityFilters activity={activity} />
+        <ActivityFilters activity={allActivity} activeFilter={sourceFilter || 'all'} />
       </header>
 
       {/* Timeline Feed */}

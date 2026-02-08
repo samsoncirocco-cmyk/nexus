@@ -224,10 +224,12 @@ export async function executeCommand(text: string): Promise<ExecuteResult> {
     
     // Log to BigQuery via events API
     await logAction({
-      action: 'command.queued',
-      target: text,
-      metadata: {
+      agentId: 'second-brain',
+      eventType: 'command.queued',
+      source: 'commands-ui',
+      payload: {
         commandId,
+        text,
         type,
         mode: 'local',
       },

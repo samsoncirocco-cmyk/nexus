@@ -33,6 +33,15 @@ function getStatusBadge(status: string) {
         icon: 'check_circle',
         dot: 'bg-emerald-400',
       };
+    case 'error':
+      return {
+        label: 'ERROR',
+        bg: 'bg-red-500/15',
+        text: 'text-red-400',
+        border: 'border-red-500/30',
+        icon: 'error',
+        dot: 'bg-red-400',
+      };
     default:
       return {
         label: status.toUpperCase(),
@@ -118,10 +127,35 @@ export default async function CommandsPage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-foreground leading-relaxed">{cmd.text}</p>
+                      
+                      {/* Result or error */}
+                      {cmd.result && (
+                        <p className="text-xs text-foreground-muted mt-1.5 bg-zinc-900/40 rounded-lg px-3 py-1.5 border border-zinc-800/50">
+                          {cmd.result}
+                        </p>
+                      )}
+                      {cmd.error && (
+                        <p className="text-xs text-red-400 mt-1.5 bg-red-500/10 rounded-lg px-3 py-1.5 border border-red-500/20">
+                          Error: {cmd.error}
+                        </p>
+                      )}
+                      
                       <div className="flex items-center gap-3 mt-2">
                         <span className={`${badge.bg} ${badge.text} px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider border ${badge.border}`}>
                           {badge.label}
                         </span>
+                        
+                        {/* Execution mode badge */}
+                        {cmd.mode && (
+                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider border ${
+                            cmd.mode === 'gateway' 
+                              ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' 
+                              : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+                          }`}>
+                            {cmd.mode === 'gateway' ? '⚡ GATEWAY' : '🧠 LOCAL'}
+                          </span>
+                        )}
+                        
                         <span className="text-foreground-muted text-[10px] font-medium" suppressHydrationWarning>
                           {(() => {
                             try {

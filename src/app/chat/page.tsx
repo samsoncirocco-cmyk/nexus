@@ -10,6 +10,12 @@ interface ChatMessage {
   status: string;
 }
 
+interface ContextMetadata {
+  emailCount: number;
+  calendarCount: number;
+  taskCount: number;
+}
+
 const STORAGE_KEY = 'second-brain-chat-history';
 const POLL_INTERVAL = 5000;
 
@@ -45,6 +51,8 @@ export default function ChatPage() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [contextMetadata, setContextMetadata] = useState<ContextMetadata | null>(null);
+  const [showContext, setShowContext] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -144,7 +152,10 @@ export default function ChatPage() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ 
+          text,
+          messages: messages.slice(-10), // Send last 10 messages for context
+        }),
       });
 
       const data = await res.json();
@@ -163,6 +174,11 @@ export default function ChatPage() {
           return [...filtered, { ...tempUserMsg, id: data.userMessage?.id || tempUserMsg.id, status: 'sent' }, errorMsg];
         });
       } else {
+        // Update context metadata if provided
+        if (data.metadata) {
+          setContextMetadata(data.metadata);
+        }
+
         // Replace temp with real messages
         setMessages((prev) => {
           const filtered = prev.filter((m) => m.id !== tempUserMsg.id);
@@ -204,6 +220,7 @@ export default function ChatPage() {
       setMessages([]);
       localStorage.removeItem(STORAGE_KEY);
       lastTimestampRef.current = null;
+      setContextMetadata(null);
     }
   };
 
@@ -223,7 +240,7 @@ export default function ChatPage() {
               <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
             <p className="text-[11px] text-foreground-muted">
-              Your AI assistant · Second Brain
+              Your AI assistant · Context-aware
             </p>
           </div>
           <button
@@ -254,15 +271,15 @@ export default function ChatPage() {
             <div>
               <h2 className="text-lg font-bold text-foreground mb-1">Hey Samson 🦆</h2>
               <p className="text-sm text-foreground-muted max-w-sm">
-                Ask me anything about your vault, deals, projects, or whatever&apos;s on your mind.
+                I&apos;ve got full visibility into your emails, calendar, tasks, and vault. What&apos;s up?
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-lg w-full">
               {[
-                'What deals need attention this week?',
-                'Summarize my recent journal entries',
-                'What E-Rate leads are active?',
-                "What's the status of all my projects?",
+                "What's on my plate today?",
+                'Any urgent emails I missed?',
+                'What tasks should I tackle first?',
+                "What's the latest from my team?",
               ].map((q) => (
                 <button
                   key={q}
@@ -377,6 +394,55 @@ export default function ChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Context Indicator */}
+      {contextMetadata && (
+        <div className="shrink-0 border-t border-border-subtle bg-bg-dark/60 backdrop-blur-md px-4 md:px-6 py-2">
+          <button
+            onClick={() => setShowContext(!showContext)}
+            className="w-full flex items-center justify-between text-xs text-foreground-muted hover:text-foreground transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
+                {showContext ? 'expand_less' : 'expand_more'}
+              </span>
+              <span className="font-medium">Context Active</span>
+            </div>
+            <div className="flex items-center gap-3">
+              {contextMetadata.emailCount > 0 && (
+                <span className="flex items-center gap-1">
+                  <span>📧</span>
+                  <span>{contextMetadata.emailCount} emails</span>
+                </span>
+              )}
+              {contextMetadata.calendarCount > 0 && (
+                <span className="flex items-center gap-1">
+                  <span>📅</span>
+                  <span>{contextMetadata.calendarCount} events</span>
+                </span>
+              )}
+              {contextMetadata.taskCount > 0 && (
+                <span className="flex items-center gap-1">
+                  <span>✅</span>
+                  <span>{contextMetadata.taskCount} tasks</span>
+                </span>
+              )}
+            </div>
+          </button>
+          {showContext && (
+            <div className="mt-2 pt-2 border-t border-border-subtle/30 text-[11px] text-foreground-muted space-y-1">
+              <p>💡 Paul has real-time access to:</p>
+              <ul className="ml-4 space-y-0.5">
+                <li>• Your recent emails and who they&apos;re from</li>
+                <li>• Upcoming calendar events (next 24 hours)</li>
+                <li>• Open tasks and priorities</li>
+                <li>• Recent agent activity and analyses</li>
+                <li>• Current date and time context</li>
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Input Bar */}
       <div className="shrink-0 border-t border-border-subtle px-3 md:px-6 py-3 bg-bg-dark/90 backdrop-blur-xl">
         <div className="flex items-end gap-2 max-w-4xl mx-auto">
@@ -410,7 +476,7 @@ export default function ChatPage() {
         </div>
         <div className="text-center mt-1.5">
           <span className="text-[10px] text-foreground-muted/25">
-            Powered by Gemini 2.0 Flash · Vault-aware
+            Powered by Gemini 2.0 Flash · Context-aware AI
           </span>
         </div>
       </div>
