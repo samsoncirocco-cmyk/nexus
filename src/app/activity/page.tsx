@@ -78,7 +78,7 @@ export default async function ActivityPage({
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col min-h-screen">
       {/* Top App Bar */}
-      <header className="sticky top-0 z-20 bg-bg-dark/80 backdrop-blur-md pt-6 md:pt-8 pb-4 px-6">
+      <header className="sticky top-0 z-20 bg-bg-dark/80 backdrop-blur-md pt-6 md:pt-8 pb-4 px-4 md:px-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Protocol Active</span>
@@ -103,7 +103,7 @@ export default async function ActivityPage({
       </header>
 
       {/* Timeline Feed */}
-      <main className="flex-1 px-6 pb-32">
+      <main className="flex-1 px-4 md:px-6 pb-32">
         {activity.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="size-16 rounded-full bg-secondary-dark/40 border border-primary/10 flex items-center justify-center mb-4">

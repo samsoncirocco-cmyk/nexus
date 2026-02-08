@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 
@@ -24,7 +24,7 @@ const categoryIcons: Record<string, string> = {
   reports: 'analytics',
 };
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQuery = searchParams?.get('q') || '';
@@ -265,5 +265,20 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+function SearchPageContent() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="animate-spin size-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+          <p className="text-sm text-foreground-muted">Loading search...</p>
+        </div>
+      </div>
+    }>
+      <SearchPageContent />
+    </Suspense>
   );
 }

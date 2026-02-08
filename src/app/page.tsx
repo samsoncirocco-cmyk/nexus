@@ -75,24 +75,26 @@ export default async function Home() {
   return (
     <div className="max-w-3xl mx-auto">
       {/* Top App Bar */}
-      <div className="flex items-center p-6 pb-2 justify-between">
-        <div className="flex size-10 shrink-0 items-center overflow-hidden rounded-full border border-primary/30 bg-secondary-dark">
+      <div className="flex items-center p-4 md:p-6 pb-2 justify-between">
+        <div className="flex size-10 md:size-11 shrink-0 items-center overflow-hidden rounded-full border border-primary/30 bg-secondary-dark">
           <span className="material-symbols-outlined text-primary mx-auto" style={{ fontSize: 22 }}>person</span>
         </div>
-        <div className="flex-1 px-4">
+        <div className="flex-1 px-3 md:px-4 min-w-0">
           <p className="text-xs font-medium uppercase tracking-widest text-primary/70">Welcome back</p>
-          <h2 className="text-primary text-xl font-bold leading-tight tracking-tight">{getGreeting()}, Samson</h2>
+          <h2 className="text-primary text-lg md:text-xl font-bold leading-tight tracking-tight truncate">{getGreeting()}, Samson</h2>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center shrink-0">
           <Link
             href="/settings"
-            className="flex items-center justify-center rounded-full size-10 bg-secondary-dark/20 text-foreground-muted border border-primary/10 hover:text-primary transition-colors"
+            className="flex items-center justify-center rounded-full size-11 bg-secondary-dark/20 text-foreground-muted border border-primary/10 hover:text-primary transition-colors"
+            aria-label="Settings"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 20 }}>settings</span>
           </Link>
           <Link
             href="/activity"
-            className="flex items-center justify-center rounded-full size-10 bg-secondary-dark/20 text-primary border border-primary/10"
+            className="flex items-center justify-center rounded-full size-11 bg-secondary-dark/20 text-primary border border-primary/10"
+            aria-label="Notifications"
           >
             <span className="material-symbols-outlined" style={{ fontSize: 22 }}>notifications</span>
           </Link>
@@ -100,49 +102,49 @@ export default async function Home() {
       </div>
 
       {/* Command Bar */}
-      <div className="px-6 mt-4 mb-2">
+      <div className="px-4 md:px-6 mt-4 mb-2">
         <CommandBar placeholder="What should Paul work on?" variant="full" />
       </div>
 
       {/* Stat Cards — Real Data */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-6 py-4">
-        <Link href="/activity" className="flex flex-col gap-2 rounded-xl p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 px-4 md:px-6 py-4">
+        <Link href="/activity" className="flex flex-col gap-2 rounded-xl p-3 md:p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors min-h-[120px]">
           <div className="flex items-center justify-between">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 22, fontVariationSettings: "'FILL' 1" }}>data_usage</span>
             <span className="text-[9px] font-bold uppercase tracking-wider text-primary/40">Activity</span>
           </div>
-          <p className="text-white tracking-tight text-3xl font-bold">{totalActivity}</p>
+          <p className="text-white tracking-tight text-2xl md:text-3xl font-bold">{totalActivity}</p>
           <p className="text-primary/50 text-[10px] font-medium">Total entries</p>
         </Link>
-        <Link href="/tasks" className="flex flex-col gap-2 rounded-xl p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+        <Link href="/tasks" className="flex flex-col gap-2 rounded-xl p-3 md:p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors min-h-[120px]">
           <div className="flex items-center justify-between">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 22 }}>task_alt</span>
             <span className="text-[9px] font-bold uppercase tracking-wider text-primary/40">Tasks</span>
           </div>
-          <p className="text-white tracking-tight text-3xl font-bold">{activeTasks}</p>
+          <p className="text-white tracking-tight text-2xl md:text-3xl font-bold">{activeTasks}</p>
           <p className="text-primary/50 text-[10px] font-medium">{tasks.length} total</p>
         </Link>
-        <Link href="/agents" className="flex flex-col gap-2 rounded-xl p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+        <Link href="/agents" className="flex flex-col gap-2 rounded-xl p-3 md:p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors min-h-[120px]">
           <div className="flex items-center justify-between">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 22 }}>smart_toy</span>
             <span className="text-[9px] font-bold uppercase tracking-wider text-primary/40">Agents</span>
           </div>
-          <p className="text-white tracking-tight text-3xl font-bold">{totalAgents}</p>
+          <p className="text-white tracking-tight text-2xl md:text-3xl font-bold">{totalAgents}</p>
           <p className="text-primary/50 text-[10px] font-medium">{runningAgents.length} running</p>
         </Link>
-        <Link href="/commands" className="flex flex-col gap-2 rounded-xl p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors">
+        <Link href="/commands" className="flex flex-col gap-2 rounded-xl p-3 md:p-4 bg-secondary-dark border border-primary/10 shadow-lg hover:border-primary/30 transition-colors min-h-[120px]">
           <div className="flex items-center justify-between">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 22, fontVariationSettings: "'FILL' 1" }}>bolt</span>
             <span className="text-[9px] font-bold uppercase tracking-wider text-primary/40">Commands</span>
           </div>
-          <p className="text-white tracking-tight text-3xl font-bold">{totalCommands}</p>
+          <p className="text-white tracking-tight text-2xl md:text-3xl font-bold">{totalCommands}</p>
           <p className="text-primary/50 text-[10px] font-medium">{commands.filter(c => c.status === 'pending').length} pending</p>
         </Link>
       </div>
 
       {/* Running Agents Card */}
       {runningAgents.length > 0 && (
-        <div className="px-6 mb-4">
+        <div className="px-4 md:px-6 mb-4">
           <Link href="/agents" className="block">
             <div className="bg-gradient-to-br from-emerald-900/30 to-bg-dark rounded-xl p-5 border border-emerald-500/20 relative overflow-hidden hover:border-emerald-500/40 transition-colors">
               <div className="absolute -right-4 -top-4 size-20 bg-emerald-500/10 rounded-full blur-2xl" />
@@ -176,7 +178,7 @@ export default async function Home() {
       )}
 
       {/* Brain Status Card */}
-      <div className="px-6 mb-6">
+      <div className="px-4 md:px-6 mb-6">
         <div className="bg-gradient-to-br from-secondary-dark to-bg-dark rounded-xl p-5 border border-primary/20 relative overflow-hidden">
           <div className="absolute -right-4 -top-4 size-24 bg-primary/10 rounded-full blur-2xl" />
           <div className="relative z-10 flex items-center justify-between">
@@ -194,7 +196,7 @@ export default async function Home() {
       </div>
 
       {/* Live Insights — BigQuery Data Lake */}
-      <div className="px-6 mb-6">
+      <div className="px-4 md:px-6 mb-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <h3 className="text-primary text-lg font-bold tracking-tight">Live Insights</h3>
@@ -347,7 +349,7 @@ export default async function Home() {
       </div>
 
       {/* What's New — 3 most recent activity entries */}
-      <div className="px-6 mb-6">
+      <div className="px-4 md:px-6 mb-6">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-primary text-lg font-bold tracking-tight">What&apos;s New</h3>
           <Link href="/activity" className="text-primary/60 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors">
@@ -405,7 +407,7 @@ export default async function Home() {
       </div>
 
       {/* Quick Links Grid */}
-      <div className="px-6 mb-8">
+      <div className="px-4 md:px-6 mb-8">
         <h3 className="text-primary text-lg font-bold tracking-tight mb-3">Quick Links</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {QUICK_LINKS.map((link) => (
@@ -429,7 +431,7 @@ export default async function Home() {
       </div>
 
       {/* Quick Access - Categories */}
-      <div className="px-6 mb-8">
+      <div className="px-4 md:px-6 mb-8">
         <h3 className="text-primary text-lg font-bold tracking-tight mb-3">Vault Categories</h3>
         <div className="grid grid-cols-2 gap-3">
           {Object.entries(documentsByCategory).slice(0, 6).map(([category, docs]) => {
