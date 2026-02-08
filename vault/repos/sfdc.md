@@ -20,7 +20,7 @@ Salesforce tools, SLED toolkit, outlook automation
 - **Total Commits:** 12
 - **Files:** 324
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main, origin/HEAD)T9cf3e7ad1443d145b08c2f25e187992324a60d8c:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main)T9cf3e7ad1443d145b08c2f25e187992324a60d8c:%M:HEADZ
 
 ## Recent Commits
 - 9cf3e7a security: remove hardcoded email from personalization script

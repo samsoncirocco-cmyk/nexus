@@ -20,7 +20,7 @@ Mac Pro Ubuntu server setup & configs
 - **Total Commits:** 2
 - **Files:** 22
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main, origin/HEAD)T64742d923b6eaa0afe756ae726b98de5dda72f55:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main)T64742d923b6eaa0afe756ae726b98de5dda72f55:%M:HEADZ
 
 ## Recent Commits
 - 64742d9 Improve documentation, tooling, and code quality

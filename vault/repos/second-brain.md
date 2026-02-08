@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 159
-- **Files:** 35349
+- **Total Commits:** 161
+- **Files:** 35479
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main)T14b5d52423f1d45502a16b08a28c972ba9ccc08e:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)Td9a5114113aab8ba9ffb9703dcdb135d6085069e:%M:HEADZ
 
 ## Recent Commits
+- d9a5114 auto: update 2 files (.planning/REQUIREMENTS.md,vault/activity.json)
+- 9861d75 feat: GSD project init — Device Knowledge Graph spec
 - 14b5d52 auto: vault data update 2026-02-08T16:37:41Z
 - 3a58059 auto: update 2 files (vault/activity.json,vault/repos/second-brain.md)
 - e50b143 feat: /directives page — DOE framework visibility
-- 3bb935b auto: vault data update 2026-02-08T16:32:21Z
-- 79663ae auto: update 4 files (src/app/directives/page.tsx,src/components/NavShell.tsx,src/lib/directives.ts)
 
 ## Status
-Last commit: `14b5d52 auto: vault data update 2026-02-08T16:37:41Z`
+Last commit: `d9a5114 auto: update 2 files (.planning/REQUIREMENTS.md,vault/activity.json)`
