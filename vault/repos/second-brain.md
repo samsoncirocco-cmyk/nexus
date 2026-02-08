@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 68
-- **Files:** 33719
+- **Total Commits:** 70
+- **Files:** 32952
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main)T58bd78de5ad6dff0f4cd271d7423863b47a9474e:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)T9951b899ca382edc06cd3378c5183a526057b728:%M:HEADZ
 
 ## Recent Commits
+- 9951b89 auto: update 19 files (src/app/agents/page.tsx,src/app/analytics/page.tsx,src/app/api/agents/route.ts)
+- 9921e57 feat: route chat through OpenClaw gateway for real Paul access
 - 58bd78d feat: full-text vault search with search page and smart command bar
 - cc7a215 auto: update 2 files (vault/activity.json,vault/repos/second-brain.md)
 - 4a4ccac feat: mobile PWA polish + functional settings page
-- 86380bf auto: update vault/repos/second-brain.md
-- 7f03afa auto: update 2 files (src/app/search/page.tsx,vault/repos/second-brain.md)
 
 ## Status
-Last commit: `58bd78d feat: full-text vault search with search page and smart command bar`
+Last commit: `9951b89 auto: update 19 files (src/app/agents/page.tsx,src/app/analytics/page.tsx,src/app/api/agents/route.ts)`
