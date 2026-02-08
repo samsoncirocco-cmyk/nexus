@@ -263,11 +263,9 @@ export default function AgentsPage() {
             <div className="size-16 rounded-full bg-secondary-dark/40 border border-primary/10 flex items-center justify-center mb-4">
               <span className="material-symbols-outlined text-primary" style={{ fontSize: 28 }}>smart_toy</span>
             </div>
-            <h3 className="text-lg font-bold mb-2">No Agents</h3>
+            <h3 className="text-lg font-bold mb-2">No Agent Activity</h3>
             <p className="text-foreground-muted text-sm text-center max-w-xs">
-              {gwStatus?.reachable
-                ? 'No active sessions on the gateway. Issue a command to spawn an agent.'
-                : 'Gateway offline — no agents registered. They\'ll show up here when spawned.'}
+              No agent activity recorded in the vault yet. Agents will appear here once they complete tasks.
             </p>
           </div>
         ) : (
@@ -354,7 +352,7 @@ export default function AgentsPage() {
                       <StatusIndicator status={agent.status} />
                     </div>
                     <p className="text-zinc-400 text-sm mb-3">{agent.summary}</p>
-                    <div className="flex items-center gap-4 text-xs">
+                    <div className="flex items-center gap-4 text-xs flex-wrap">
                       <div className="flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>timer</span>
                         <span className="text-foreground-muted font-mono">{formatDuration(agent.startedAt, agent.completedAt)}</span>
@@ -367,6 +365,12 @@ export default function AgentsPage() {
                         <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>schedule</span>
                         <span className="text-foreground-muted">{formatTimeAgo(agent.lastUpdate)}</span>
                       </div>
+                      {agent.taskCount !== undefined && agent.taskCount > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>task_alt</span>
+                          <span className="text-foreground-muted">{agent.taskCount} tasks</span>
+                        </div>
+                      )}
                     </div>
                     <TokenBar tokens={agent.tokens} contextTokens={agent.contextTokens} />
                   </div>

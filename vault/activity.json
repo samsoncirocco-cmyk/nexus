@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T03:16:35Z",
+    "type": "completed",
+    "agent": "commands-fix",
+    "message": "Fixed /commands to use Gemini locally instead of gateway tunnel"
+  },
+  {
     "timestamp": "2026-02-08T03:16:26Z",
     "type": "completed",
     "agent": "pipeline-verify",
