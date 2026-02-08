@@ -127,6 +127,7 @@ export default async function Home() {
     { href: '/ask', icon: 'neurology', label: 'Ask Brain', desc: 'Search knowledge', gradient: 'from-blue-900/15 to-secondary-dark/30' },
     { href: '/commands', icon: 'bolt', label: 'Commands', desc: 'Issue orders', gradient: 'from-amber-900/15 to-secondary-dark/30' },
     { href: '/analytics', icon: 'analytics', label: 'Analytics', desc: 'Insights', gradient: '' },
+    { href: '/devices', icon: 'storage', label: 'Devices', desc: 'Storage & cleanup', gradient: 'from-emerald-900/15 to-secondary-dark/30' },
     { href: '/activity', icon: 'data_usage', label: 'Activity Feed', desc: `${totalActivity} entries`, gradient: '' },
     { href: '/graph', icon: 'hub', label: 'Knowledge Graph', desc: `${allDocs.length} nodes`, gradient: '' },
     { href: '/doc', icon: 'folder_open', label: 'Documents', desc: `${Object.keys(documentsByCategory).length} categories`, gradient: '' },
