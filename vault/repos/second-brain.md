@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 174
-- **Files:** 35485
+- **Total Commits:** 176
+- **Files:** 36651
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> feature/device-knowledge-graph, origin/feature/device-knowledge-graph)Tb1f7ca83b33b46b5c967819c5df4513c5418939b:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> feature/device-knowledge-graph, origin/feature/device-knowledge-graph)T9ad08416a00c7b9e7df455803f69b015786d3efd:%M:HEADZ
 
 ## Recent Commits
+- 9ad0841 auto: update 2 files (src/lib/devices.ts,vault/activity.json)
+- 259645a auto: vault data update 2026-02-08T20:09:14Z
 - b1f7ca8 auto: update vault/activity.json
 - f20e1a7 auto: vault data update 2026-02-08T20:07:15Z
 - ff149c4 auto: update 12 files (src/app/devices/[id]/page.tsx,src/app/devices/loading.tsx,src/app/devices/page.tsx)
-- 860e5e8 docs: Add Phase 2 completion summary
-- 68c6b16 docs: Update STATE.md - Phase 2 complete
 
 ## Status
-Last commit: `b1f7ca8 auto: update vault/activity.json`
+Last commit: `9ad0841 auto: update 2 files (src/lib/devices.ts,vault/activity.json)`
