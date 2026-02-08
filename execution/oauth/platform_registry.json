@@ -1,0 +1,116 @@
+{
+  "platforms": {
+    "twitter": {
+      "name": "X / Twitter",
+      "auth_type": "oauth2",
+      "scopes": ["tweet.read", "tweet.write", "users.read", "offline.access"],
+      "token_url": "https://api.twitter.com/2/oauth2/token",
+      "auth_url": "https://twitter.com/i/oauth2/authorize",
+      "api_base": "https://api.twitter.com/2",
+      "supports_refresh": true,
+      "token_expiry_seconds": 7200,
+      "directive": "directives/oauth_twitter.md",
+      "script": "execution/oauth/twitter_flow.py",
+      "env_prefix": "TWITTER",
+      "rate_limits": {
+        "post_tweet": "200 per 15 min per user",
+        "get_timeline": "1500 per 15 min per app"
+      }
+    },
+    "linkedin": {
+      "name": "LinkedIn",
+      "auth_type": "oauth2",
+      "scopes": ["r_basicprofile", "r_organization_social", "w_member_social", "r_member_social"],
+      "token_url": "https://www.linkedin.com/oauth/v2/accessToken",
+      "auth_url": "https://www.linkedin.com/oauth/v2/authorization",
+      "api_base": "https://api.linkedin.com/v2",
+      "supports_refresh": true,
+      "token_expiry_days": 60,
+      "refresh_token_expiry_days": 365,
+      "directive": "directives/oauth_linkedin.md",
+      "script": "execution/oauth/linkedin_flow.py",
+      "env_prefix": "LINKEDIN",
+      "rate_limits": {
+        "basic": "100 req/day",
+        "enterprise": "500 req/day"
+      }
+    },
+    "medium": {
+      "name": "Medium",
+      "auth_type": "oauth2",
+      "scopes": ["basicProfile", "listPublications", "publishPost"],
+      "token_url": "https://api.medium.com/v1/tokens",
+      "auth_url": "https://medium.com/m/oauth/authorize",
+      "api_base": "https://api.medium.com/v1",
+      "supports_refresh": false,
+      "token_expiry": "never",
+      "directive": "directives/oauth_medium.md",
+      "script": "execution/oauth/medium_flow.py",
+      "env_prefix": "MEDIUM",
+      "rate_limits": {
+        "posts_per_day": 100,
+        "write_ops": "10 per minute"
+      }
+    },
+    "instagram": {
+      "name": "Instagram",
+      "auth_type": "oauth2",
+      "scopes": ["instagram_basic", "instagram_content_publish", "pages_read_engagement"],
+      "token_url": "https://graph.facebook.com/v18.0/oauth/access_token",
+      "auth_url": "https://www.facebook.com/v18.0/dialog/oauth",
+      "api_base": "https://graph.instagram.com",
+      "facebook_api_base": "https://graph.facebook.com/v18.0",
+      "supports_refresh": true,
+      "token_type": "long_lived",
+      "token_expiry_days": 60,
+      "requires_business_account": true,
+      "directive": "directives/oauth_instagram.md",
+      "script": "execution/oauth/instagram_flow.py",
+      "env_prefix": "INSTAGRAM",
+      "rate_limits": {
+        "publishing": "200 per hour per user",
+        "insights": "100 per hour per user"
+      }
+    },
+    "tiktok": {
+      "name": "TikTok",
+      "auth_type": "oauth2",
+      "scopes": ["user.info.basic", "user.info.profile", "video.publish", "video.upload"],
+      "token_url": "https://open-api.tiktok.com/oauth/access_token/",
+      "auth_url": "https://www.tiktok.com/v2/auth/authorize/",
+      "api_base": "https://open-api.tiktok.com",
+      "supports_refresh": true,
+      "token_expiry_hours": 24,
+      "refresh_token_expiry_days": 365,
+      "requires_anti_forgery": true,
+      "requires_creator_account": true,
+      "directive": "directives/oauth_tiktok.md",
+      "script": "execution/oauth/tiktok_flow.py",
+      "env_prefix": "TIKTOK",
+      "rate_limits": {
+        "videos_per_day": 5,
+        "queries_per_day": 1000
+      }
+    },
+    "substack": {
+      "name": "Substack",
+      "auth_type": "api_key",
+      "api_base": "https://substack.com/api/v1",
+      "supports_refresh": false,
+      "token_expiry": "never",
+      "directive": "directives/oauth_substack.md",
+      "script": "execution/oauth/substack_flow.py",
+      "env_prefix": "SUBSTACK",
+      "rate_limits": {
+        "assumed": "100 per hour"
+      },
+      "notes": [
+        "API key stored encrypted in database",
+        "Not officially documented - endpoints reverse-engineered",
+        "Requires manual API key generation in Substack settings"
+      ]
+    }
+  },
+  "version": "1.0.0",
+  "last_updated": "2026-02-08"
+}

@@ -1,0 +1,170 @@
+# OAuth 2.0 Platform Configurations
+# Adding a new platform = add ~10 lines here, not 200+ lines of code
+#
+# Supported auth_methods:
+#   - basic_auth: Base64(client_id:client_secret) in Authorization header
+#   - post_body: client_id and client_secret in POST body
+#   - none: No client authentication (PKCE-only)
+#
+# Supported token_content_types:
+#   - form: application/x-www-form-urlencoded
+#   - json: application/json
+
+platforms:
+  # ============================================
+  # LinkedIn
+  # ============================================
+  linkedin:
+    name: "LinkedIn"
+    enabled: true
+    
+    # OAuth Endpoints
+    auth_url: "https://www.linkedin.com/oauth/v2/authorization"
+    token_url: "https://www.linkedin.com/oauth/v2/accessToken"
+    api_base_url: "https://api.linkedin.com/v2"
+    
+    # OAuth Settings
+    pkce: true
+    response_type: "code"
+    scopes:
+      - "r_basicprofile"
+      - "r_organization_social"
+      - "w_member_social"
+      - "r_member_social"
+    scope_separator: " "
+    
+    # Token Exchange Settings
+    auth_method: "post_body"  # client_id/secret in POST body
+    token_content_type: "form"
+    
+    # Custom Headers
+    default_headers:
+      X-Restli-Protocol-Version: "2.0.0"
+    
+    # Environment Variable Prefix
+    env_prefix: "LINKEDIN"
+    
+    # API Endpoints (for post-init actions)
+    endpoints:
+      profile: "/me"
+      post: "/ugcPosts"
+    
+    # Token Lifetime (seconds) - for calculating expires_at
+    default_token_lifetime: 5184000  # 60 days
+
+  # ============================================
+  # X / Twitter
+  # ============================================
+  twitter:
+    name: "X (Twitter)"
+    enabled: true
+    
+    # OAuth Endpoints
+    auth_url: "https://twitter.com/i/oauth2/authorize"
+    token_url: "https://api.twitter.com/2/oauth2/token"
+    api_base_url: "https://api.twitter.com/2"
+    
+    # OAuth Settings
+    pkce: true
+    response_type: "code"
+    scopes:
+      - "tweet.read"
+      - "tweet.write"
+      - "users.read"
+      - "offline.access"
+    scope_separator: " "
+    
+    # Token Exchange Settings
+    auth_method: "basic_auth"  # Base64(client_id:client_secret) in header
+    token_content_type: "form"
+    
+    # Environment Variable Prefix
+    env_prefix: "TWITTER"
+    
+    # API Endpoints
+    endpoints:
+      profile: "/users/me"
+      post: "/tweets"
+    
+    # Token Lifetime
+    default_token_lifetime: 7200  # 2 hours
+
+  # ============================================
+  # Example: Adding Substack (when they add OAuth)
+  # ============================================
+  # substack:
+  #   name: "Substack"
+  #   enabled: false
+  #   auth_url: "https://substack.com/oauth2/authorize"
+  #   token_url: "https://substack.com/oauth2/token"
+  #   api_base_url: "https://api.substack.com/v1"
+  #   pkce: true
+  #   response_type: "code"
+  #   scopes:
+  #     - "publish"
+  #     - "read"
+  #   scope_separator: " "
+  #   auth_method: "basic_auth"
+  #   token_content_type: "form"
+  #   env_prefix: "SUBSTACK"
+  #   default_token_lifetime: 3600
+
+  # ============================================
+  # Example: Adding Medium
+  # ============================================
+  # medium:
+  #   name: "Medium"
+  #   enabled: false
+  #   auth_url: "https://medium.com/m/oauth/authorize"
+  #   token_url: "https://medium.com/v1/tokens"
+  #   api_base_url: "https://api.medium.com/v1"
+  #   pkce: false  # Medium uses OAuth 2.0 without PKCE
+  #   response_type: "code"
+  #   scopes:
+  #     - "basicProfile"
+  #     - "publishPost"
+  #   scope_separator: ","
+  #   auth_method: "post_body"
+  #   token_content_type: "json"
+  #   env_prefix: "MEDIUM"
+  #   default_token_lifetime: 31536000  # 1 year
+
+  # ============================================
+  # Example: Adding Instagram (Basic Display API)
+  # ============================================
+  # instagram:
+  #   name: "Instagram"
+  #   enabled: false
+  #   auth_url: "https://api.instagram.com/oauth/authorize"
+  #   token_url: "https://api.instagram.com/oauth/access_token"
+  #   api_base_url: "https://graph.instagram.com"
+  #   pkce: false
+  #   response_type: "code"
+  #   scopes:
+  #     - "user_profile"
+  #     - "user_media"
+  #   scope_separator: ","
+  #   auth_method: "post_body"
+  #   token_content_type: "form"
+  #   env_prefix: "INSTAGRAM"
+  #   default_token_lifetime: 5184000  # 60 days
+
+  # ============================================
+  # Example: Adding TikTok
+  # ============================================
+  # tiktok:
+  #   name: "TikTok"
+  #   enabled: false
+  #   auth_url: "https://www.tiktok.com/v2/auth/authorize/"
+  #   token_url: "https://open.tiktokapis.com/v2/oauth/token/"
+  #   api_base_url: "https://open.tiktokapis.com/v2"
+  #   pkce: true
+  #   response_type: "code"
+  #   scopes:
+  #     - "user.info.basic"
+  #     - "video.publish"
+  #   scope_separator: ","
+  #   auth_method: "basic_auth"
+  #   token_content_type: "form"
+  #   env_prefix: "TIKTOK"
+  #   default_token_lifetime: 86400  # 24 hours
