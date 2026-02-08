@@ -28,13 +28,23 @@ interface BQEvent {
   metadata?: any;
 }
 
+function getBQClient(): BigQuery {
+  // On Vercel: use base64-encoded service account key
+  const keyBase64 = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+  if (keyBase64) {
+    const credentials = JSON.parse(Buffer.from(keyBase64, 'base64').toString('utf-8'));
+    return new BigQuery({ projectId: PROJECT_ID, credentials });
+  }
+  // Locally: use ADC
+  return new BigQuery({ projectId: PROJECT_ID });
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = req.nextUrl;
     const action = searchParams.get('action') || 'recent';
 
-    // Initialize BigQuery client - uses ADC (Application Default Credentials)
-    const bq = new BigQuery({ projectId: PROJECT_ID });
+    const bq = getBQClient();
 
     switch (action) {
       case 'stats': {
