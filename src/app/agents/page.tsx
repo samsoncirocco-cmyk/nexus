@@ -16,6 +16,9 @@ interface AgentEntry {
   tokens?: { input: number; output: number; total: number };
   contextTokens?: number;
   sessionKey?: string;
+  // Vault-derived fields
+  taskCount?: number;
+  recentActivity?: Array<{ type: string; message: string; timestamp: string }>;
 }
 
 interface GatewayStatus {
@@ -298,7 +301,7 @@ export default function AgentsPage() {
 
                       <p className="text-zinc-300 text-sm leading-relaxed mb-4">{agent.summary}</p>
 
-                      <div className="flex items-center gap-4 text-xs">
+                      <div className="flex items-center gap-4 text-xs flex-wrap">
                         <div className="flex items-center gap-1.5">
                           <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>timer</span>
                           <span className="text-primary/80 font-mono font-bold">{formatDuration(agent.startedAt, agent.completedAt)}</span>
@@ -311,6 +314,12 @@ export default function AgentsPage() {
                           <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>schedule</span>
                           <span className="text-foreground-muted">{formatTimeAgo(agent.lastUpdate)}</span>
                         </div>
+                        {agent.taskCount !== undefined && agent.taskCount > 0 && (
+                          <div className="flex items-center gap-1.5">
+                            <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>task_alt</span>
+                            <span className="text-foreground-muted">{agent.taskCount} tasks</span>
+                          </div>
+                        )}
                       </div>
 
                       <TokenBar tokens={agent.tokens} contextTokens={agent.contextTokens} />
