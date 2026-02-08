@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T07:40:16Z",
+    "type": "completed",
+    "agent": "task-drag-drop",
+    "message": "Task board drag-and-drop \u2014 tasks can now be moved between columns"
+  },
+  {
     "timestamp": "2026-02-08T07:31:46Z",
     "type": "completed",
     "agent": "live-agent-status",

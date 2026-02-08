@@ -699,7 +699,7 @@ export default function TasksPage() {
     });
   };
 
-  // Drag-and-drop handler with @hello-pangea/dnd
+  // Drag-and-drop handler
   const handleDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
     
@@ -708,6 +708,7 @@ export default function TasksPage() {
       return;
     }
 
+    const sourceColumn = source.droppableId as Column;
     const destColumn = destination.droppableId as Column;
     const taskId = draggableId;
     const task = tasks.find(t => t.id === taskId);
@@ -901,7 +902,7 @@ export default function TasksPage() {
           searchRef={searchRef}
         />
 
-        {/* Kanban Board with Drag-and-Drop */}
+        {/* Kanban Board */}
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
             {COLUMNS.map((col) => {
@@ -935,26 +936,26 @@ export default function TasksPage() {
                           const isDone = col === 'Done';
                           const dueBadge = getDueBadge(task.dueDate, task.column);
                           const isSelected = selectedIds.has(task.id);
-                          
                           return (
                             <Draggable key={task.id} draggableId={task.id} index={idx} isDragDisabled={batchMode}>
                               {(provided, snapshot) => (
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
                                   onClick={batchMode ? () => toggleSelect(task.id) : undefined}
-                                  className={`rounded-xl border border-l-4 ${priorityStripe[task.priority]} bg-bg-dark p-4 card-hover group animate-slide-up ${batchMode ? 'cursor-pointer' : ''} ${isSelected ? 'border-primary/50 ring-1 ring-primary/30' : 'border-white/10'} ${snapshot.isDragging ? 'shadow-2xl shadow-primary/20 rotate-2 scale-105' : ''}`}
+                                  className={`relative rounded-xl border border-l-4 ${priorityStripe[task.priority]} bg-bg-dark p-4 group animate-slide-up ${batchMode ? 'cursor-pointer' : 'cursor-grab active:cursor-grabbing'} ${isSelected ? 'border-primary/50 ring-1 ring-primary/30' : 'border-white/10'} ${snapshot.isDragging ? 'shadow-2xl shadow-primary/20 scale-105 rotate-2' : 'card-hover'} transition-all ${idx === 0 ? '' : idx === 1 ? 'delay-1' : idx === 2 ? 'delay-2' : idx === 3 ? 'delay-3' : idx === 4 ? 'delay-4' : 'delay-5'}`}
                                 >
-                                  {/* Selection checkbox + Drag handle + Priority badge + due date + edit */}
+                                  {/* Drag handle (mobile visual indicator) + Selection checkbox + Priority badge + due date + edit */}
                                   <div className="flex items-center gap-2 mb-3 flex-wrap">
+                                    {!batchMode && (
+                                      <div className="md:hidden text-foreground-muted pointer-events-none">
+                                        <span className="material-symbols-outlined" style={{ fontSize: 18 }}>drag_handle</span>
+                                      </div>
+                                    )}
                                     {batchMode && (
                                       <div className={`size-5 rounded border flex items-center justify-center transition-all shrink-0 ${isSelected ? 'bg-primary border-primary' : 'border-border'}`}>
                                         {isSelected && <span className="material-symbols-outlined text-bg-dark" style={{ fontSize: 14 }}>check</span>}
-                                      </div>
-                                    )}
-                                    {!batchMode && (
-                                      <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing text-foreground-muted hover:text-primary transition-colors touch-none">
-                                        <span className="material-symbols-outlined" style={{ fontSize: 18 }}>drag_handle</span>
                                       </div>
                                     )}
                                     <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${getPriorityStyles(task.priority)}`}>
@@ -980,42 +981,42 @@ export default function TasksPage() {
                                   <h3 className={`font-semibold group-hover:text-primary transition-colors mb-2 leading-snug ${isDone ? 'line-through text-foreground-muted' : 'text-foreground'}`}>
                                     {task.title}
                                   </h3>
-                                  {task.description && (
-                                    <p className="text-xs text-foreground-muted line-clamp-2 mb-3">{task.description}</p>
-                                  )}
+                      {task.description && (
+                        <p className="text-xs text-foreground-muted line-clamp-2 mb-3">{task.description}</p>
+                      )}
 
-                                  <SubtaskProgress subtasks={task.subtasks || []} />
+                      <SubtaskProgress subtasks={task.subtasks || []} />
 
-                                  {task.tags && task.tags.length > 0 && (
-                                    <div className="flex flex-wrap gap-1 mb-3">
-                                      {task.tags.map(tag => (
-                                        <span key={tag} className="text-[10px] font-semibold text-primary/80 bg-primary/10 px-1.5 py-0.5 rounded">
-                                          {tag}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  )}
+                      {task.tags && task.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {task.tags.map(tag => (
+                            <span key={tag} className="text-[10px] font-semibold text-primary/80 bg-primary/10 px-1.5 py-0.5 rounded">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
 
-                                  {task.links && task.links.length > 0 && (
-                                    <div className="flex flex-wrap gap-1.5 mb-3">
-                                      {task.links.map((link, i) => (
-                                        <a
-                                          key={i}
-                                          href={link.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          onClick={(e) => e.stopPropagation()}
-                                          className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold bg-secondary-dark text-primary border border-primary/30 hover:bg-primary hover:text-bg-dark transition-all"
-                                        >
-                                          {link.type === 'drive' && '📁'}
-                                          {link.type === 'brain' && '🧠'}
-                                          {link.type === 'file' && '📄'}
-                                          {link.type === 'external' && '🔗'}
-                                          {link.label}
-                                        </a>
-                                      ))}
-                                    </div>
-                                  )}
+                      {task.links && task.links.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {task.links.map((link, i) => (
+                            <a
+                              key={i}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold bg-secondary-dark text-primary border border-primary/30 hover:bg-primary hover:text-bg-dark transition-all"
+                            >
+                              {link.type === 'drive' && '📁'}
+                              {link.type === 'brain' && '🧠'}
+                              {link.type === 'file' && '📄'}
+                              {link.type === 'external' && '🔗'}
+                              {link.label}
+                            </a>
+                          ))}
+                        </div>
+                      )}
 
                                   {/* Action buttons (hidden in batch mode) */}
                                   {!batchMode && (
@@ -1050,10 +1051,10 @@ export default function TasksPage() {
                             </Draggable>
                           );
                         })}
-                        {provided.placeholder}
                         {columnTasks.length === 0 && (
                           <EmptyColumn column={col} />
                         )}
+                        {provided.placeholder}
                       </div>
                     )}
                   </Droppable>
