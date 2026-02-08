@@ -3,6 +3,7 @@ import "./globals.css";
 import NavShell from "@/components/NavShell";
 import { NotificationProvider } from "@/components/NotificationBanner";
 import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
+import GlobalSearchShortcut from "@/components/GlobalSearchShortcut";
 
 export const metadata: Metadata = {
   title: "Second Brain",
@@ -56,6 +57,7 @@ export default function RootLayout({
         <NotificationProvider>
           <NavShell>{children}</NavShell>
           <ServiceWorkerRegistrar />
+          <GlobalSearchShortcut />
         
           {/* Background ambient glow effects (from designs) */}
         <div className="fixed inset-0 pointer-events-none -z-10 opacity-40">
