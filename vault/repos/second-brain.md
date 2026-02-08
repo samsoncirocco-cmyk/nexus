@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 105
-- **Files:** 33729
+- **Total Commits:** 108
+- **Files:** 33879
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)T7b004719c37c6511ef98a9fe9412acb7fa3871fd:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)T45a089139c178f5833a5f8caf5ada2f06c6cb2f2:%M:HEADZ
 
 ## Recent Commits
+- 45a0891 auto: update 3 files (src/app/search/page.js,vault/activity.json,vault/heartbeat-status.json)
+- 2ab5c5d feat: unified search page with source filters and mock data (frontend-only, API fallback to mock)
+- ca859ab auto: vault data update 2026-02-08T06:26:15Z
 - 7b00471 auto: update 6 files (src/app/layout.tsx,src/app/search/page.tsx,src/components/GlobalSearchShortcut.tsx)
 - 56e01ea auto: vault data update 2026-02-08T06:20:44Z
-- dc2b42f auto: update 2 files (vault/activity.json,vault/heartbeat-status.json)
-- 6813a5a auto: vault data update 2026-02-08T06:17:49Z
-- f949bdd auto: update 5 files (src/app/api/heartbeat-status/route.ts,src/app/page.tsx,vault/activity.json)
 
 ## Status
-Last commit: `7b00471 auto: update 6 files (src/app/layout.tsx,src/app/search/page.tsx,src/components/GlobalSearchShortcut.tsx)`
+Last commit: `45a0891 auto: update 3 files (src/app/search/page.js,vault/activity.json,vault/heartbeat-status.json)`
