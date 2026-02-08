@@ -15,9 +15,9 @@ const BADGE_MAP: Record<string, number> = {
 const NAV_ITEMS = [
   { href: '/', icon: 'home', label: 'Home', fill: true },
   { href: '/tasks', icon: 'checklist', label: 'Tasks', fill: true },
+  { href: '/doc', icon: 'folder_open', label: 'Docs', fill: true },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat', fill: true },
-  { href: '/commands', icon: 'bolt', label: 'Commands', fill: true },
-  { href: '/agents', icon: 'smart_toy', label: 'Agents', fill: true },
+  { href: '/activity', icon: 'data_usage', label: 'Activity', fill: true },
 ];
 
 const SIDEBAR_LINKS = [
