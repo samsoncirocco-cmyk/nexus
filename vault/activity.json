@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T15:23:38Z",
+    "type": "completed",
+    "agent": "insight-extraction-fix",
+    "message": "Insight Extraction (NIGHTSHIFT #21): Auto-extract key insights from activity feed. API route /api/insights analyzes patterns, InsightsWidget shows 3-5 cards (task completion, active agents, deployments). Build passes. Committed & pushed."
+  },
+  {
     "timestamp": "2026-02-08T15:22:27Z",
     "type": "completed",
     "agent": "calendar-widget-fix",
