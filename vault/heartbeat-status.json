@@ -1,10 +1,10 @@
 {
-  "lastHeartbeat": "2026-02-08T05:58:34.990925+00:00",
+  "lastHeartbeat": "2026-02-08T06:19:18.596596+00:00",
   "lastChecks": [
     "email",
     "auto-commit",
     "task-sync"
   ],
-  "tasksMovedToDone": 13,
+  "tasksMovedToDone": 0,
   "staleTasks": 0
 }
