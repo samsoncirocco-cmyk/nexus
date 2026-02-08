@@ -8,6 +8,7 @@ import { getInsights, getRecentEvents } from '@/app/actions/datalake';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
+import CalendarWidget from '@/components/CalendarWidget';
 import {
   Greeting,
   LiveClock,
@@ -20,6 +21,8 @@ import {
   InsightsCard,
   DatalakeEventsBadge,
 } from '@/components/DashboardClient';
+import EmailDigest from '@/components/EmailDigest';
+import { InsightsWidget } from '@/components/InsightsWidget';
 
 export const dynamic = 'force-dynamic';
 
@@ -299,6 +302,19 @@ export default async function Home() {
       {(insightAnalyses.length > 0 || insightObservations.length > 0) && (
         <InsightsCard analyses={insightAnalyses} observations={insightObservations} />
       )}
+
+      {/* Activity Insights Widget */}
+      <InsightsWidget />
+
+      {/* Email Digest */}
+      <div className="px-6 mb-6 animate-slide-up delay-5">
+        <EmailDigest />
+      </div>
+
+      {/* Calendar Widget */}
+      <div className="px-6 mb-6 animate-slide-up delay-6">
+        <CalendarWidget />
+      </div>
 
       {/* What's New */}
       <div className="px-6 mb-6">
