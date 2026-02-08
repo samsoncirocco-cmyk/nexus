@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 155
-- **Files:** 36302
+- **Total Commits:** 157
+- **Files:** 36456
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)T79663ae94259479384fa42172c2cd52aa853a392:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)Te50b143a5c359dccd156e4d9ec7e0d4ab3479fe0:%M:HEADZ
 
 ## Recent Commits
+- e50b143 feat: /directives page — DOE framework visibility
+- 3bb935b auto: vault data update 2026-02-08T16:32:21Z
 - 79663ae auto: update 4 files (src/app/directives/page.tsx,src/components/NavShell.tsx,src/lib/directives.ts)
 - bc03da6 auto: vault data sync — 9 repo docs refreshed, tasks synced
 - 58523be data: backfill 39 missing activity entries from Feb 7-8 work
-- e5b8155 auto: update vault tasks
-- 26ab295 auto: vault data update 2026-02-08T15:24:17Z
 
 ## Status
-Last commit: `79663ae auto: update 4 files (src/app/directives/page.tsx,src/components/NavShell.tsx,src/lib/directives.ts)`
+Last commit: `e50b143 feat: /directives page — DOE framework visibility`
