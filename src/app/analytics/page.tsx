@@ -20,12 +20,14 @@ interface EventsBySource {
   count: number;
 }
 
-interface ModelUsage {
-  model: string;
-  calls: number;
-  inputTokens: number;
-  outputTokens: number;
-  estimatedCost: number;
+interface RecentEvent {
+  id: string;
+  timestamp: string;
+  agent: string;
+  type: string;
+  source: string;
+  summary: string;
+  metadata: any;
 }
 
 interface AnalyticsData {
@@ -33,32 +35,40 @@ interface AnalyticsData {
     totalEvents: number;
     eventsToday: number;
     activeAgents: number;
-    vaultDocs: number;
+    uniqueSources: number;
+    uniqueTypes: number;
   };
   eventsByDay: EventsByDay[];
   eventsByType: EventsByType[];
   eventsBySource: EventsBySource[];
-  modelUsage: ModelUsage[];
-  totalCost: number;
+  recentEvents: RecentEvent[];
 }
 
 /* ─── Helpers ─── */
 
-function formatCost(cost: number): string {
-  if (cost === 0) return '$0.00';
-  if (cost < 0.01) return '<$0.01';
-  return `$${cost.toFixed(2)}`;
-}
-
-function formatTokens(tokens: number): string {
-  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(2)}M`;
-  if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}K`;
-  return String(tokens);
-}
-
 function shortDate(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function formatTimestamp(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function formatTime(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
 /* ─── Main Component ─── */
@@ -136,7 +146,7 @@ export default function AnalyticsPage() {
             <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">
               BigQuery Analytics
             </span>
-            <h1 className="text-2xl font-bold tracking-tight">Cost Tracking</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Event Analytics</h1>
           </div>
           <Link
             href="/activity"
@@ -149,7 +159,7 @@ export default function AnalyticsPage() {
           </Link>
         </div>
         <p className="text-foreground-muted text-sm">
-          Model usage, token consumption & cost estimates (last 7 days)
+          Real-time event tracking & analysis (last 7 days)
         </p>
       </header>
 
@@ -170,19 +180,18 @@ export default function AnalyticsPage() {
             accent="emerald"
           />
           <SummaryCard
+            icon="source"
+            label="Unique Sources"
+            value={data.summary.uniqueSources}
+            sub={`${data.summary.uniqueTypes} event types`}
+            accent="blue"
+          />
+          <SummaryCard
             icon="smart_toy"
             label="Active Agents"
             value={data.summary.activeAgents}
             sub="unique agents"
-            accent="blue"
-          />
-          <SummaryCard
-            icon="attach_money"
-            label="Estimated Cost"
-            value={formatCost(data.totalCost)}
-            sub="last 7 days"
             accent="orange"
-            isPrice
           />
         </div>
 
@@ -249,7 +258,7 @@ export default function AnalyticsPage() {
               <p className="text-foreground-muted text-sm py-4 text-center">No data.</p>
             ) : (
               <div className="space-y-3">
-                {data.eventsByType.map((entry) => {
+                {data.eventsByType.slice(0, 10).map((entry) => {
                   const pct = (entry.count / maxByType) * 100;
                   return (
                     <div key={entry.type}>
@@ -283,7 +292,7 @@ export default function AnalyticsPage() {
                 className="material-symbols-outlined text-primary"
                 style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
               >
-                source
+                hub
               </span>
               <h2 className="text-lg font-bold">Events by Source</h2>
             </div>
@@ -292,7 +301,7 @@ export default function AnalyticsPage() {
               <p className="text-foreground-muted text-sm py-4 text-center">No data.</p>
             ) : (
               <div className="space-y-3">
-                {data.eventsBySource.map((entry) => {
+                {data.eventsBySource.slice(0, 10).map((entry) => {
                   const pct = (entry.count / maxBySource) * 100;
                   return (
                     <div key={entry.source}>
@@ -320,77 +329,68 @@ export default function AnalyticsPage() {
           </section>
         </div>
 
-        {/* ─────── MODEL USAGE & COST ─────── */}
+        {/* ─────── RECENT ACTIVITY TIMELINE ─────── */}
         <section className="bg-card-dark rounded-2xl border border-border p-6">
           <div className="flex items-center gap-2 mb-6">
             <span
               className="material-symbols-outlined text-primary"
               style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
             >
-              psychology
+              schedule
             </span>
-            <h2 className="text-lg font-bold">Model Usage & Cost</h2>
-            <span className="ml-auto text-xl font-bold text-primary">
-              {formatCost(data.totalCost)}
-            </span>
+            <h2 className="text-lg font-bold">Recent Activity</h2>
+            <span className="ml-auto text-xs text-foreground-muted">Last 10 events</span>
           </div>
 
-          {data.modelUsage.length === 0 ? (
+          {data.recentEvents.length === 0 ? (
             <p className="text-foreground-muted text-sm py-8 text-center">
-              No model usage data available. Token tracking may not be enabled.
+              No recent events found.
             </p>
           ) : (
             <div className="space-y-4">
-              {data.modelUsage.map((usage) => (
+              {data.recentEvents.map((event, idx) => (
                 <div
-                  key={usage.model}
+                  key={event.id || idx}
                   className="bg-bg-dark rounded-xl border border-border-subtle p-4 hover:border-primary/20 transition-colors"
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <h3 className="text-sm font-bold mb-1">{usage.model}</h3>
-                      <p className="text-xs text-foreground-muted">{usage.calls} API calls</p>
+                  <div className="flex items-start gap-3">
+                    {/* Timeline dot */}
+                    <div className="shrink-0 mt-1">
+                      <div className="size-2 rounded-full bg-primary" />
                     </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold text-primary">
-                        {formatCost(usage.estimatedCost)}
-                      </div>
-                      <div className="text-[10px] text-foreground-muted uppercase tracking-wider">
-                        Estimated
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-4 pt-3 border-t border-border-subtle">
-                    <div>
-                      <div className="text-xs text-foreground-muted mb-1">Input Tokens</div>
-                      <div className="text-sm font-bold text-emerald-400">
-                        {formatTokens(usage.inputTokens)}
+                    <div className="flex-1 min-w-0">
+                      {/* Header: type + source + time */}
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className="text-xs font-bold text-primary px-2 py-0.5 bg-primary/10 rounded-md">
+                          {event.type}
+                        </span>
+                        <span className="text-xs text-foreground-muted">from</span>
+                        <span className="text-xs font-semibold text-foreground">
+                          {event.source}
+                        </span>
+                        {event.agent && event.agent !== 'system' && (
+                          <>
+                            <span className="text-xs text-foreground-muted">•</span>
+                            <span className="text-xs text-foreground-muted">
+                              agent: {event.agent}
+                            </span>
+                          </>
+                        )}
+                        <span className="text-xs text-foreground-muted ml-auto">
+                          {formatTimestamp(event.timestamp)}
+                        </span>
                       </div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-foreground-muted mb-1">Output Tokens</div>
-                      <div className="text-sm font-bold text-blue-400">
-                        {formatTokens(usage.outputTokens)}
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="mt-3 pt-3 border-t border-border-subtle">
-                    <div className="text-xs text-foreground-muted mb-2">Token Distribution</div>
-                    <div className="flex h-2 rounded-full overflow-hidden bg-bg-dark">
-                      <div
-                        className="bg-emerald-500"
-                        style={{
-                          width: `${(usage.inputTokens / (usage.inputTokens + usage.outputTokens)) * 100}%`,
-                        }}
-                      />
-                      <div
-                        className="bg-blue-500"
-                        style={{
-                          width: `${(usage.outputTokens / (usage.inputTokens + usage.outputTokens)) * 100}%`,
-                        }}
-                      />
+                      {/* Summary */}
+                      <p className="text-sm text-foreground-muted line-clamp-2">
+                        {event.summary}
+                      </p>
+
+                      {/* Timestamp */}
+                      <div className="text-[10px] text-foreground-muted/60 mt-2 font-mono">
+                        {formatTime(event.timestamp)}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -403,7 +403,7 @@ export default function AnalyticsPage() {
         <div className="text-center text-xs text-foreground-muted space-y-1 pb-8">
           <p>Data source: BigQuery (tatt-pro.openclaw.events)</p>
           <p>Auto-refreshes every 30 seconds</p>
-          <p className="text-primary">Cost estimates based on public API pricing</p>
+          <p className="text-primary">Real-time event analytics from your Second Brain</p>
         </div>
       </main>
     </div>
@@ -418,14 +418,12 @@ function SummaryCard({
   value,
   sub,
   accent,
-  isPrice,
 }: {
   icon: string;
   label: string;
   value: number | string;
   sub: string;
   accent?: 'emerald' | 'blue' | 'orange';
-  isPrice?: boolean;
 }) {
   const accentColors = {
     emerald: {
@@ -461,9 +459,7 @@ function SummaryCard({
           {label}
         </span>
       </div>
-      <div className={`${isPrice ? 'text-2xl' : 'text-3xl'} font-bold tracking-tight`}>
-        {value}
-      </div>
+      <div className="text-3xl font-bold tracking-tight">{value}</div>
       <div className="text-xs text-foreground-muted mt-1">{sub}</div>
     </div>
   );
