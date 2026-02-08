@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
 import Breadcrumbs from './Breadcrumbs';
+import PageTransition from './PageTransition';
 
 /* ── Badge config: which nav items show unread counts ── */
 const BADGE_MAP: Record<string, number> = {
@@ -277,9 +278,9 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
       {/* ==================== MAIN CONTENT ==================== */}
       <main id="main-content" role="main" className="flex-1 overflow-y-auto min-h-screen pb-24 md:pb-0">
         <Breadcrumbs />
-        <div className="page-enter">
+        <PageTransition>
           {children}
-        </div>
+        </PageTransition>
       </main>
 
       {/* ==================== MOBILE BOTTOM NAV ==================== */}

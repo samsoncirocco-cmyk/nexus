@@ -12,8 +12,9 @@ export function OfflineIndicator() {
 
     const handleOnline = () => {
       setIsOnline(true);
-      // Keep banner visible for a moment to show "Back online" message
-      setTimeout(() => setShowBanner(false), 3000);
+      setShowBanner(true);
+      // Auto-dismiss "Back online!" message after 2 seconds
+      setTimeout(() => setShowBanner(false), 2000);
     };
 
     const handleOffline = () => {
@@ -38,13 +39,6 @@ export function OfflineIndicator() {
     };
   }, []);
 
-  // Show banner immediately when offline, or briefly when coming back online
-  useEffect(() => {
-    if (!isOnline) {
-      setShowBanner(true);
-    }
-  }, [isOnline]);
-
   if (!showBanner) return null;
 
   return (
@@ -53,11 +47,12 @@ export function OfflineIndicator() {
         fixed top-0 left-0 right-0 z-[10000]
         flex items-center justify-center gap-3
         px-4 py-3 backdrop-blur-md
-        border-b transition-all duration-300
+        border-b
+        animate-in slide-in-from-top duration-300
         ${
           isOnline
-            ? "bg-[#154733]/90 border-[#154733]/60 text-[#FEE123]"
-            : "bg-[#FEE123]/95 border-[#FEE123]/80 text-[#0a0f0c]"
+            ? "bg-[#154733]/95 border-[#154733]/60 text-[#FEE123]"
+            : "bg-[#154733]/95 border-[#154733]/60 text-[#FEE123]"
         }
       `}
       role="alert"
@@ -67,22 +62,13 @@ export function OfflineIndicator() {
         className="material-symbols-outlined text-[20px] md:text-[22px]"
         style={{ fontVariationSettings: "'FILL' 1" }}
       >
-        {isOnline ? "wifi" : "wifi_off"}
+        {isOnline ? "cloud_done" : "cloud_off"}
       </span>
       <span className="text-sm md:text-base font-semibold tracking-tight">
         {isOnline
-          ? "Back online! Changes will sync."
-          : "You're offline — using cached content"}
+          ? "Back online!"
+          : "You're offline — some features may not work"}
       </span>
-      {isOnline && (
-        <button
-          onClick={() => setShowBanner(false)}
-          className="ml-2 opacity-80 hover:opacity-100 transition-opacity"
-          aria-label="Dismiss"
-        >
-          <span className="material-symbols-outlined text-[18px]">close</span>
-        </button>
-      )}
     </div>
   );
 }

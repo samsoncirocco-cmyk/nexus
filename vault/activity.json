@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-08T08:23:48Z",
+    "type": "completed",
+    "agent": "nexus-api-spec",
+    "message": "Nexus: API specification complete"
+  },
+  {
+    "timestamp": "2026-02-08T08:22:05Z",
+    "type": "completed",
+    "agent": "offline-indicator",
+    "message": "Offline indicator: Show banner when app is offline, cache critical pages for PWA. Uses navigator.onLine API, Material Symbols icons, theme colors (#154733, #FEE123). Enhanced SW to cache /memory, /vault, /tasks routes."
+  },
+  {
     "timestamp": "2026-02-08T08:19:20Z",
     "type": "completed",
     "agent": "error-boundaries",
