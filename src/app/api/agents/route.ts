@@ -21,6 +21,7 @@ export interface AgentEntry {
   tokens?: { input: number; output: number; total: number };
   contextTokens?: number;
   sessionKey?: string;
+  cost?: number; // Estimated cost in USD
   // Vault-derived fields
   taskCount?: number;
   recentActivity?: Array<{ type: string; message: string; timestamp: string }>;
@@ -176,6 +177,7 @@ function enrichedToAgent(session: EnrichedSession): AgentEntry {
     tokens: session.tokens,
     contextTokens: session.contextTokens,
     sessionKey: session.key,
+    cost: session.cost,
   };
 }
 

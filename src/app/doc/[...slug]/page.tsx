@@ -106,6 +106,13 @@ export default async function DocumentPage({ params }: PageProps) {
             </h2>
           </div>
           <div className="flex items-center gap-2">
+            <Link
+              href={`/doc/${slugPath}/edit`}
+              className="text-foreground-muted p-2 hover:bg-white/10 rounded-full transition-colors"
+              title="Edit document"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 22 }}>edit</span>
+            </Link>
             <button className="text-foreground-muted p-2 hover:bg-white/10 rounded-full transition-colors">
               <span className="material-symbols-outlined" style={{ fontSize: 22 }}>share</span>
             </button>

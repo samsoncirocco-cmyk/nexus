@@ -1,77 +1,59 @@
-import { getActivity, type ActivityEntry } from '@/app/actions/activity';
-import { getTasks, type Task } from '@/app/actions/tasks';
-import { getCommands, type CommandEntry } from '@/app/actions/commands';
-import { getAgents, type AgentEntry } from '@/app/actions/agents';
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
+/* ─── Types ─── */
 
-/* ─── helpers ─── */
-
-function countByDay(entries: ActivityEntry[]): Record<string, number> {
-  const map: Record<string, number> = {};
-  for (const e of entries) {
-    const day = e.timestamp.slice(0, 10);
-    map[day] = (map[day] || 0) + 1;
-  }
-  return map;
+interface EventsByDay {
+  day: string;
+  count: number;
 }
 
-function countByAgent(entries: ActivityEntry[]): { name: string; count: number }[] {
-  const map: Record<string, number> = {};
-  for (const e of entries) {
-    const name = e.agent || 'unknown';
-    map[name] = (map[name] || 0) + 1;
-  }
-  return Object.entries(map)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count);
+interface EventsByType {
+  type: string;
+  count: number;
 }
 
-function tasksByColumn(tasks: Task[]): { column: string; count: number; color: string }[] {
-  const columns: { key: string; color: string }[] = [
-    { key: 'Backlog', color: '#6b7280' },
-    { key: 'In Progress', color: '#3b82f6' },
-    { key: 'Waiting on Samson', color: '#f59e0b' },
-    { key: 'Done', color: '#10b981' },
-  ];
-  return columns.map(({ key, color }) => ({
-    column: key,
-    count: tasks.filter((t) => t.column === key).length,
-    color,
-  }));
+interface EventsBySource {
+  source: string;
+  count: number;
 }
 
-function activeStreak(entries: ActivityEntry[]): number {
-  if (!entries.length) return 0;
-  const days = new Set(entries.map((e) => e.timestamp.slice(0, 10)));
-  let streak = 0;
-  const today = new Date();
-  for (let i = 0; i < 365; i++) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const ds = d.toISOString().slice(0, 10);
-    if (days.has(ds)) {
-      streak++;
-    } else if (i === 0) {
-      // today might not have activity yet, check yesterday first
-      continue;
-    } else {
-      break;
-    }
-  }
-  return streak;
+interface ModelUsage {
+  model: string;
+  calls: number;
+  inputTokens: number;
+  outputTokens: number;
+  estimatedCost: number;
 }
 
-function timeAgo(timestamp: string): string {
-  const diff = Date.now() - new Date(timestamp).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  return `${days}d ago`;
+interface AnalyticsData {
+  summary: {
+    totalEvents: number;
+    eventsToday: number;
+    activeAgents: number;
+    vaultDocs: number;
+  };
+  eventsByDay: EventsByDay[];
+  eventsByType: EventsByType[];
+  eventsBySource: EventsBySource[];
+  modelUsage: ModelUsage[];
+  totalCost: number;
+}
+
+/* ─── Helpers ─── */
+
+function formatCost(cost: number): string {
+  if (cost === 0) return '$0.00';
+  if (cost < 0.01) return '<$0.01';
+  return `$${cost.toFixed(2)}`;
+}
+
+function formatTokens(tokens: number): string {
+  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(2)}M`;
+  if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}K`;
+  return String(tokens);
 }
 
 function shortDate(iso: string): string {
@@ -79,34 +61,71 @@ function shortDate(iso: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-/* ─── page ─── */
+/* ─── Main Component ─── */
 
-export default async function AnalyticsPage() {
-  const [activity, tasks, commands, agents] = await Promise.all([
-    getActivity(),
-    getTasks(),
-    getCommands(),
-    getAgents(),
-  ]);
+export default function AnalyticsPage() {
+  const [data, setData] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const totalRuns = activity.length + agents.length;
-  const tasksDone = tasks.filter((t) => t.column === 'Done').length;
-  const commandsProcessed = commands.length;
-  const streak = activeStreak(activity);
+  const fetchAnalytics = async () => {
+    try {
+      const res = await fetch('/api/analytics', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`API returned ${res.status}`);
+      const json = await res.json();
+      setData(json);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to fetch analytics', err);
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const byDay = countByDay(activity);
-  const dayEntries = Object.entries(byDay).sort(([a], [b]) => a.localeCompare(b));
-  const maxPerDay = Math.max(...dayEntries.map(([, c]) => c), 1);
+  useEffect(() => {
+    fetchAnalytics();
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(fetchAnalytics, 30_000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const leaderboard = countByAgent(activity);
-  const maxAgent = Math.max(...leaderboard.map((l) => l.count), 1);
+  if (loading) {
+    return (
+      <div className="w-full max-w-5xl mx-auto flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <p className="text-foreground-muted text-sm">Loading analytics...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const taskFlow = tasksByColumn(tasks);
-  const maxTasks = Math.max(...taskFlow.map((t) => t.count), 1);
+  if (error || !data) {
+    return (
+      <div className="w-full max-w-5xl mx-auto flex items-center justify-center min-h-screen">
+        <div className="bg-card-dark rounded-2xl border border-red-500/20 p-8 max-w-md">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="material-symbols-outlined text-red-500" style={{ fontSize: 32 }}>
+              error
+            </span>
+            <h2 className="text-xl font-bold">Analytics Error</h2>
+          </div>
+          <p className="text-foreground-muted mb-4">{error || 'Failed to load analytics data'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="w-full px-4 py-2 bg-primary/10 border border-primary/20 rounded-xl hover:bg-primary/20 transition-colors text-primary font-semibold"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-  const recentDone = activity
-    .filter((a) => a.status === 'done' || a.type === 'completed' || a.type === 'deployed')
-    .slice(0, 10);
+  const maxPerDay = Math.max(...data.eventsByDay.map((e) => e.count), 1);
+  const maxByType = Math.max(...data.eventsByType.map((e) => e.count), 1);
+  const maxBySource = Math.max(...data.eventsBySource.map((e) => e.count), 1);
 
   return (
     <div className="w-full max-w-5xl mx-auto flex flex-col min-h-screen">
@@ -115,22 +134,22 @@ export default async function AnalyticsPage() {
         <div className="flex items-center justify-between mb-2">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">
-              Protocol Active
+              BigQuery Analytics
             </span>
-            <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Cost Tracking</h1>
           </div>
           <Link
             href="/activity"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-colors"
           >
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 16 }}>
-              data_usage
+              history
             </span>
             <span className="text-primary text-xs font-bold">Activity</span>
           </Link>
         </div>
         <p className="text-foreground-muted text-sm">
-          Agent performance, task metrics & activity timeline
+          Model usage, token consumption & cost estimates (last 7 days)
         </p>
       </header>
 
@@ -138,69 +157,71 @@ export default async function AnalyticsPage() {
         {/* ─────── SUMMARY CARDS ─────── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <SummaryCard
-            icon="smart_toy"
-            label="Agents Run"
-            value={totalRuns}
-            sub={`${agents.filter((a) => a.status === 'completed').length} completed`}
+            icon="database"
+            label="Total Events"
+            value={data.summary.totalEvents}
+            sub="last 7 days"
           />
           <SummaryCard
-            icon="task_alt"
-            label="Tasks Done"
-            value={tasksDone}
-            sub={`of ${tasks.length} total`}
+            icon="today"
+            label="Events Today"
+            value={data.summary.eventsToday}
+            sub={data.summary.eventsToday === 0 ? 'quiet day' : 'active'}
             accent="emerald"
           />
           <SummaryCard
-            icon="bolt"
-            label="Commands"
-            value={commandsProcessed}
-            sub={commandsProcessed > 0 ? 'processed' : 'none yet'}
+            icon="smart_toy"
+            label="Active Agents"
+            value={data.summary.activeAgents}
+            sub="unique agents"
             accent="blue"
           />
           <SummaryCard
-            icon="local_fire_department"
-            label="Active Streak"
-            value={streak}
-            sub={streak === 1 ? 'day' : 'days'}
+            icon="attach_money"
+            label="Estimated Cost"
+            value={formatCost(data.totalCost)}
+            sub="last 7 days"
             accent="orange"
+            isPrice
           />
         </div>
 
-        {/* ─────── AGENT ACTIVITY TIMELINE ─────── */}
+        {/* ─────── EVENTS OVER TIME ─────── */}
         <section className="bg-card-dark rounded-2xl border border-border p-6">
           <div className="flex items-center gap-2 mb-6">
             <span
               className="material-symbols-outlined text-primary"
               style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
             >
-              bar_chart
+              show_chart
             </span>
-            <h2 className="text-lg font-bold">Agent Activity Timeline</h2>
+            <h2 className="text-lg font-bold">Events Over Time</h2>
+            <span className="text-xs text-foreground-muted ml-auto">Last 7 days</span>
           </div>
 
-          {dayEntries.length === 0 ? (
+          {data.eventsByDay.length === 0 ? (
             <p className="text-foreground-muted text-sm py-8 text-center">
-              No activity recorded yet.
+              No events in the last 7 days.
             </p>
           ) : (
             <div className="space-y-3">
-              {dayEntries.map(([day, count]) => {
-                const pct = (count / maxPerDay) * 100;
+              {data.eventsByDay.map((entry) => {
+                const pct = (entry.count / maxPerDay) * 100;
                 return (
-                  <div key={day} className="flex items-center gap-4">
-                    <span className="text-xs text-foreground-muted font-mono w-20 shrink-0">
-                      {shortDate(day)}
+                  <div key={entry.day} className="flex items-center gap-4">
+                    <span className="text-xs text-foreground-muted font-mono w-16 shrink-0">
+                      {shortDate(entry.day)}
                     </span>
                     <div className="flex-1 h-8 bg-bg-dark rounded-lg overflow-hidden relative">
                       <div
                         className="h-full rounded-lg transition-all duration-700"
                         style={{
                           width: `${Math.max(pct, 4)}%`,
-                          background: 'linear-gradient(90deg, #154733 0%, #fade29 100%)',
+                          background: 'linear-gradient(90deg, #154733 0%, #FEE123 100%)',
                         }}
                       />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-foreground">
-                        {count}
+                        {entry.count}
                       </span>
                     </div>
                   </div>
@@ -210,53 +231,43 @@ export default async function AnalyticsPage() {
           )}
         </section>
 
-        {/* ─────── 2-COL: LEADERBOARD + TASK FLOW ─────── */}
+        {/* ─────── 2-COL: EVENTS BY TYPE + SOURCE ─────── */}
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Agent Leaderboard */}
+          {/* Events by Type */}
           <section className="bg-card-dark rounded-2xl border border-border p-6">
             <div className="flex items-center gap-2 mb-6">
               <span
                 className="material-symbols-outlined text-primary"
                 style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
               >
-                leaderboard
+                category
               </span>
-              <h2 className="text-lg font-bold">Agent Leaderboard</h2>
+              <h2 className="text-lg font-bold">Events by Type</h2>
             </div>
 
-            {leaderboard.length === 0 ? (
+            {data.eventsByType.length === 0 ? (
               <p className="text-foreground-muted text-sm py-4 text-center">No data.</p>
             ) : (
               <div className="space-y-3">
-                {leaderboard.map((agent, i) => {
-                  const pct = (agent.count / maxAgent) * 100;
-                  const medals = ['🥇', '🥈', '🥉'];
+                {data.eventsByType.map((entry) => {
+                  const pct = (entry.count / maxByType) * 100;
                   return (
-                    <div key={agent.name} className="flex items-center gap-3">
-                      <span className="text-base w-6 text-center shrink-0">
-                        {i < 3 ? medals[i] : <span className="text-foreground-muted text-xs">{i + 1}</span>}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm font-semibold truncate">{agent.name}</span>
-                          <span className="text-xs text-primary font-bold ml-2">{agent.count}</span>
-                        </div>
-                        <div className="h-2 bg-bg-dark rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full transition-all duration-700"
-                            style={{
-                              width: `${Math.max(pct, 6)}%`,
-                              background:
-                                i === 0
-                                  ? '#fade29'
-                                  : i === 1
-                                    ? '#d4a843'
-                                    : i === 2
-                                      ? '#8B7355'
-                                      : '#154733',
-                            }}
-                          />
-                        </div>
+                    <div key={entry.type}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-sm font-medium truncate pr-2">{entry.type}</span>
+                        <span className="text-xs font-bold text-primary shrink-0">
+                          {entry.count}
+                        </span>
+                      </div>
+                      <div className="h-6 bg-bg-dark rounded-lg overflow-hidden">
+                        <div
+                          className="h-full rounded-lg transition-all duration-700"
+                          style={{
+                            width: `${Math.max(pct, 4)}%`,
+                            background: '#FEE123',
+                            opacity: 0.8,
+                          }}
+                        />
                       </div>
                     </div>
                   );
@@ -265,173 +276,135 @@ export default async function AnalyticsPage() {
             )}
           </section>
 
-          {/* Task Flow */}
+          {/* Events by Source */}
           <section className="bg-card-dark rounded-2xl border border-border p-6">
             <div className="flex items-center gap-2 mb-6">
               <span
                 className="material-symbols-outlined text-primary"
                 style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
               >
-                view_kanban
+                source
               </span>
-              <h2 className="text-lg font-bold">Task Flow</h2>
+              <h2 className="text-lg font-bold">Events by Source</h2>
             </div>
 
-            <div className="space-y-4">
-              {taskFlow.map((tf) => {
-                const pct = (tf.count / maxTasks) * 100;
-                return (
-                  <div key={tf.column}>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-sm font-medium">{tf.column}</span>
-                      <span
-                        className="text-xs font-bold px-2 py-0.5 rounded-full"
-                        style={{
-                          color: tf.color,
-                          background: `${tf.color}20`,
-                        }}
-                      >
-                        {tf.count}
-                      </span>
+            {data.eventsBySource.length === 0 ? (
+              <p className="text-foreground-muted text-sm py-4 text-center">No data.</p>
+            ) : (
+              <div className="space-y-3">
+                {data.eventsBySource.map((entry) => {
+                  const pct = (entry.count / maxBySource) * 100;
+                  return (
+                    <div key={entry.source}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-sm font-medium truncate pr-2">{entry.source}</span>
+                        <span className="text-xs font-bold text-primary shrink-0">
+                          {entry.count}
+                        </span>
+                      </div>
+                      <div className="h-6 bg-bg-dark rounded-lg overflow-hidden">
+                        <div
+                          className="h-full rounded-lg transition-all duration-700"
+                          style={{
+                            width: `${Math.max(pct, 4)}%`,
+                            background: '#FEE123',
+                            opacity: 0.8,
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div className="h-6 bg-bg-dark rounded-lg overflow-hidden">
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        </div>
+
+        {/* ─────── MODEL USAGE & COST ─────── */}
+        <section className="bg-card-dark rounded-2xl border border-border p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <span
+              className="material-symbols-outlined text-primary"
+              style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
+            >
+              psychology
+            </span>
+            <h2 className="text-lg font-bold">Model Usage & Cost</h2>
+            <span className="ml-auto text-xl font-bold text-primary">
+              {formatCost(data.totalCost)}
+            </span>
+          </div>
+
+          {data.modelUsage.length === 0 ? (
+            <p className="text-foreground-muted text-sm py-8 text-center">
+              No model usage data available. Token tracking may not be enabled.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {data.modelUsage.map((usage) => (
+                <div
+                  key={usage.model}
+                  className="bg-bg-dark rounded-xl border border-border-subtle p-4 hover:border-primary/20 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h3 className="text-sm font-bold mb-1">{usage.model}</h3>
+                      <p className="text-xs text-foreground-muted">{usage.calls} API calls</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-bold text-primary">
+                        {formatCost(usage.estimatedCost)}
+                      </div>
+                      <div className="text-[10px] text-foreground-muted uppercase tracking-wider">
+                        Estimated
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 pt-3 border-t border-border-subtle">
+                    <div>
+                      <div className="text-xs text-foreground-muted mb-1">Input Tokens</div>
+                      <div className="text-sm font-bold text-emerald-400">
+                        {formatTokens(usage.inputTokens)}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-foreground-muted mb-1">Output Tokens</div>
+                      <div className="text-sm font-bold text-blue-400">
+                        {formatTokens(usage.outputTokens)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 pt-3 border-t border-border-subtle">
+                    <div className="text-xs text-foreground-muted mb-2">Token Distribution</div>
+                    <div className="flex h-2 rounded-full overflow-hidden bg-bg-dark">
                       <div
-                        className="h-full rounded-lg transition-all duration-700 flex items-center justify-end pr-2"
+                        className="bg-emerald-500"
                         style={{
-                          width: `${Math.max(pct, 6)}%`,
-                          background: tf.color,
-                          opacity: 0.8,
+                          width: `${(usage.inputTokens / (usage.inputTokens + usage.outputTokens)) * 100}%`,
+                        }}
+                      />
+                      <div
+                        className="bg-blue-500"
+                        style={{
+                          width: `${(usage.outputTokens / (usage.inputTokens + usage.outputTokens)) * 100}%`,
                         }}
                       />
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
+          )}
+        </section>
 
-            {/* Total */}
-            <div className="mt-4 pt-4 border-t border-border-subtle flex items-center justify-between">
-              <span className="text-sm text-foreground-muted">Total tasks</span>
-              <span className="text-lg font-bold text-primary">{tasks.length}</span>
-            </div>
-          </section>
+        {/* ─────── FOOTER INFO ─────── */}
+        <div className="text-center text-xs text-foreground-muted space-y-1 pb-8">
+          <p>Data source: BigQuery (tatt-pro.openclaw.events)</p>
+          <p>Auto-refreshes every 30 seconds</p>
+          <p className="text-primary">Cost estimates based on public API pricing</p>
         </div>
-
-        {/* ─────── RECENT COMPLETIONS ─────── */}
-        <section className="bg-card-dark rounded-2xl border border-border p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <span
-              className="material-symbols-outlined text-primary"
-              style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
-            >
-              history
-            </span>
-            <h2 className="text-lg font-bold">Recent Completions</h2>
-          </div>
-
-          {recentDone.length === 0 ? (
-            <p className="text-foreground-muted text-sm py-6 text-center">No completions yet.</p>
-          ) : (
-            <div className="space-y-1">
-              {recentDone.map((entry, i) => (
-                <div
-                  key={entry.id}
-                  className="flex items-start gap-4 py-3 border-b border-border-subtle last:border-0 group"
-                >
-                  {/* Index */}
-                  <div className="w-7 h-7 rounded-full bg-secondary-dark/40 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-[11px] font-bold text-primary">{i + 1}</span>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-sm font-semibold truncate">{entry.title}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-xs text-foreground-muted">
-                      <span className="flex items-center gap-1">
-                        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>
-                          smart_toy
-                        </span>
-                        {entry.agent}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>
-                          schedule
-                        </span>
-                        {timeAgo(entry.timestamp)}
-                      </span>
-                      <span
-                        className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                        style={{
-                          background:
-                            entry.type === 'deployed'
-                              ? 'rgba(59,130,246,0.15)'
-                              : 'rgba(16,185,129,0.15)',
-                          color: entry.type === 'deployed' ? '#60a5fa' : '#34d399',
-                        }}
-                      >
-                        {entry.type}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Check icon */}
-                  <span
-                    className="material-symbols-outlined text-emerald-500 shrink-0 mt-1"
-                    style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
-                  >
-                    check_circle
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* ─────── AGENT FLEET STATUS ─────── */}
-        <section className="bg-card-dark rounded-2xl border border-border p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <span
-              className="material-symbols-outlined text-primary"
-              style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}
-            >
-              hub
-            </span>
-            <h2 className="text-lg font-bold">Agent Fleet Status</h2>
-          </div>
-
-          {agents.length === 0 ? (
-            <p className="text-foreground-muted text-sm py-4 text-center">No agents in fleet.</p>
-          ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {agents.map((agent) => (
-                <div
-                  key={agent.id}
-                  className="bg-bg-dark rounded-xl border border-border-subtle p-4 hover:border-primary/20 transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-bold truncate pr-2">{agent.label}</span>
-                    <span
-                      className={`w-2 h-2 rounded-full shrink-0 ${
-                        agent.status === 'running'
-                          ? 'bg-primary animate-pulse'
-                          : agent.status === 'completed'
-                            ? 'bg-emerald-500'
-                            : 'bg-red-500'
-                      }`}
-                    />
-                  </div>
-                  <p className="text-xs text-foreground-muted line-clamp-2 mb-2">{agent.summary}</p>
-                  <div className="flex items-center justify-between text-[10px] text-foreground-muted">
-                    <span className="uppercase tracking-wider font-bold">{agent.model}</span>
-                    <span>{agent.status}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
       </main>
     </div>
   );
@@ -445,24 +418,34 @@ function SummaryCard({
   value,
   sub,
   accent,
+  isPrice,
 }: {
   icon: string;
   label: string;
-  value: number;
+  value: number | string;
   sub: string;
   accent?: 'emerald' | 'blue' | 'orange';
+  isPrice?: boolean;
 }) {
   const accentColors = {
-    emerald: { icon: 'text-emerald-400', ring: 'border-emerald-500/20', glow: 'shadow-emerald-500/10' },
+    emerald: {
+      icon: 'text-emerald-400',
+      ring: 'border-emerald-500/20',
+      glow: 'shadow-emerald-500/10',
+    },
     blue: { icon: 'text-blue-400', ring: 'border-blue-500/20', glow: 'shadow-blue-500/10' },
-    orange: { icon: 'text-orange-400', ring: 'border-orange-500/20', glow: 'shadow-orange-500/10' },
+    orange: {
+      icon: 'text-orange-400',
+      ring: 'border-orange-500/20',
+      glow: 'shadow-orange-500/10',
+    },
   };
-  const colors = accent ? accentColors[accent] : { icon: 'text-primary', ring: 'border-primary/20', glow: 'shadow-primary/10' };
+  const colors = accent
+    ? accentColors[accent]
+    : { icon: 'text-primary', ring: 'border-primary/20', glow: 'shadow-primary/10' };
 
   return (
-    <div
-      className="bg-card-dark rounded-2xl border border-border p-5 hover:border-primary/20 transition-colors group"
-    >
+    <div className="bg-card-dark rounded-2xl border border-border p-5 hover:border-primary/20 transition-colors group">
       <div className="flex items-center gap-3 mb-3">
         <div
           className={`size-10 rounded-xl bg-bg-dark border ${colors.ring} flex items-center justify-center shadow-lg ${colors.glow}`}
@@ -478,7 +461,9 @@ function SummaryCard({
           {label}
         </span>
       </div>
-      <div className="text-3xl font-bold tracking-tight">{value}</div>
+      <div className={`${isPrice ? 'text-2xl' : 'text-3xl'} font-bold tracking-tight`}>
+        {value}
+      </div>
       <div className="text-xs text-foreground-muted mt-1">{sub}</div>
     </div>
   );

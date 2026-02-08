@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-08T04:09:57Z",
+    "type": "completed",
+    "agent": "brain-search-upgrade",
+    "message": "Vault search overhaul - search page, API, smart command bar"
+  },
+  {
+    "timestamp": "2026-02-08T04:09:35Z",
+    "type": "completed",
+    "agent": "brain-chat-upgrade",
+    "message": "Chat page now routes through OpenClaw gateway - talking to real Paul"
+  },
+  {
     "timestamp": "2026-02-08T04:08:42Z",
     "type": "completed",
     "agent": "brain-mobile-settings",

@@ -59,6 +59,7 @@ export default async function Home() {
   };
 
   const QUICK_LINKS = [
+    { href: '/inbox', icon: 'mail', label: 'Inbox', desc: 'Unified email' },
     { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul', desc: 'Talk to your AI' },
     { href: '/tasks', icon: 'checklist', label: 'Task Board', desc: `${activeTasks} active` },
     { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet', desc: `${runningAgents.length} running` },

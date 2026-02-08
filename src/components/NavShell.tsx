@@ -14,6 +14,7 @@ const NAV_ITEMS = [
 
 const SIDEBAR_LINKS = [
   { href: '/', icon: 'home', label: 'Dashboard' },
+  { href: '/inbox', icon: 'mail', label: 'Inbox' },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul' },
   { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet' },
   { href: '/analytics', icon: 'analytics', label: 'Analytics' },

@@ -1,9 +1,9 @@
 [
   {
     "id": "100",
-    "title": "\ud83d\udd25 Outlook API - restart VM server",
-    "description": "SAMSON DO THIS:\n1. Open VNC or RDP to fortinet-windows VM (192.168.122.104)\n2. Log in as samso (PIN: 3437)\n3. Open Outlook and wait for it to fully load\n4. Open Command Prompt (Win+R \u2192 cmd)\n5. Run: python C:\\outlook_server.py\n6. If firewall blocks port 8899, run: netsh advfirewall set allprofiles state off\n7. Test: curl http://192.168.122.104:8899/status from host",
-    "column": "Waiting on Samson",
+    "title": "🔥 Outlook API - restart VM server",
+    "description": "SAMSON DO THIS:\n1. Open VNC or RDP to fortinet-windows VM (192.168.122.104)\n2. Log in as samso (PIN: 3437)\n3. Open Outlook and wait for it to fully load\n4. Open Command Prompt (Win+R → cmd)\n5. Run: python C:\\outlook_server.py\n6. If firewall blocks port 8899, run: netsh advfirewall set allprofiles state off\n7. Test: curl http://192.168.122.104:8899/status from host",
+    "column": "todo",
     "priority": "high",
     "createdAt": "2026-02-06T21:50:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -15,9 +15,9 @@
   },
   {
     "id": "101",
-    "title": "\ud83d\udd25 Delete old bad E-Rate drafts from Outlook",
+    "title": "🔥 Delete old bad E-Rate drafts from Outlook",
     "description": "SAMSON DO THIS:\n1. Open Outlook on the VM\n2. Go to Drafts folder\n3. Delete the ~31 E-Rate draft emails Paul created for wrong accounts (Elkhorn, Blair, Beatrice, Cedar Rapids, etc.)\n4. Keep any drafts you've personally written",
-    "column": "Waiting on Samson",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -29,9 +29,9 @@
   },
   {
     "id": "102",
-    "title": "\ud83d\udd25 Review 3 Fortinet E-Rate outreach emails",
-    "description": "SAMSON DO THIS:\n1. Open the Google Drive folder below\n2. Review all 3 emails + research summary\n3. Ogallala NE \u2014 FortiGate 600F, deadline Feb 24\n4. Parkston SD \u2014 FortiGate 70G, deadline Feb 26\n5. Deshler NE \u2014 43x FortiSwitch, deadline Mar 3\n6. Add your personal touch / war stories\n7. Tell Paul to send or create Outlook drafts\n\n~$120-170K total revenue across all 3 deals.",
-    "column": "Waiting on Samson",
+    "title": "🔥 Review 3 Fortinet E-Rate outreach emails",
+    "description": "SAMSON DO THIS:\n1. Open the Google Drive folder below\n2. Review all 3 emails + research summary\n3. Ogallala NE — FortiGate 600F, deadline Feb 24\n4. Parkston SD — FortiGate 70G, deadline Feb 26\n5. Deshler NE — 43x FortiSwitch, deadline Mar 3\n6. Add your personal touch / war stories\n7. Tell Paul to send or create Outlook drafts\n\n~$120-170K total revenue across all 3 deals.",
+    "column": "todo",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -55,9 +55,9 @@
   },
   {
     "id": "103",
-    "title": "\ud83d\udd25 Call bankruptcy lawyer (Oswalt Law Group)",
-    "description": "SAMSON DO THIS:\n1. Call Oswalt Law Group \u2014 welcome letter was in Gmail Dec 30\n2. Discuss Ch 13 (keep rental house) vs Ch 7\n3. URGENT: Means test window is shrinking \u2014 6-month lookback still includes $0 unemployment months\n4. Every month you wait, your calculated income goes UP (Fortinet salary replacing $0 months)\n5. GoodLeap and SoFi are past due and escalating",
-    "column": "Waiting on Samson",
+    "title": "🔥 Call bankruptcy lawyer (Oswalt Law Group)",
+    "description": "SAMSON DO THIS:\n1. Call Oswalt Law Group — welcome letter was in Gmail Dec 30\n2. Discuss Ch 13 (keep rental house) vs Ch 7\n3. URGENT: Means test window is shrinking — 6-month lookback still includes $0 unemployment months\n4. Every month you wait, your calculated income goes UP (Fortinet salary replacing $0 months)\n5. GoodLeap and SoFi are past due and escalating",
+    "column": "todo",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -70,9 +70,9 @@
   },
   {
     "id": "104",
-    "title": "\ud83d\udd25 YC Application \u2014 draft complete, needs Samson review",
-    "description": "SAMSON DO THIS:\n1. Open the YC Prep folder in Google Drive (link below)\n2. Read 02-tatt-vs-irl-analysis.md (TatT wins 10-0)\n3. Read 04-draft-yc-application.md \u2014 first draft ready for your personal details\n4. Read 03-tatt-market-analysis.md for market sizing\n5. Pick which product to submit\n6. \u26a0\ufe0f S26 deadline may be Feb 9 @ 8pm PT \u2014 verify!",
-    "column": "In Progress",
+    "title": "🔥 YC Application — draft complete, needs Samson review",
+    "description": "SAMSON DO THIS:\n1. Open the YC Prep folder in Google Drive (link below)\n2. Read 02-tatt-vs-irl-analysis.md (TatT wins 10-0)\n3. Read 04-draft-yc-application.md — first draft ready for your personal details\n4. Read 03-tatt-market-analysis.md for market sizing\n5. Pick which product to submit\n6. ⚠️ S26 deadline may be Feb 9 @ 8pm PT — verify!",
+    "column": "in-progress",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -101,8 +101,8 @@
   {
     "id": "105",
     "title": "Review Book Chapter 4: Kids draft",
-    "description": "SAMSON DO THIS:\n1. Open the chapter in Google Drive (link below)\n2. ~2,200 words \u2014 covers Pinterest parenting lie, roommate phase, tiny terrorists\n3. Add your personal stories \u2014 Paul wrote the framework, you add the real moments\n4. Flag anything that doesn't sound like you\n5. Tell Paul what to change",
-    "column": "Waiting on Samson",
+    "description": "SAMSON DO THIS:\n1. Open the chapter in Google Drive (link below)\n2. ~2,200 words — covers Pinterest parenting lie, roommate phase, tiny terrorists\n3. Add your personal stories — Paul wrote the framework, you add the real moments\n4. Flag anything that doesn't sound like you\n5. Tell Paul what to change",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -124,9 +124,9 @@
   },
   {
     "id": "200",
-    "title": "YC Application Research & Prep \u2705",
+    "title": "YC Application Research & Prep ✅",
     "description": "Full YC prep package: timeline, requirements, draft application, market analysis, competitive moat. 6 documents, ~52KB.",
-    "column": "Done",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T15:00:00.000Z",
     "updatedAt": "2026-02-07T15:08:00.000Z",
@@ -144,9 +144,9 @@
   },
   {
     "id": "201",
-    "title": "TatT \u2014 make demo-ready for investors",
+    "title": "TatT — make demo-ready for investors",
     "description": "Review codebase, fix bugs, polish UX, landing page, core flow, mobile. Opus sub-agent working on this.",
-    "column": "In Progress",
+    "column": "in-progress",
     "priority": "high",
     "createdAt": "2026-02-07T15:00:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -170,9 +170,9 @@
   },
   {
     "id": "202",
-    "title": "TatT \u2014 pitch deck v1",
+    "title": "TatT — pitch deck v1",
     "description": "YC-style pitch deck: problem, solution, market size, traction, team, ask.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -190,9 +190,9 @@
   },
   {
     "id": "203",
-    "title": "TatT \u2014 financial model / unit economics",
+    "title": "TatT — financial model / unit economics",
     "description": "Revenue projections, CAC/LTV, marketplace take rate, subscription tiers, path to $1M ARR.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "high",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -204,9 +204,9 @@
   },
   {
     "id": "204",
-    "title": "LinkedIn CreatorBuddy \u2014 market research",
+    "title": "LinkedIn CreatorBuddy — market research",
     "description": "Research CreatorBuddy.io model, LinkedIn content tools landscape, build MVP spec for LinkedIn-focused AI content tool.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "high",
     "createdAt": "2026-02-07T15:13:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -225,9 +225,9 @@
   },
   {
     "id": "300",
-    "title": "E-Rate \u2014 outreach for remaining 52 leads",
+    "title": "E-Rate — outreach for remaining 52 leads",
     "description": "Build templates for 52 validated territory leads grouped by state and deadline.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "high",
     "createdAt": "2026-02-07T14:52:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -250,9 +250,9 @@
   },
   {
     "id": "301",
-    "title": "E-Rate \u2014 SS Peter & Paul NE urgent 471 PIA",
+    "title": "E-Rate — SS Peter & Paul NE urgent 471 PIA",
     "description": "15 Day PIA Notice already 20+ days old. Need to follow up ASAP.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "high",
     "createdAt": "2026-02-06T21:50:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -265,9 +265,9 @@
   },
   {
     "id": "302",
-    "title": "E-Rate \u2014 contact enrichment for all 55 leads",
+    "title": "E-Rate — contact enrichment for all 55 leads",
     "description": "Google-search based research for decision-maker contacts at each account.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -281,7 +281,7 @@
     "id": "400",
     "title": "Book Chapter 5: Sales/Career",
     "description": "Draft ~2,500 words on career struggles, sales life, unemployment, starting over.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -298,9 +298,9 @@
   },
   {
     "id": "401",
-    "title": "Deep manuscript review \u2014 Stella's edits vs original",
+    "title": "Deep manuscript review — Stella's edits vs original",
     "description": "Compare Working Copy (75K), Stella's Edits (50.6K), Original (50.7K). Produce diff analysis.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-06T21:50:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -322,9 +322,9 @@
   },
   {
     "id": "500",
-    "title": "IRL \u2014 improve codebase, tests, docs",
+    "title": "IRL — improve codebase, tests, docs",
     "description": "Potential B2B YC play. Schema governance for AI agents.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -336,9 +336,9 @@
   },
   {
     "id": "501",
-    "title": "Second Brain \u2014 add search, mobile, vault nav",
+    "title": "Second Brain — add search, mobile, vault nav",
     "description": "Full-text search, better mobile responsiveness, improved vault browsing.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -356,9 +356,9 @@
   },
   {
     "id": "502",
-    "title": "SFDC \u2014 improve quote builder & triage",
+    "title": "SFDC — improve quote builder & triage",
     "description": "Improve quote_builder.py, triage system, add new automations.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -372,7 +372,7 @@
     "id": "600",
     "title": "Fix Notion API key compromise",
     "description": "Key exposed Feb 6. Needs rotation.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "low",
     "createdAt": "2026-02-06T21:50:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -383,9 +383,9 @@
   },
   {
     "id": "700",
-    "title": "Founder toolkit \u2014 investor meeting templates",
+    "title": "Founder toolkit — investor meeting templates",
     "description": "One-pager, exec summary, FAQ sheet, cap table template, SAFE note explainer.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -399,7 +399,7 @@
     "id": "701",
     "title": "Daily morning briefing automation",
     "description": "Auto-summary of Samson's day: meetings, deadlines, urgent emails, weather.",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "medium",
     "createdAt": "2026-02-07T15:02:00.000Z",
     "updatedAt": "2026-02-07T15:15:00.000Z",
@@ -411,9 +411,9 @@
   },
   {
     "id": "800",
-    "title": "Nightshift system \u2014 operational \u2705",
+    "title": "Nightshift system — operational ✅",
     "description": "Workhorse cron every 3hrs (Opus 4.6, 2hr timeout). NIGHTSHIFT.md work queue.",
-    "column": "Done",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T14:50:00.000Z",
     "updatedAt": "2026-02-07T14:52:00.000Z",
@@ -424,9 +424,9 @@
   },
   {
     "id": "801",
-    "title": "E-Rate 3 Fortinet outreach emails \u2705",
+    "title": "E-Rate 3 Fortinet outreach emails ✅",
     "description": "Ogallala NE (600F), Parkston SD (70G), Deshler NE (FortiSwitch). All drafted.",
-    "column": "Done",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T14:48:00.000Z",
     "updatedAt": "2026-02-07T14:53:00.000Z",
@@ -444,9 +444,9 @@
   },
   {
     "id": "802",
-    "title": "Book Chapter 4: Kids \u2705",
+    "title": "Book Chapter 4: Kids ✅",
     "description": "~2,200 words drafted.",
-    "column": "Done",
+    "column": "done",
     "priority": "high",
     "createdAt": "2026-02-07T14:48:00.000Z",
     "updatedAt": "2026-02-07T14:52:00.000Z",
@@ -463,9 +463,9 @@
   },
   {
     "id": "803",
-    "title": "TatT test suite + TypeScript migration \u2705",
+    "title": "TatT test suite + TypeScript migration ✅",
     "description": "129 tests passing, 7 files migrated to TypeScript.",
-    "column": "Done",
+    "column": "done",
     "priority": "medium",
     "createdAt": "2026-02-07T15:07:00.000Z",
     "updatedAt": "2026-02-07T15:07:00.000Z",
@@ -483,9 +483,9 @@
   },
   {
     "id": "804",
-    "title": "Activity Feed built \u2705",
+    "title": "Activity Feed built ✅",
     "description": "Live at brain.6eyes.dev/activity. Shows all sub-agent work with timeline, tags, output files.",
-    "column": "Done",
+    "column": "done",
     "priority": "medium",
     "createdAt": "2026-02-07T15:10:00.000Z",
     "updatedAt": "2026-02-07T15:10:00.000Z",
@@ -503,9 +503,9 @@
   },
   {
     "id": "805",
-    "title": "Google Drive sync + vault index \u2705",
+    "title": "Google Drive sync + vault index ✅",
     "description": "Ran gdrive-sync.sh, created comprehensive INDEX.md (54 docs, 32K+ words catalogued), updated task board.",
-    "column": "Done",
+    "column": "done",
     "priority": "medium",
     "createdAt": "2026-02-07T21:03:00.000Z",
     "updatedAt": "2026-02-07T21:05:00.000Z",
@@ -528,9 +528,9 @@
   },
   {
     "id": "806",
-    "title": "Marketing copy \u2014 landing page + Product Hunt \u2705",
+    "title": "Marketing copy — landing page + Product Hunt ✅",
     "description": "Landing page copy (hero, features, CTA) and Product Hunt launch materials (tagline, description, first comment).",
-    "column": "Done",
+    "column": "done",
     "priority": "medium",
     "createdAt": "2026-02-07T19:00:00.000Z",
     "updatedAt": "2026-02-07T19:30:00.000Z",
@@ -547,88 +547,88 @@
     ]
   },
   {
-    "title": "\u2705 API keys rotated + scrubbed from git",
-    "column": "Done",
+    "title": "✅ API keys rotated + scrubbed from git",
+    "column": "done",
     "priority": "high",
     "tags": [
       "security"
     ]
   },
   {
-    "title": "\u2705 Second Brain wired to BigQuery (5 pages)",
-    "column": "Done",
+    "title": "✅ Second Brain wired to BigQuery (5 pages)",
+    "column": "done",
     "priority": "high",
     "tags": [
       "second-brain"
     ]
   },
   {
-    "title": "\u2705 Cloudflare gateway tunnel deployed",
-    "column": "Done",
+    "title": "✅ Cloudflare gateway tunnel deployed",
+    "column": "done",
     "priority": "high",
     "tags": [
       "infra"
     ]
   },
   {
-    "title": "\ud83d\udd27 TatT: Fix 20 broken imports (agent running)",
-    "column": "In Progress",
+    "title": "🔧 TatT: Fix 20 broken imports (agent running)",
+    "column": "in-progress",
     "priority": "critical",
     "tags": [
       "tatt"
     ]
   },
   {
-    "title": "\ud83d\udd27 TatT: Error boundaries + demo mode (agent running)",
-    "column": "In Progress",
+    "title": "🔧 TatT: Error boundaries + demo mode (agent running)",
+    "column": "in-progress",
     "priority": "critical",
     "tags": [
       "tatt"
     ]
   },
   {
-    "title": "\ud83d\udd27 TatT: /pitch investor page (agent running)",
-    "column": "In Progress",
+    "title": "🔧 TatT: /pitch investor page (agent running)",
+    "column": "in-progress",
     "priority": "high",
     "tags": [
       "tatt"
     ]
   },
   {
-    "title": "\ud83d\udcc4 YC market analysis complete",
-    "column": "Done",
+    "title": "📄 YC market analysis complete",
+    "column": "done",
     "priority": "high",
     "tags": [
       "yc"
     ]
   },
   {
-    "title": "\ud83d\udcc4 YC application draft complete",
-    "column": "Done",
+    "title": "📄 YC application draft complete",
+    "column": "done",
     "priority": "high",
     "tags": [
       "yc"
     ]
   },
   {
-    "title": "\ud83d\udd11 Get new Google API key (Samson)",
-    "column": "Waiting on Samson",
+    "title": "🔑 Get new Google API key (Samson)",
+    "column": "todo",
     "priority": "medium",
     "tags": [
       "security"
     ]
   },
   {
-    "title": "\ud83d\udd11 Rotate OpenRouter key (Samson)",
-    "column": "Waiting on Samson",
+    "title": "🔑 Rotate OpenRouter key (Samson)",
+    "column": "todo",
     "priority": "medium",
     "tags": [
       "security"
     ]
   },
   {
-    "title": "\u2705 Auto-logging pipeline built",
-    "column": "Done",
+    "title": "✅ Auto-logging pipeline built",
+    "column": "done",
     "priority": "high",
     "tags": [
       "infra",
@@ -637,7 +637,7 @@
   },
   {
     "title": "Test task validation",
-    "column": "Backlog",
+    "column": "todo",
     "priority": "low",
     "tags": [
       "test"

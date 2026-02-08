@@ -16,6 +16,7 @@ interface AgentEntry {
   tokens?: { input: number; output: number; total: number };
   contextTokens?: number;
   sessionKey?: string;
+  cost?: number; // Estimated cost in USD
   // Vault-derived fields
   taskCount?: number;
   recentActivity?: Array<{ type: string; message: string; timestamp: string }>;
@@ -194,6 +195,9 @@ export default function AgentsPage() {
   const running = agents.filter((a) => a.status === 'running');
   const completed = agents.filter((a) => a.status === 'completed');
   const failed = agents.filter((a) => a.status === 'failed');
+  
+  // Calculate total cost across all agents
+  const totalCost = agents.reduce((sum, a) => sum + (a.cost || 0), 0);
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col min-h-screen">
@@ -232,22 +236,29 @@ export default function AgentsPage() {
         </div>
 
         {/* Stats Bar */}
-        <div className="flex gap-3">
-          <div className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary-dark/40 border border-primary/10">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary-dark/40 border border-primary/10">
             <span className="material-symbols-outlined text-emerald-400" style={{ fontSize: 18 }}>play_circle</span>
             <span className="text-white text-sm font-bold">{running.length}</span>
             <span className="text-foreground-muted text-xs">Running</span>
           </div>
-          <div className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary-dark/40 border border-primary/10">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary-dark/40 border border-primary/10">
             <span className="material-symbols-outlined text-primary" style={{ fontSize: 18 }}>check_circle</span>
             <span className="text-white text-sm font-bold">{completed.length}</span>
             <span className="text-foreground-muted text-xs">Done</span>
           </div>
-          <div className="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary-dark/40 border border-primary/10">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary-dark/40 border border-primary/10">
             <span className="material-symbols-outlined text-red-400" style={{ fontSize: 18 }}>error</span>
             <span className="text-white text-sm font-bold">{failed.length}</span>
             <span className="text-foreground-muted text-xs">Failed</span>
           </div>
+          {totalCost > 0 && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 border border-primary/20">
+              <span className="material-symbols-outlined text-primary" style={{ fontSize: 18 }}>payments</span>
+              <span className="text-white text-sm font-bold">${totalCost.toFixed(3)}</span>
+              <span className="text-foreground-muted text-xs">Cost</span>
+            </div>
+          )}
         </div>
       </header>
 
@@ -312,6 +323,12 @@ export default function AgentsPage() {
                           <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>schedule</span>
                           <span className="text-foreground-muted">{formatTimeAgo(agent.lastUpdate)}</span>
                         </div>
+                        {agent.cost !== undefined && agent.cost > 0 && (
+                          <div className="flex items-center gap-1.5">
+                            <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>payments</span>
+                            <span className="text-emerald-400 font-mono">${agent.cost.toFixed(4)}</span>
+                          </div>
+                        )}
                         {agent.taskCount !== undefined && agent.taskCount > 0 && (
                           <div className="flex items-center gap-1.5">
                             <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>task_alt</span>
@@ -365,6 +382,12 @@ export default function AgentsPage() {
                         <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>schedule</span>
                         <span className="text-foreground-muted">{formatTimeAgo(agent.lastUpdate)}</span>
                       </div>
+                      {agent.cost !== undefined && agent.cost > 0 && (
+                        <div className="flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>payments</span>
+                          <span className="text-primary font-mono">${agent.cost.toFixed(4)}</span>
+                        </div>
+                      )}
                       {agent.taskCount !== undefined && agent.taskCount > 0 && (
                         <div className="flex items-center gap-1.5">
                           <span className="material-symbols-outlined text-primary/60" style={{ fontSize: 14 }}>task_alt</span>
