@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 74
-- **Files:** 32951
+- **Total Commits:** 76
+- **Files:** 32929
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)T55c66003d8e50f8333a75e8652b7f4541744d371:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main)T94730879b696884b1ea8a83fe703cb78a7365e12:%M:HEADZ
 
 ## Recent Commits
+- 9473087 feat: interactive Kanban task board with task management
+- fb88604 auto: vault data update 2026-02-08T04:15:25Z
 - 55c6600 auto: update vault/activity.json
 - d44dae9 auto: vault data update 2026-02-08T04:14:57Z
 - dcc57ea auto: update 5 files (src/app/actions/tasks.ts,src/app/doc/[...slug]/page.tsx,src/app/doc/edit/[...slug]/page.tsx)
-- 0f258f0 auto: vault data update 2026-02-08T04:14:00Z
-- 9951b89 auto: update 19 files (src/app/agents/page.tsx,src/app/analytics/page.tsx,src/app/api/agents/route.ts)
 
 ## Status
-Last commit: `55c6600 auto: update vault/activity.json`
+Last commit: `9473087 feat: interactive Kanban task board with task management`
