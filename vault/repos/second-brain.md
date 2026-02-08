@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 65
-- **Files:** 33590
+- **Total Commits:** 66
+- **Files:** 33598
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)T86380bf08511a739de5de6038d420e0e8be62b7b:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main)T4a4ccac6953beb14f9a140f9b48e0e5a9a1f27de:%M:HEADZ
 
 ## Recent Commits
+- 4a4ccac feat: mobile PWA polish + functional settings page
 - 86380bf auto: update vault/repos/second-brain.md
 - 7f03afa auto: update 2 files (src/app/search/page.tsx,vault/repos/second-brain.md)
 - cba2ba8 auto: update vault/repos/second-brain.md
 - 31f317c auto: update 4 files (src/app/activity/page.tsx,src/app/page.tsx,src/app/search/page.tsx)
-- 6527d8b auto: update vault/repos/second-brain.md
 
 ## Status
-Last commit: `86380bf auto: update vault/repos/second-brain.md`
+Last commit: `4a4ccac feat: mobile PWA polish + functional settings page`
