@@ -8,6 +8,7 @@ import { getRecentEvents, getInsights } from '@/app/actions/datalake';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
+import WhatMattersWidget from '@/components/WhatMattersWidget';
 
 export const dynamic = 'force-dynamic';
 
@@ -452,6 +453,11 @@ export default async function Home() {
             <p className="text-primary/40 text-xs">Falling back to local vault data</p>
           </div>
         )}
+      </div>
+
+      {/* What Matters Now Widget */}
+      <div className="px-4 md:px-6 mb-6">
+        <WhatMattersWidget />
       </div>
 
       {/* What's New — 3 most recent activity entries */}

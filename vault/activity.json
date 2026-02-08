@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-08T06:44:53Z",
+    "type": "completed",
+    "agent": "tool-upgrade",
+    "message": "Tooling upgrade: installed Vertex AI SDK (v1.136.0), BigQuery, numpy, pandas, scikit-learn, tiktoken, google-genai + Node.js packages. Verified ADC auth and Vertex AI embeddings (768-dim) working."
+  },
+  {
+    "timestamp": "2026-02-08T06:41:23Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
     "timestamp": "2026-02-08T06:32:20Z",
     "type": "completed",
     "agent": "search-frontend",
