@@ -146,5 +146,41 @@
     "startedAt": "2026-02-07T21:00:15Z",
     "lastUpdate": "2026-02-07T21:00:15Z",
     "summary": "The Grind \u2014 5,500 words on sales, rejection, starting over"
+  },
+  {
+    "id": "auth",
+    "label": "Authentication",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T21:07:20Z",
+    "lastUpdate": "2026-02-07T21:07:20Z",
+    "summary": "PIN login, session cookies, route protection"
+  },
+  {
+    "id": "sync-index",
+    "label": "Drive Sync + Index",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T21:07:20Z",
+    "lastUpdate": "2026-02-07T21:07:20Z",
+    "summary": "54 vault docs indexed, Google Drive synced, task board updated"
+  },
+  {
+    "id": "nexus-deploy",
+    "label": "Nexus Deploy",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T21:07:20Z",
+    "lastUpdate": "2026-02-07T21:07:20Z",
+    "summary": "Live at nexus-content.vercel.app with README"
+  },
+  {
+    "id": "divorce-book",
+    "label": "Divorce Book",
+    "status": "completed",
+    "model": "opus-4.6",
+    "startedAt": "2026-02-07T21:07:20Z",
+    "lastUpdate": "2026-02-07T21:07:20Z",
+    "summary": "59,312 words assembled into divorce-manuscript.md"
   }
 ]
