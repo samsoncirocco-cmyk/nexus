@@ -625,5 +625,14 @@
     "tags": [
       "security"
     ]
+  },
+  {
+    "title": "\u2705 Auto-logging pipeline built",
+    "column": "Done",
+    "priority": "high",
+    "tags": [
+      "infra",
+      "second-brain"
+    ]
   }
 ]

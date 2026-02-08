@@ -1,124 +1,372 @@
 [
   {
-    "id": "act-001",
-    "timestamp": "2026-02-07T14:52:00.000Z",
-    "agent": "nightshift-book-ch4",
+    "timestamp": "2026-02-08T02:18:01Z",
+    "type": "Testing auto-pipeline",
+    "agent": "test",
+    "message": "paul"
+  },
+  {
+    "timestamp": "2026-02-08T02:17:47Z",
     "type": "completed",
-    "title": "Book Chapter 4: Kids (and Other Tiny Terrorists)",
-    "summary": "Drafted ~2,200 words covering the Pinterest parenting lie, the roommate phase, and the reality of raising tiny terrorists. Matches Samson's voice from the working copy.",
-    "output": [
-      "projects/book-toolkit/drafts/chapter-04-kids.md"
-    ],
-    "tags": [
-      "book"
-    ],
+    "agent": "pipeline-builder",
+    "message": "Test activity from pipeline build"
+  },
+  {
+    "timestamp": "2026-02-08T02:04:00Z",
+    "type": "completed",
+    "agent": "yc-market-v2",
+    "message": "TatT market analysis \u2014 TAM/SAM/SOM, competitor landscape, unit economics, trend data with real sources."
+  },
+  {
+    "timestamp": "2026-02-08T02:03:00Z",
+    "type": "completed",
+    "agent": "yc-application",
+    "message": "YC application draft complete \u2014 all standard questions answered, full pipeline positioning, authentic voice."
+  },
+  {
+    "timestamp": "2026-02-08T02:00:00Z",
+    "type": "started",
+    "agent": "tatt-builders",
+    "message": "Spawned 3 TatT builders: import fixer, error boundaries + demo mode, /pitch investor page. All on Sonnet 4.5."
+  },
+  {
+    "timestamp": "2026-02-08T01:35:00Z",
+    "type": "completed",
+    "agent": "paul",
+    "message": "Fresh Killua bootstrap doc written \u2014 current state, credentials, repos, deploy commands, NIGHTSHIFT queue."
+  },
+  {
+    "timestamp": "2026-02-08T01:28:00Z",
+    "type": "completed",
+    "agent": "paul",
+    "message": "Second Brain deployed to Vercel with all 5 wiring tasks + BigQuery deps + new env vars. brain.6eyes.dev live."
+  },
+  {
+    "timestamp": "2026-02-08T01:22:00Z",
+    "type": "completed",
+    "agent": "paul",
+    "message": "Cloudflare tunnel live \u2014 gateway reachable from Vercel at trycloudflare.com. Systemd service enabled for auto-restart."
+  },
+  {
+    "timestamp": "2026-02-08T01:19:00Z",
+    "type": "completed",
+    "agent": "wire-activity",
+    "message": "Activity feed unified \u2014 pulls from BigQuery + vault with source filter pills (Email/Calendar/Drive/Agents)."
+  },
+  {
+    "timestamp": "2026-02-08T01:18:00Z",
+    "type": "completed",
+    "agent": "wire-chat",
+    "message": "Chat is context-aware \u2014 pulls live email/calendar/tasks state before each response. Paul personality baked in."
+  },
+  {
+    "timestamp": "2026-02-08T01:17:00Z",
+    "type": "completed",
+    "agent": "wire-commands",
+    "message": "Commands execute locally via Gemini/BigQuery when gateway unreachable on Vercel. Dual-mode with inline results."
+  },
+  {
+    "timestamp": "2026-02-08T01:16:00Z",
+    "type": "completed",
+    "agent": "wire-dashboard",
+    "message": "Dashboard now shows live BigQuery insights \u2014 event counts by source, AI analyses, connection status indicator."
+  },
+  {
+    "timestamp": "2026-02-08T01:15:00Z",
+    "type": "completed",
+    "agent": "wire-ask-brain",
+    "message": "Wired Ask Brain to BigQuery \u2014 searches email/calendar/decision history alongside vault docs before answering."
+  },
+  {
+    "timestamp": "2026-02-08T01:05:00Z",
+    "type": "completed",
+    "agent": "paul",
+    "message": "Rotated all API keys \u2014 scrubbed hardcoded secrets from 3 source files and 11 docs. New gateway + hook tokens deployed."
+  },
+  {
+    "id": "9288eb4f",
+    "timestamp": "2026-02-07T22:45:54Z",
+    "agent": "Book Chapters 1-4 deep edit \u2014 tightened, cut redundancy, improved transitions",
+    "type": "update",
+    "title": "Activity update",
+    "summary": "",
+    "output": [],
+    "tags": [],
     "status": "done"
   },
   {
-    "id": "act-002",
-    "timestamp": "2026-02-07T14:53:00.000Z",
-    "agent": "nightshift-erate-outreach",
-    "type": "completed",
-    "title": "E-Rate Outreach: 3 Fortinet-Tagged Leads",
-    "summary": "Researched and drafted personalized outreach emails for Ogallala NE (FortiGate 600F, Feb 24 deadline), Parkston SD (FortiGate 70G + Meraki displacement, Feb 26), and Deshler NE (43x FortiSwitch, Mar 3). Includes research dossier with contact details, LinkedIn profiles, and revenue estimates (~$120-170K total).",
-    "output": [
-      "projects/sled-toolkit/erate-fortinet-outreach/ogallala-ne-fortigate-600f.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/parkston-sd-fortigate-70g.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/deshler-ne-fortiswitch-148f.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/research-summary.md"
-    ],
-    "tags": [
-      "sled",
-      "erate",
-      "revenue"
-    ],
+    "id": "2a0e3c9c",
+    "timestamp": "2026-02-07T22:43:13Z",
+    "agent": "TatT investor demo polished \u2014 landing page, demo flow, meta tags, mobile responsive",
+    "type": "update",
+    "title": "Activity update",
+    "summary": "",
+    "output": [],
+    "tags": [],
     "status": "done"
   },
   {
-    "id": "act-003",
-    "timestamp": "2026-02-07T15:07:00.000Z",
-    "agent": "workhorse",
-    "type": "completed",
-    "title": "TatT Test Suite + TypeScript Migration",
-    "summary": "Fixed TatT test suite \u2014 129 tests now passing (was 0 runnable). Migrated 7 files to TypeScript: Button, Input, Card components + 4 services with proper types. Also added 18 tests to Second Brain. 6 commits pushed to main.",
-    "output": [
-      "repos/TatT/src/components/ui/Button.tsx",
-      "repos/TatT/src/components/ui/Input.tsx",
-      "repos/TatT/src/components/ui/Card.tsx"
-    ],
-    "tags": [
-      "dev",
-      "tatt",
-      "testing"
-    ],
+    "id": "3ec159e5",
+    "timestamp": "2026-02-07T22:40:27Z",
+    "agent": "Second Brain memory explorer live \u2014 BigQuery integration, 170+ searchable events, timeline view",
+    "type": "update",
+    "title": "Activity update",
+    "summary": "",
+    "output": [],
+    "tags": [],
     "status": "done"
   },
   {
-    "id": "act-004",
-    "timestamp": "2026-02-07T15:08:00.000Z",
-    "agent": "yc-research",
-    "type": "completed",
-    "title": "YCombinator Prep Package",
-    "summary": "Created comprehensive YC prep: application guide (S26 deadline Feb 9!), TatT vs IRL analysis (TatT wins 10-0), market sizing ($60B+ TAM), draft YC application, competitive moat analysis, and 1-minute demo video script. 6 documents, ~52KB total.",
-    "output": [
-      "projects/yc-prep/README.md",
-      "projects/yc-prep/01-yc-application-guide.md",
-      "projects/yc-prep/02-tatt-vs-irl-analysis.md",
-      "projects/yc-prep/03-tatt-market-analysis.md",
-      "projects/yc-prep/04-draft-yc-application.md",
-      "projects/yc-prep/05-competitive-moat-analysis.md"
-    ],
-    "tags": [
-      "yc",
-      "founder",
-      "tatt"
-    ],
+    "id": "17a08208",
+    "timestamp": "2026-02-07T21:46:09Z",
+    "agent": "Nexus multi-platform upgrade complete \u2014 all 7 features now platform-aware for LinkedIn, X, Substack, Medium, Instagram, TikTok. Platform intelligence engine, per-platform voice profiles, comparison view, platform command center.",
+    "type": "update",
+    "title": "Activity update",
+    "summary": "",
+    "output": [],
+    "tags": [],
     "status": "done"
   },
   {
-    "id": "act-005",
-    "timestamp": "2026-02-07T15:23:00.000Z",
-    "agent": "second-brain-redesign",
-    "type": "completed",
-    "title": "\ud83e\udd86 Oregon Ducks \u00d7 Nike Theme Redesign",
-    "summary": "Complete redesign of Second Brain with Oregon Ducks/Nike theme. Forest green (#154733) + gold (#FEE123) color palette. Mobile-first responsive: hamburger menu, bottom nav, touch-friendly 44px tap targets. Updated 7 files: globals.css, layout.tsx, Sidebar.tsx, page.tsx, tasks/page.tsx, activity/page.tsx, deals/page.tsx, doc page. Build passes, deployed to Vercel.",
-    "output": [
-      "src/app/globals.css",
-      "src/components/Sidebar.tsx",
-      "src/app/page.tsx",
-      "src/app/tasks/page.tsx",
-      "src/app/activity/page.tsx",
-      "src/app/deals/page.tsx"
-    ],
-    "tags": [
-      "dev",
-      "design",
-      "second-brain"
-    ],
+    "id": "496b7037",
+    "timestamp": "2026-02-07T21:35:37Z",
+    "agent": "nexus-product",
+    "type": "deployed",
+    "title": "\ud83d\ude80 Nexus: Full Product Build",
+    "summary": "AI composer, 9-metric scoring engine, brain dump, account analyzer, reply engine, voice learning \u2014 all functional with Gemini API",
+    "output": [],
+    "tags": [],
     "status": "done"
   },
   {
-    "id": "act-006",
-    "timestamp": "2026-02-07T15:30:00.000Z",
-    "agent": "linkedin-buddy-build",
+    "id": "e83a1da4",
+    "timestamp": "2026-02-07T21:07:05Z",
+    "agent": "sync-index",
     "type": "completed",
-    "title": "\ud83d\udd17 Nexus: LinkedIn Content Tool \u2014 Spec & MVP",
-    "summary": "Full product spec, competitive research, and MVP build for LinkedIn-focused AI content tool. Researched Taplio, AuthoredUp, Shield, Supergrow. Created SPEC.md (11 features, 5 personas, pricing tiers), COMPETITORS.md (gap analysis), ARCHITECTURE.md (tech stack, AI pipeline, database schema). Built Next.js 16 MVP with Oregon Ducks theme: landing page, dashboard, content composer, post history. All pages building successfully.",
-    "output": [
-      "projects/linkedin-buddy/SPEC.md",
-      "projects/linkedin-buddy/COMPETITORS.md",
-      "projects/linkedin-buddy/ARCHITECTURE.md",
-      "projects/linkedin-buddy/app/src/app/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/compose/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/history/page.tsx"
-    ],
-    "tags": [
-      "dev",
-      "product",
-      "ai",
-      "linkedin"
-    ],
+    "title": "\ud83d\udccb Drive Sync + Vault Index",
+    "summary": "Google Drive synced, vault index created, task board updated",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "384593b9",
+    "timestamp": "2026-02-07T21:06:50Z",
+    "agent": "auth",
+    "type": "deployed",
+    "title": "\ud83d\udd10 Authentication",
+    "summary": "PIN-based login, session management, route protection \u2014 Second Brain is now secured",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "6b3e8d75",
+    "timestamp": "2026-02-07T21:03:06Z",
+    "agent": "nexus-deploy",
+    "type": "deployed",
+    "title": "\ud83d\ude80 Nexus Deployed",
+    "summary": "Nexus content engine live with README and clean deployment",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "25a4f7ad",
+    "timestamp": "2026-02-07T21:01:28Z",
+    "agent": "divorce-book",
+    "type": "completed",
+    "title": "\ud83d\udcd6 Divorce Book Assembled",
+    "summary": "All 16 chapters from 26 source files assembled into divorce-manuscript.md",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "174cf2bc",
+    "timestamp": "2026-02-07T20:59:53Z",
+    "agent": "ui-audit",
+    "type": "deployed",
+    "title": "\ud83d\udd0d Full UI Audit & Polish",
+    "summary": "All 11 pages audited for consistency, mobile responsiveness, and build cleanliness",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "94d86675",
+    "timestamp": "2026-02-07T20:56:57Z",
+    "agent": "marketing-copy",
+    "type": "completed",
+    "title": "\ud83d\udcdd README + Marketing Copy",
+    "summary": "Professional README, landing page copy, and Product Hunt launch materials",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "de4ab240",
+    "timestamp": "2026-02-07T20:53:21Z",
+    "agent": "book-ch5",
+    "type": "completed",
+    "title": "\ud83d\udcd6 Book Chapter 5: Sales",
+    "summary": "Chapter 5 written/edited in manuscript.md \u2014 career, rejection, identity",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "be8c502e",
+    "timestamp": "2026-02-07T20:50:04Z",
+    "agent": "erate-batch2",
+    "type": "completed",
+    "title": "\ud83c\udfaf E-Rate Batch 2: Top 10 Leads",
+    "summary": "Research dossiers for 10 priority E-Rate leads with talking points",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "585fef33",
+    "timestamp": "2026-02-07T20:46:52Z",
+    "agent": "settings-polish",
+    "type": "deployed",
+    "title": "\u2699\ufe0f Settings + Dashboard Polish",
+    "summary": "Settings page with config, connected services, and polished home dashboard",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "d966bae4",
+    "timestamp": "2026-02-07T20:42:00Z",
+    "agent": "knowledge-graph",
+    "type": "deployed",
+    "title": "\ud83d\udd78\ufe0f Knowledge Graph",
+    "summary": "Interactive visualization of vault document connections at brain.6eyes.dev/graph",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "e03d1934",
+    "timestamp": "2026-02-07T20:40:45Z",
+    "agent": "pwa",
+    "type": "deployed",
+    "title": "\ud83d\udcf1 PWA + Notifications",
+    "summary": "Second Brain is now installable on mobile with offline support and notification banners",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "436a2134",
+    "timestamp": "2026-02-07T20:37:16Z",
+    "agent": "analytics",
+    "type": "deployed",
+    "title": "\ud83d\udcca Analytics Dashboard",
+    "summary": "Agent performance, task metrics, and activity timeline at brain.6eyes.dev/analytics",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "4ad37a1a",
+    "timestamp": "2026-02-07T20:33:20Z",
+    "agent": "chat-ui",
+    "type": "deployed",
+    "title": "\ud83d\udcac Chat Interface",
+    "summary": "Talk to Paul directly from Second Brain at brain.6eyes.dev/chat",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "74376ec8",
+    "timestamp": "2026-02-07T20:30:31Z",
+    "agent": "tunnel",
+    "type": "completed",
+    "title": "\ud83d\udd17 Gateway Tunnel",
+    "summary": "OpenClaw Gateway now reachable from the internet \u2014 Second Brain bridge fully operational",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "402bdf5c",
+    "timestamp": "2026-02-07T20:24:56Z",
+    "agent": "gateway-bridge",
+    "type": "deployed",
+    "title": "\ud83c\udf09 Gateway Bridge",
+    "summary": "Second Brain can now proxy commands to OpenClaw Gateway \u2014 the foundation for real agent orchestration",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "65cc5321",
+    "timestamp": "2026-02-07T20:22:35Z",
+    "agent": "yc-pitch",
+    "type": "completed",
+    "title": "\ud83d\udcca YC Pitch Materials",
+    "summary": "Pitch deck outline, investor one-pager, and financial model for TatT",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "08504e84",
+    "timestamp": "2026-02-07T20:13:27Z",
+    "agent": "nexus-redesign",
+    "type": "completed",
+    "title": "\ud83c\udfa8 Nexus Stitch UI Rebuild",
+    "summary": "Integrated Stitch-generated designs into Nexus \u2014 landing page and dashboard",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "abc78322",
+    "timestamp": "2026-02-07T20:12:31Z",
+    "agent": "tatt-redesign",
+    "type": "completed",
+    "title": "\ud83c\udfa8 TatT Stitch UI Rebuild",
+    "summary": "Integrated Stitch-generated designs \u2014 new landing page and app screen for YC demo",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "d65714e1",
+    "timestamp": "2026-02-07T20:12:25Z",
+    "agent": "agent-dashboard",
+    "type": "deployed",
+    "title": "\ud83e\udd16 Agent Management Dashboard",
+    "summary": "Live agent status, auto-refresh, running agent cards at brain.6eyes.dev/agents",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "3decfaf6",
+    "timestamp": "2026-02-07T20:11:53Z",
+    "agent": "platform-spec",
+    "type": "completed",
+    "title": "\ud83d\udccb Second Brain Platform Spec",
+    "summary": "Full product spec for Second Brain as an AI orchestration platform \u2014 the better OpenClaw",
+    "output": [],
+    "tags": [],
+    "status": "done"
+  },
+  {
+    "id": "d7e29986",
+    "timestamp": "2026-02-07T20:09:12Z",
+    "agent": "gog-automations",
+    "type": "completed",
+    "title": "\ud83d\udd04 Google Workspace Automations",
+    "summary": "Gmail triage, calendar sync, and Drive watch scripts built and tested",
+    "output": [],
+    "tags": [],
     "status": "done"
   },
   {
@@ -166,361 +414,125 @@
     "status": "done"
   },
   {
-    "id": "d7e29986",
-    "timestamp": "2026-02-07T20:09:12Z",
-    "agent": "gog-automations",
+    "id": "act-006",
+    "timestamp": "2026-02-07T15:30:00.000Z",
+    "agent": "linkedin-buddy-build",
     "type": "completed",
-    "title": "\ud83d\udd04 Google Workspace Automations",
-    "summary": "Gmail triage, calendar sync, and Drive watch scripts built and tested",
-    "output": [],
-    "tags": [],
+    "title": "\ud83d\udd17 Nexus: LinkedIn Content Tool \u2014 Spec & MVP",
+    "summary": "Full product spec, competitive research, and MVP build for LinkedIn-focused AI content tool. Researched Taplio, AuthoredUp, Shield, Supergrow. Created SPEC.md (11 features, 5 personas, pricing tiers), COMPETITORS.md (gap analysis), ARCHITECTURE.md (tech stack, AI pipeline, database schema). Built Next.js 16 MVP with Oregon Ducks theme: landing page, dashboard, content composer, post history. All pages building successfully.",
+    "output": [
+      "projects/linkedin-buddy/SPEC.md",
+      "projects/linkedin-buddy/COMPETITORS.md",
+      "projects/linkedin-buddy/ARCHITECTURE.md",
+      "projects/linkedin-buddy/app/src/app/page.tsx",
+      "projects/linkedin-buddy/app/src/app/dashboard/page.tsx",
+      "projects/linkedin-buddy/app/src/app/dashboard/compose/page.tsx",
+      "projects/linkedin-buddy/app/src/app/dashboard/history/page.tsx"
+    ],
+    "tags": [
+      "dev",
+      "product",
+      "ai",
+      "linkedin"
+    ],
     "status": "done"
   },
   {
-    "id": "3decfaf6",
-    "timestamp": "2026-02-07T20:11:53Z",
-    "agent": "platform-spec",
+    "id": "act-005",
+    "timestamp": "2026-02-07T15:23:00.000Z",
+    "agent": "second-brain-redesign",
     "type": "completed",
-    "title": "\ud83d\udccb Second Brain Platform Spec",
-    "summary": "Full product spec for Second Brain as an AI orchestration platform \u2014 the better OpenClaw",
-    "output": [],
-    "tags": [],
+    "title": "\ud83e\udd86 Oregon Ducks \u00d7 Nike Theme Redesign",
+    "summary": "Complete redesign of Second Brain with Oregon Ducks/Nike theme. Forest green (#154733) + gold (#FEE123) color palette. Mobile-first responsive: hamburger menu, bottom nav, touch-friendly 44px tap targets. Updated 7 files: globals.css, layout.tsx, Sidebar.tsx, page.tsx, tasks/page.tsx, activity/page.tsx, deals/page.tsx, doc page. Build passes, deployed to Vercel.",
+    "output": [
+      "src/app/globals.css",
+      "src/components/Sidebar.tsx",
+      "src/app/page.tsx",
+      "src/app/tasks/page.tsx",
+      "src/app/activity/page.tsx",
+      "src/app/deals/page.tsx"
+    ],
+    "tags": [
+      "dev",
+      "design",
+      "second-brain"
+    ],
     "status": "done"
   },
   {
-    "id": "d65714e1",
-    "timestamp": "2026-02-07T20:12:25Z",
-    "agent": "agent-dashboard",
-    "type": "deployed",
-    "title": "\ud83e\udd16 Agent Management Dashboard",
-    "summary": "Live agent status, auto-refresh, running agent cards at brain.6eyes.dev/agents",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "abc78322",
-    "timestamp": "2026-02-07T20:12:31Z",
-    "agent": "tatt-redesign",
+    "id": "act-004",
+    "timestamp": "2026-02-07T15:08:00.000Z",
+    "agent": "yc-research",
     "type": "completed",
-    "title": "\ud83c\udfa8 TatT Stitch UI Rebuild",
-    "summary": "Integrated Stitch-generated designs \u2014 new landing page and app screen for YC demo",
-    "output": [],
-    "tags": [],
+    "title": "YCombinator Prep Package",
+    "summary": "Created comprehensive YC prep: application guide (S26 deadline Feb 9!), TatT vs IRL analysis (TatT wins 10-0), market sizing ($60B+ TAM), draft YC application, competitive moat analysis, and 1-minute demo video script. 6 documents, ~52KB total.",
+    "output": [
+      "projects/yc-prep/README.md",
+      "projects/yc-prep/01-yc-application-guide.md",
+      "projects/yc-prep/02-tatt-vs-irl-analysis.md",
+      "projects/yc-prep/03-tatt-market-analysis.md",
+      "projects/yc-prep/04-draft-yc-application.md",
+      "projects/yc-prep/05-competitive-moat-analysis.md"
+    ],
+    "tags": [
+      "yc",
+      "founder",
+      "tatt"
+    ],
     "status": "done"
   },
   {
-    "id": "08504e84",
-    "timestamp": "2026-02-07T20:13:27Z",
-    "agent": "nexus-redesign",
+    "id": "act-003",
+    "timestamp": "2026-02-07T15:07:00.000Z",
+    "agent": "workhorse",
     "type": "completed",
-    "title": "\ud83c\udfa8 Nexus Stitch UI Rebuild",
-    "summary": "Integrated Stitch-generated designs into Nexus \u2014 landing page and dashboard",
-    "output": [],
-    "tags": [],
+    "title": "TatT Test Suite + TypeScript Migration",
+    "summary": "Fixed TatT test suite \u2014 129 tests now passing (was 0 runnable). Migrated 7 files to TypeScript: Button, Input, Card components + 4 services with proper types. Also added 18 tests to Second Brain. 6 commits pushed to main.",
+    "output": [
+      "repos/TatT/src/components/ui/Button.tsx",
+      "repos/TatT/src/components/ui/Input.tsx",
+      "repos/TatT/src/components/ui/Card.tsx"
+    ],
+    "tags": [
+      "dev",
+      "tatt",
+      "testing"
+    ],
     "status": "done"
   },
   {
-    "id": "65cc5321",
-    "timestamp": "2026-02-07T20:22:35Z",
-    "agent": "yc-pitch",
+    "id": "act-002",
+    "timestamp": "2026-02-07T14:53:00.000Z",
+    "agent": "nightshift-erate-outreach",
     "type": "completed",
-    "title": "\ud83d\udcca YC Pitch Materials",
-    "summary": "Pitch deck outline, investor one-pager, and financial model for TatT",
-    "output": [],
-    "tags": [],
+    "title": "E-Rate Outreach: 3 Fortinet-Tagged Leads",
+    "summary": "Researched and drafted personalized outreach emails for Ogallala NE (FortiGate 600F, Feb 24 deadline), Parkston SD (FortiGate 70G + Meraki displacement, Feb 26), and Deshler NE (43x FortiSwitch, Mar 3). Includes research dossier with contact details, LinkedIn profiles, and revenue estimates (~$120-170K total).",
+    "output": [
+      "projects/sled-toolkit/erate-fortinet-outreach/ogallala-ne-fortigate-600f.md",
+      "projects/sled-toolkit/erate-fortinet-outreach/parkston-sd-fortigate-70g.md",
+      "projects/sled-toolkit/erate-fortinet-outreach/deshler-ne-fortiswitch-148f.md",
+      "projects/sled-toolkit/erate-fortinet-outreach/research-summary.md"
+    ],
+    "tags": [
+      "sled",
+      "erate",
+      "revenue"
+    ],
     "status": "done"
   },
   {
-    "id": "402bdf5c",
-    "timestamp": "2026-02-07T20:24:56Z",
-    "agent": "gateway-bridge",
-    "type": "deployed",
-    "title": "\ud83c\udf09 Gateway Bridge",
-    "summary": "Second Brain can now proxy commands to OpenClaw Gateway \u2014 the foundation for real agent orchestration",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "74376ec8",
-    "timestamp": "2026-02-07T20:30:31Z",
-    "agent": "tunnel",
+    "id": "act-001",
+    "timestamp": "2026-02-07T14:52:00.000Z",
+    "agent": "nightshift-book-ch4",
     "type": "completed",
-    "title": "\ud83d\udd17 Gateway Tunnel",
-    "summary": "OpenClaw Gateway now reachable from the internet \u2014 Second Brain bridge fully operational",
-    "output": [],
-    "tags": [],
+    "title": "Book Chapter 4: Kids (and Other Tiny Terrorists)",
+    "summary": "Drafted ~2,200 words covering the Pinterest parenting lie, the roommate phase, and the reality of raising tiny terrorists. Matches Samson's voice from the working copy.",
+    "output": [
+      "projects/book-toolkit/drafts/chapter-04-kids.md"
+    ],
+    "tags": [
+      "book"
+    ],
     "status": "done"
-  },
-  {
-    "id": "4ad37a1a",
-    "timestamp": "2026-02-07T20:33:20Z",
-    "agent": "chat-ui",
-    "type": "deployed",
-    "title": "\ud83d\udcac Chat Interface",
-    "summary": "Talk to Paul directly from Second Brain at brain.6eyes.dev/chat",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "436a2134",
-    "timestamp": "2026-02-07T20:37:16Z",
-    "agent": "analytics",
-    "type": "deployed",
-    "title": "\ud83d\udcca Analytics Dashboard",
-    "summary": "Agent performance, task metrics, and activity timeline at brain.6eyes.dev/analytics",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "e03d1934",
-    "timestamp": "2026-02-07T20:40:45Z",
-    "agent": "pwa",
-    "type": "deployed",
-    "title": "\ud83d\udcf1 PWA + Notifications",
-    "summary": "Second Brain is now installable on mobile with offline support and notification banners",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "d966bae4",
-    "timestamp": "2026-02-07T20:42:00Z",
-    "agent": "knowledge-graph",
-    "type": "deployed",
-    "title": "\ud83d\udd78\ufe0f Knowledge Graph",
-    "summary": "Interactive visualization of vault document connections at brain.6eyes.dev/graph",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "585fef33",
-    "timestamp": "2026-02-07T20:46:52Z",
-    "agent": "settings-polish",
-    "type": "deployed",
-    "title": "\u2699\ufe0f Settings + Dashboard Polish",
-    "summary": "Settings page with config, connected services, and polished home dashboard",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "be8c502e",
-    "timestamp": "2026-02-07T20:50:04Z",
-    "agent": "erate-batch2",
-    "type": "completed",
-    "title": "\ud83c\udfaf E-Rate Batch 2: Top 10 Leads",
-    "summary": "Research dossiers for 10 priority E-Rate leads with talking points",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "de4ab240",
-    "timestamp": "2026-02-07T20:53:21Z",
-    "agent": "book-ch5",
-    "type": "completed",
-    "title": "\ud83d\udcd6 Book Chapter 5: Sales",
-    "summary": "Chapter 5 written/edited in manuscript.md \u2014 career, rejection, identity",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "94d86675",
-    "timestamp": "2026-02-07T20:56:57Z",
-    "agent": "marketing-copy",
-    "type": "completed",
-    "title": "\ud83d\udcdd README + Marketing Copy",
-    "summary": "Professional README, landing page copy, and Product Hunt launch materials",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "174cf2bc",
-    "timestamp": "2026-02-07T20:59:53Z",
-    "agent": "ui-audit",
-    "type": "deployed",
-    "title": "\ud83d\udd0d Full UI Audit & Polish",
-    "summary": "All 11 pages audited for consistency, mobile responsiveness, and build cleanliness",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "25a4f7ad",
-    "timestamp": "2026-02-07T21:01:28Z",
-    "agent": "divorce-book",
-    "type": "completed",
-    "title": "\ud83d\udcd6 Divorce Book Assembled",
-    "summary": "All 16 chapters from 26 source files assembled into divorce-manuscript.md",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "6b3e8d75",
-    "timestamp": "2026-02-07T21:03:06Z",
-    "agent": "nexus-deploy",
-    "type": "deployed",
-    "title": "\ud83d\ude80 Nexus Deployed",
-    "summary": "Nexus content engine live with README and clean deployment",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "384593b9",
-    "timestamp": "2026-02-07T21:06:50Z",
-    "agent": "auth",
-    "type": "deployed",
-    "title": "\ud83d\udd10 Authentication",
-    "summary": "PIN-based login, session management, route protection \u2014 Second Brain is now secured",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "e83a1da4",
-    "timestamp": "2026-02-07T21:07:05Z",
-    "agent": "sync-index",
-    "type": "completed",
-    "title": "\ud83d\udccb Drive Sync + Vault Index",
-    "summary": "Google Drive synced, vault index created, task board updated",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "496b7037",
-    "timestamp": "2026-02-07T21:35:37Z",
-    "agent": "nexus-product",
-    "type": "deployed",
-    "title": "\ud83d\ude80 Nexus: Full Product Build",
-    "summary": "AI composer, 9-metric scoring engine, brain dump, account analyzer, reply engine, voice learning \u2014 all functional with Gemini API",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "17a08208",
-    "timestamp": "2026-02-07T21:46:09Z",
-    "agent": "Nexus multi-platform upgrade complete \u2014 all 7 features now platform-aware for LinkedIn, X, Substack, Medium, Instagram, TikTok. Platform intelligence engine, per-platform voice profiles, comparison view, platform command center.",
-    "type": "update",
-    "title": "Activity update",
-    "summary": "",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "3ec159e5",
-    "timestamp": "2026-02-07T22:40:27Z",
-    "agent": "Second Brain memory explorer live \u2014 BigQuery integration, 170+ searchable events, timeline view",
-    "type": "update",
-    "title": "Activity update",
-    "summary": "",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "2a0e3c9c",
-    "timestamp": "2026-02-07T22:43:13Z",
-    "agent": "TatT investor demo polished \u2014 landing page, demo flow, meta tags, mobile responsive",
-    "type": "update",
-    "title": "Activity update",
-    "summary": "",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "9288eb4f",
-    "timestamp": "2026-02-07T22:45:54Z",
-    "agent": "Book Chapters 1-4 deep edit \u2014 tightened, cut redundancy, improved transitions",
-    "type": "update",
-    "title": "Activity update",
-    "summary": "",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "timestamp": "2026-02-08T01:05:00Z",
-    "type": "completed",
-    "agent": "paul",
-    "message": "Rotated all API keys \u2014 scrubbed hardcoded secrets from 3 source files and 11 docs. New gateway + hook tokens deployed."
-  },
-  {
-    "timestamp": "2026-02-08T01:15:00Z",
-    "type": "completed",
-    "agent": "wire-ask-brain",
-    "message": "Wired Ask Brain to BigQuery \u2014 searches email/calendar/decision history alongside vault docs before answering."
-  },
-  {
-    "timestamp": "2026-02-08T01:16:00Z",
-    "type": "completed",
-    "agent": "wire-dashboard",
-    "message": "Dashboard now shows live BigQuery insights \u2014 event counts by source, AI analyses, connection status indicator."
-  },
-  {
-    "timestamp": "2026-02-08T01:17:00Z",
-    "type": "completed",
-    "agent": "wire-commands",
-    "message": "Commands execute locally via Gemini/BigQuery when gateway unreachable on Vercel. Dual-mode with inline results."
-  },
-  {
-    "timestamp": "2026-02-08T01:18:00Z",
-    "type": "completed",
-    "agent": "wire-chat",
-    "message": "Chat is context-aware \u2014 pulls live email/calendar/tasks state before each response. Paul personality baked in."
-  },
-  {
-    "timestamp": "2026-02-08T01:19:00Z",
-    "type": "completed",
-    "agent": "wire-activity",
-    "message": "Activity feed unified \u2014 pulls from BigQuery + vault with source filter pills (Email/Calendar/Drive/Agents)."
-  },
-  {
-    "timestamp": "2026-02-08T01:22:00Z",
-    "type": "completed",
-    "agent": "paul",
-    "message": "Cloudflare tunnel live \u2014 gateway reachable from Vercel at trycloudflare.com. Systemd service enabled for auto-restart."
-  },
-  {
-    "timestamp": "2026-02-08T01:28:00Z",
-    "type": "completed",
-    "agent": "paul",
-    "message": "Second Brain deployed to Vercel with all 5 wiring tasks + BigQuery deps + new env vars. brain.6eyes.dev live."
-  },
-  {
-    "timestamp": "2026-02-08T01:35:00Z",
-    "type": "completed",
-    "agent": "paul",
-    "message": "Fresh Killua bootstrap doc written \u2014 current state, credentials, repos, deploy commands, NIGHTSHIFT queue."
-  },
-  {
-    "timestamp": "2026-02-08T02:00:00Z",
-    "type": "started",
-    "agent": "tatt-builders",
-    "message": "Spawned 3 TatT builders: import fixer, error boundaries + demo mode, /pitch investor page. All on Sonnet 4.5."
-  },
-  {
-    "timestamp": "2026-02-08T02:03:00Z",
-    "type": "completed",
-    "agent": "yc-application",
-    "message": "YC application draft complete \u2014 all standard questions answered, full pipeline positioning, authentic voice."
-  },
-  {
-    "timestamp": "2026-02-08T02:04:00Z",
-    "type": "completed",
-    "agent": "yc-market-v2",
-    "message": "TatT market analysis \u2014 TAM/SAM/SOM, competitor landscape, unit economics, trend data with real sources."
   }
 ]
