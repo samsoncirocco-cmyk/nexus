@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { LinkedInConnect } from '@/components/LinkedInConnect';
 
 interface Config {
   profile: { name: string; email: string; timezone: string };
@@ -28,6 +29,7 @@ const SERVICE_META: Record<string, { icon: string; label: string; color: string 
   drive: { icon: 'cloud', label: 'Google Drive', color: 'text-yellow-400' },
   salesforce: { icon: 'rocket_launch', label: 'Salesforce', color: 'text-cyan-400' },
   github: { icon: 'code', label: 'GitHub', color: 'text-purple-400' },
+  linkedin: { icon: 'business', label: 'LinkedIn', color: 'text-[#0077B5]' },
 };
 
 const THEME_COLORS = [
@@ -509,6 +511,19 @@ export default function SettingsPage() {
             </div>
           </div>
         </Section>
+
+        {/* ── LinkedIn Integration ── */}
+        <section className="bg-bg-secondary border border-border rounded-2xl overflow-hidden">
+          <div className="p-6 border-b border-border">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-[#0077B5]" style={{ fontSize: 22, fontVariationSettings: "'FILL' 1" }}>business</span>
+              <h2 className="text-lg font-bold text-foreground">Social Publishing</h2>
+            </div>
+          </div>
+          <div className="p-6">
+            <LinkedInConnect />
+          </div>
+        </section>
 
         {/* ── Data Management ── */}
         <Section>
