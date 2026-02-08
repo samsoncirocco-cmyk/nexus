@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T07:58:38Z",
+    "type": "completed",
+    "agent": "related-notes-sidebar",
+    "message": "Related Notes sidebar deployed \u2014 Shows related vault docs on activity items, and related activity on vault docs. Fixed edit route structure (/doc/edit/[...slug]). Live at brain.6eyes.dev"
+  },
+  {
     "timestamp": "2026-02-08T07:48:06Z",
     "type": "completed",
     "agent": "task-age-indicators",
