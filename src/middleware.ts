@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const COOKIE_NAME = 'sb-session';
 
 // Public paths that don't require auth
-const PUBLIC_PATHS = ['/login', '/api/auth'];
+const PUBLIC_PATHS = ['/login', '/api/auth', '/api/datalake', '/api/revalidate', '/api/activity', '/api/ask'];
 
 // Static asset patterns to skip
 const STATIC_PATTERNS = [
