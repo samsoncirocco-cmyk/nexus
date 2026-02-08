@@ -1,5 +1,35 @@
 [
   {
+    "timestamp": "2026-02-08T02:40:48Z",
+    "type": "started",
+    "agent": "paul",
+    "message": "3 TatT builder agents running \u2014 fixing imports, error boundaries, /pitch page"
+  },
+  {
+    "timestamp": "2026-02-08T02:40:41Z",
+    "type": "completed",
+    "agent": "paul",
+    "message": "Auto-commit now triggers Vercel revalidation when vault changes"
+  },
+  {
+    "timestamp": "2026-02-08T02:40:34Z",
+    "type": "completed",
+    "agent": "paul",
+    "message": "ISR revalidation API deployed \u2014 /api/revalidate endpoint for live cache busting"
+  },
+  {
+    "timestamp": "2026-02-08T02:40:28Z",
+    "type": "completed",
+    "agent": "paul",
+    "message": "Auto-logging pipeline live \u2014 post-activity.sh, update-tasks.sh, deploy-brain.sh"
+  },
+  {
+    "timestamp": "2026-02-08T02:40:21Z",
+    "type": "deployed",
+    "agent": "paul",
+    "message": "Knowledge graph upgraded \u2014 67 nodes with TatT, Nexus, IRL, data sources"
+  },
+  {
     "timestamp": "2026-02-08T02:18:34Z",
     "type": "completed",
     "agent": "deploy-tester",
