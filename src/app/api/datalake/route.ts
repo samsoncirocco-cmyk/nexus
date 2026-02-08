@@ -1,93 +1,125 @@
 /**
  * Data Lake API
  *
- * Server-side proxy connecting Second Brain to the OpenClaw data lake.
- * All requests are POST with an `action` field to route to the right operation.
- *
- * Actions:
- *   - query   -> Natural language query against BigQuery
- *   - search  -> Semantic search across events, NLP, and AI tables
- *   - context -> Build a full context snapshot (emails, tasks, analyses)
- *   - log     -> Log an agent action to the events table
+ * GET endpoint for querying the tatt-pro.openclaw.events table.
+ * Query params:
+ *   - action: stats | recent | search | type
+ *   - count:  number of events to return (for recent)
+ *   - q:      search query (for search)
+ *   - type:   event type filter (for type)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  queryDatalake,
-  semanticSearch,
-  buildContext,
-  logAction,
-} from '../../../../openclaw/skills';
+import { BigQuery } from '@google-cloud/bigquery';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(req: NextRequest) {
+const PROJECT_ID = 'tatt-pro';
+const DATASET = 'openclaw';
+const TABLE = 'events';
+
+interface BQEvent {
+  id?: string;
+  timestamp: string;
+  type: string;
+  source: string;
+  summary: string;
+  content: string;
+  metadata?: any;
+}
+
+export async function GET(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { action } = body;
+    const { searchParams } = req.nextUrl;
+    const action = searchParams.get('action') || 'recent';
+
+    // Initialize BigQuery client - uses ADC (Application Default Credentials)
+    const bq = new BigQuery({ projectId: PROJECT_ID });
 
     switch (action) {
-      case 'query': {
-        const { question, maxRows } = body;
-        if (!question || typeof question !== 'string') {
-          return NextResponse.json(
-            { error: 'question is required' },
-            { status: 400 }
-          );
-        }
-        const result = await queryDatalake({ question, maxRows });
-        return NextResponse.json(result);
+      case 'stats': {
+        // Return event type counts
+        const query = `
+          SELECT type, COUNT(*) as count
+          FROM \`${PROJECT_ID}.${DATASET}.${TABLE}\`
+          GROUP BY type
+          ORDER BY count DESC
+        `;
+        const [rows] = await bq.query({ query });
+        return NextResponse.json(rows);
+      }
+
+      case 'recent': {
+        // Return recent events
+        const count = Math.min(Number(searchParams.get('count')) || 20, 500);
+        const query = `
+          SELECT id, timestamp, type, source, summary, content, metadata
+          FROM \`${PROJECT_ID}.${DATASET}.${TABLE}\`
+          ORDER BY timestamp DESC
+          LIMIT @count
+        `;
+        const [rows] = await bq.query({ 
+          query, 
+          params: { count } 
+        });
+        return NextResponse.json(rows as BQEvent[]);
       }
 
       case 'search': {
-        const { query, maxResults, sources, timeRangeDays } = body;
-        if (!query || typeof query !== 'string') {
+        // Search events by content or summary
+        const q = searchParams.get('q');
+        if (!q) {
           return NextResponse.json(
-            { error: 'query is required' },
+            { error: 'q parameter is required for search' },
             { status: 400 }
           );
         }
-        const result = await semanticSearch({
+        const count = Math.min(Number(searchParams.get('count')) || 50, 500);
+        const query = `
+          SELECT id, timestamp, type, source, summary, content, metadata
+          FROM \`${PROJECT_ID}.${DATASET}.${TABLE}\`
+          WHERE LOWER(summary) LIKE @pattern 
+             OR LOWER(content) LIKE @pattern
+          ORDER BY timestamp DESC
+          LIMIT @count
+        `;
+        const [rows] = await bq.query({
           query,
-          maxResults,
-          sources,
-          timeRangeDays,
+          params: { 
+            pattern: `%${q.toLowerCase()}%`,
+            count 
+          }
         });
-        return NextResponse.json(result);
+        return NextResponse.json(rows as BQEvent[]);
       }
 
-      case 'context': {
-        const { agentId, emailCount, taskCount, analysisCount } = body;
-        const result = await buildContext({
-          agentId,
-          emailCount,
-          taskCount,
-          analysisCount,
-        });
-        return NextResponse.json(result);
-      }
-
-      case 'log': {
-        const { agentId, eventType, source, payload, processed } = body;
-        if (!agentId || !eventType || !source) {
+      case 'type': {
+        // Filter events by type
+        const eventType = searchParams.get('type');
+        if (!eventType) {
           return NextResponse.json(
-            { error: 'agentId, eventType, and source are required' },
+            { error: 'type parameter is required' },
             { status: 400 }
           );
         }
-        const result = await logAction({
-          agentId,
-          eventType,
-          source,
-          payload: payload || {},
-          processed,
+        const count = Math.min(Number(searchParams.get('count')) || 50, 500);
+        const query = `
+          SELECT id, timestamp, type, source, summary, content, metadata
+          FROM \`${PROJECT_ID}.${DATASET}.${TABLE}\`
+          WHERE type = @eventType
+          ORDER BY timestamp DESC
+          LIMIT @count
+        `;
+        const [rows] = await bq.query({
+          query,
+          params: { eventType, count }
         });
-        return NextResponse.json(result);
+        return NextResponse.json(rows as BQEvent[]);
       }
 
       default:
         return NextResponse.json(
-          { error: `Unknown action: ${action}. Use: query, search, context, log` },
+          { error: `Unknown action: ${action}. Use: stats, recent, search, type` },
           { status: 400 }
         );
     }
@@ -98,13 +130,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// Health check endpoint
-export async function GET() {
-  return NextResponse.json({
-    service: 'datalake',
-    status: 'online',
-    actions: ['query', 'search', 'context', 'log'],
-  });
 }

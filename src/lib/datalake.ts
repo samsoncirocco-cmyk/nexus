@@ -8,11 +8,12 @@ export interface BQEvent {
   metadata?: any;
 }
 
-const PROXY_URL = process.env.NEXT_PUBLIC_BQ_PROXY_URL || "http://localhost:8877";
+// Use Next.js API route instead of external proxy
+const API_URL = "/api/datalake";
 
 export async function getStats() {
   try {
-    const res = await fetch(`${PROXY_URL}/stats`);
+    const res = await fetch(`${API_URL}?action=stats`);
     if (!res.ok) return [];
     return await res.json();
   } catch (e) {
@@ -23,7 +24,7 @@ export async function getStats() {
 
 export async function getRecentEvents(count = 20): Promise<BQEvent[]> {
   try {
-    const res = await fetch(`${PROXY_URL}/recent?count=${count}`);
+    const res = await fetch(`${API_URL}?action=recent&count=${count}`);
     if (!res.ok) return [];
     return await res.json();
   } catch (e) {
@@ -34,7 +35,7 @@ export async function getRecentEvents(count = 20): Promise<BQEvent[]> {
 
 export async function searchEvents(query: string): Promise<BQEvent[]> {
   try {
-    const res = await fetch(`${PROXY_URL}/search?q=${encodeURIComponent(query)}`);
+    const res = await fetch(`${API_URL}?action=search&q=${encodeURIComponent(query)}`);
     if (!res.ok) return [];
     return await res.json();
   } catch (e) {
