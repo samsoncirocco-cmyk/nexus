@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 52
+- **Total Commits:** 57
 - **Files:** 34653
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main)Tf1d12e91863993abc0d4cb130b42cd5736d5ccba:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)Te324c07cf10790e16dde0ac7de8a684346b579a3:%M:HEADZ
 
 ## Recent Commits
-- f1d12e9 fix: use service account credentials for BigQuery on Vercel
-- 4d4217e auto: update 2 files (vault/activity.json,vault/repos/second-brain.md)
-- 3ac6b0e fix: /agents uses vault data as primary source, gateway optional
-- 865842d auto: update 3 files (src/app/agents/page.tsx,vault/activity.json,vault/repos/second-brain.md)
-- f3373fa fix: make /commands use local Gemini execution as primary, remove tunnel dependency
+- e324c07 auto: update src/app/api/chat/route.ts
+- 52c90eb fix: align datalake API with actual BQ schema (event_type, payload, agent_id)
+- 89fae89 fix: properly escape BQ reserved words without template literal conflicts
+- ce777c6 fix: backtick-escape reserved word 'type' in BQ queries
+- e49f3bd fix: allow API routes through auth middleware
 
 ## Status
-Last commit: `f1d12e9 fix: use service account credentials for BigQuery on Vercel`
+Last commit: `e324c07 auto: update src/app/api/chat/route.ts`
