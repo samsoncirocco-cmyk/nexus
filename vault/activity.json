@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T07:31:46Z",
+    "type": "completed",
+    "agent": "live-agent-status",
+    "message": "Live agent status on /agents page \u2014 shows running agents with elapsed time"
+  },
+  {
     "timestamp": "2026-02-08T07:19:18Z",
     "type": "alert",
     "agent": "auto-deploy",
