@@ -65,7 +65,7 @@ export default function NewDocumentPage() {
       }
 
       // Redirect to the new document's edit page
-      router.push(`/doc/${slug}/edit`);
+      router.push(`/doc/edit/${slug}`);
     } catch (error) {
       console.error('Error creating document:', error);
       alert(`Failed to create document: ${(error as Error).message}`);

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
+import RelatedNotes from '@/components/RelatedNotes';
 
 /* ─── Types ─── */
 interface ActivityEntry {
@@ -538,6 +539,11 @@ export default function ActivityFeed({ initialEntries }: { initialEntries: Activ
                               <div>
                                 <span className="text-[10px] uppercase tracking-wider text-foreground-muted font-bold">ID</span>
                                 <p className="text-[11px] text-zinc-500 mt-0.5 font-mono">{entry.id}</p>
+                              </div>
+
+                              {/* Related Notes */}
+                              <div className="mt-4 pt-4 border-t border-border-subtle">
+                                <RelatedNotes activityId={entry.id} className="bg-transparent border-0 p-0" />
                               </div>
                             </div>
                           )}

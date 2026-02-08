@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T07:48:06Z",
+    "type": "completed",
+    "agent": "task-age-indicators",
+    "message": "Task age indicators \u2014 color-coded by time in column (green <1d, yellow 1-3d, red >3d)"
+  },
+  {
     "timestamp": "2026-02-08T07:44:59Z",
     "type": "completed",
     "agent": "task-creation",
