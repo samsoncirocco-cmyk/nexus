@@ -50,10 +50,10 @@ export async function GET(req: NextRequest) {
       case 'stats': {
         // Return event type counts
         const query = `
-          SELECT type, COUNT(*) as count
+          SELECT `type`, COUNT(*) as count
           FROM \`${PROJECT_ID}.${DATASET}.${TABLE}\`
-          GROUP BY type
-          ORDER BY count DESC
+          GROUP BY `type`
+          ORDER BY `count` DESC
         `;
         const [rows] = await bq.query({ query });
         return NextResponse.json(rows);
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
         // Return recent events
         const count = Math.min(Number(searchParams.get('count')) || 20, 500);
         const query = `
-          SELECT id, timestamp, type, source, summary, content, metadata
+          SELECT id, timestamp, `type`, source, summary, content, metadata
           FROM \`${PROJECT_ID}.${DATASET}.${TABLE}\`
           ORDER BY timestamp DESC
           LIMIT @count
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
         }
         const count = Math.min(Number(searchParams.get('count')) || 50, 500);
         const query = `
-          SELECT id, timestamp, type, source, summary, content, metadata
+          SELECT id, timestamp, `type`, source, summary, content, metadata
           FROM \`${PROJECT_ID}.${DATASET}.${TABLE}\`
           WHERE LOWER(summary) LIKE @pattern 
              OR LOWER(content) LIKE @pattern
@@ -114,9 +114,9 @@ export async function GET(req: NextRequest) {
         }
         const count = Math.min(Number(searchParams.get('count')) || 50, 500);
         const query = `
-          SELECT id, timestamp, type, source, summary, content, metadata
+          SELECT id, timestamp, `type`, source, summary, content, metadata
           FROM \`${PROJECT_ID}.${DATASET}.${TABLE}\`
-          WHERE type = @eventType
+          WHERE `type` = @eventType
           ORDER BY timestamp DESC
           LIMIT @count
         `;
