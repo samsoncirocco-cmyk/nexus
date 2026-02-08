@@ -33,6 +33,7 @@ const SIDEBAR_LINKS = [
   { href: '/deals', icon: 'rocket_launch', label: 'Sales Pipeline' },
   { href: '/graph', icon: 'hub', label: 'Knowledge Graph' },
   { href: '/doc', icon: 'folder_open', label: 'Documents' },
+  { href: '/directives', icon: 'description', label: 'Directives' },
   { href: '/settings', icon: 'settings', label: 'Settings' },
 ];
 

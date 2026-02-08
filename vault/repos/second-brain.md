@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 153
+- **Total Commits:** 154
 - **Files:** 36295
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)T58523be5650a8b80c562026c923a95c7f7f949ed:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)Tbc03da62207e35ea3532db464290c6a46b5058d6:%M:HEADZ
 
 ## Recent Commits
+- bc03da6 auto: vault data sync — 9 repo docs refreshed, tasks synced
 - 58523be data: backfill 39 missing activity entries from Feb 7-8 work
 - e5b8155 auto: update vault tasks
 - 26ab295 auto: vault data update 2026-02-08T15:24:17Z
 - 4d01c2c auto: update vault/activity.json
-- 4c0ab03 feat: Insights Widget - auto-extract activity patterns
 
 ## Status
-Last commit: `58523be data: backfill 39 missing activity entries from Feb 7-8 work`
+Last commit: `bc03da6 auto: vault data sync — 9 repo docs refreshed, tasks synced`
