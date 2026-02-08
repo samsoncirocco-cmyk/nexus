@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 139
-- **Files:** 35341
+- **Total Commits:** 142
+- **Files:** 35331
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)Tf8c4e0fa48168c1b8a164dff3acececaff768551:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)Tc4274193f0a3139c05d7174619ec3e89b9cb7978:%M:HEADZ
 
 ## Recent Commits
+- c427419 auto: update 2 files (vault/activity.json,vercel-deploy.log)
+- 2a06e94 Add insights extraction widget - auto-extract patterns from activity feed
+- ce4c71c auto: vault data update 2026-02-08T15:16:56Z
 - f8c4e0f auto: update 8 files (src/app/api/calendar/route.ts,src/app/api/email-digest/route.ts,src/app/api/insights/route.ts)
 - 86f31ae feat: implement offline indicator with PWA caching
-- 841e5bf feat: Add offline indicator banner with PWA caching
-- 271233f Add comprehensive error boundaries with themed UI
-- 901d49d docs: Add loading skeletons completion report
 
 ## Status
-Last commit: `f8c4e0f auto: update 8 files (src/app/api/calendar/route.ts,src/app/api/email-digest/route.ts,src/app/api/insights/route.ts)`
+Last commit: `c427419 auto: update 2 files (vault/activity.json,vercel-deploy.log)`
