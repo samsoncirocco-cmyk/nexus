@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 119
-- **Files:** 33814
+- **Total Commits:** 121
+- **Files:** 33813
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main)Tcbb4c886622bc41f141ce8dfd4a34f4c8548256a:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main)T086e059a21ab486269238226b778ba841db5db13:%M:HEADZ
 
 ## Recent Commits
+- 086e059 auto: update 3 files (src/lib/semantic-search.ts,vault/activity.json,vault/heartbeat-status.json)
+- 3d0d428 auto: vault data update 2026-02-08T07:16:33Z
 - cbb4c88 auto: update 4 files (src/app/api/related/route.ts,src/app/api/what-matters/route.ts,vault/activity.json)
 - 48add5f auto: vault data update 2026-02-08T07:13:02Z
 - 30dd9ae auto: update 5 files (src/app/api/related/route.ts,src/app/doc/[...slug]/page.tsx,src/components/RelatedNotes.tsx)
-- e07082c auto: vault data update 2026-02-08T06:57:46Z
-- b7c7469 feat: deploy semantic_search_api and wire up frontend proxy
 
 ## Status
-Last commit: `cbb4c88 auto: update 4 files (src/app/api/related/route.ts,src/app/api/what-matters/route.ts,vault/activity.json)`
+Last commit: `086e059 auto: update 3 files (src/lib/semantic-search.ts,vault/activity.json,vault/heartbeat-status.json)`
