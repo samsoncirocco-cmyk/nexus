@@ -14,7 +14,7 @@ import path from 'path';
 export interface Device {
   id: string;
   name: string;
-  type: 'mac' | 'iphone' | 'windows' | 'linux' | 'other';
+  type: 'mac' | 'iphone' | 'windows' | 'linux' | 'android';
   hostname?: string;
   os?: string;
   lastScan: string; // ISO timestamp
