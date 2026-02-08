@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T04:15:28Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
     "timestamp": "2026-02-08T04:15:15Z",
     "type": "completed",
     "agent": "paul-briefing-deploy",
