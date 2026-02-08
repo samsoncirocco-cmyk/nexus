@@ -111,7 +111,7 @@ export default function MemoryPage() {
                       <span className="text-xs text-gray-500">{event.source}</span>
                     </div>
                     <span className="text-xs text-gray-400">
-                      {event.timestamp ? formatDistanceToNow(new Date(event.timestamp * 1000), { addSuffix: true }) : 'Unknown'}
+                      {event.timestamp ? formatDistanceToNow(new Date(Number(event.timestamp) * 1000), { addSuffix: true }) : 'Unknown'}
                     </span>
                   </div>
                   
