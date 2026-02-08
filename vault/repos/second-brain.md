@@ -17,17 +17,17 @@ Knowledge base & mission control (Vercel)
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 147
-- **Files:** 36434
+- **Total Commits:** 150
+- **Files:** 36435
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)Taf9e564b49840bdd9efea936d93df9232b00281f:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)T4d01c2cc2c0dc2de75c3744ab2369f1bb969ae7f:%M:HEADZ
 
 ## Recent Commits
+- 4d01c2c auto: update vault/activity.json
+- 4c0ab03 feat: Insights Widget - auto-extract activity patterns
+- 232b4b9 auto: vault data update 2026-02-08T15:21:41Z
 - af9e564 auto: update EMAIL_DIGEST_IMPLEMENTATION.md
 - 4da66a1 auto: vault data update 2026-02-08T15:20:09Z
-- ede081b auto: update vault/activity.json
-- c288b0b activity: update activity feed with latest entries
-- 4e6b477 auto: vault data update 2026-02-08T15:19:10Z
 
 ## Status
-Last commit: `af9e564 auto: update EMAIL_DIGEST_IMPLEMENTATION.md`
+Last commit: `4d01c2c auto: update vault/activity.json`
