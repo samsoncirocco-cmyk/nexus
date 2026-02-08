@@ -41,7 +41,7 @@ python scan.py --help
 
 ## Usage
 
-### Basic Scan
+### Basic Scan (Local JSON Output)
 
 Scan a directory and save results:
 
@@ -307,3 +307,44 @@ Part of Second Brain. See main project LICENSE.
 ## Questions?
 
 See main project docs: `.planning/ROADMAP.md`, `.planning/REQUIREMENTS.md`
+
+---
+
+## Phase 2: Sync to Second Brain
+
+### Upload Scan Results
+
+Upload scan results directly to Second Brain API:
+
+```bash
+# Local development
+python scan.py \
+  --directory ~/Downloads \
+  --device-id mac-mini-m2 \
+  --upload http://localhost:3000
+
+# Production
+python scan.py \
+  --directory ~/Downloads \
+  --device-id mac-mini-m2 \
+  --upload https://brain.6eyes.dev
+```
+
+**What happens:**
+1. Scanner performs full scan
+2. Results are uploaded to `/api/devices/sync`
+3. Device appears in `/devices` page
+4. Scan history is maintained (last 7 scans)
+5. Activity feed is updated
+
+**Upload + Save:**
+```bash
+python scan.py \
+  --directory ~/Downloads \
+  --device-id mac-mini-m2 \
+  --upload http://localhost:3000 \
+  --output backup-scan.json
+```
+
+Uploads to API **and** saves local copy.
+

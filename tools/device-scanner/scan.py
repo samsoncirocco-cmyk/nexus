@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
-Device Scanner - Phase 1
+Device Scanner - Phase 1 + 2
 Scans directories, catalogs files, detects duplicates, generates JSON output.
+Can optionally upload results to Second Brain API.
 
 Usage:
     python scan.py --directory ~/Downloads --device-id mac-mini-m2 --output scan.json
+    python scan.py --directory ~/Downloads --device-id mac-mini-m2 --upload http://localhost:3000
 """
 
 import os
@@ -18,6 +20,8 @@ from collections import defaultdict
 from typing import Dict, List, Any, Optional
 import platform
 import socket
+import urllib.request
+import urllib.error
 
 # File type categories
 FILE_TYPES = {
@@ -292,6 +296,71 @@ def scan_directory(
     return result
 
 
+def upload_scan_results(result: Dict[str, Any], api_url: str) -> bool:
+    """
+    Upload scan results to Second Brain API.
+    
+    Args:
+        result: Scan result dictionary
+        api_url: Base URL of Second Brain (e.g., http://localhost:3000)
+    
+    Returns:
+        True if successful, False otherwise
+    """
+    # Construct API endpoint
+    if not api_url.endswith('/'):
+        api_url += '/'
+    endpoint = f"{api_url}api/devices/sync"
+    
+    print(f"\n📤 Uploading to {endpoint}...")
+    
+    try:
+        # Convert to JSON
+        payload = json.dumps(result).encode('utf-8')
+        
+        # Create request
+        req = urllib.request.Request(
+            endpoint,
+            data=payload,
+            headers={
+                'Content-Type': 'application/json',
+                'Content-Length': str(len(payload)),
+            },
+            method='POST'
+        )
+        
+        # Send request
+        with urllib.request.urlopen(req, timeout=30) as response:
+            response_data = json.loads(response.read().decode('utf-8'))
+            
+            if response_data.get('success'):
+                print(f"✅ Upload successful!")
+                print(f"   Device: {response_data.get('device', {}).get('name')}")
+                print(f"   Scan count: {response_data.get('device', {}).get('scanCount')}")
+                return True
+            else:
+                print(f"⚠️  Upload failed: {response_data.get('error', 'Unknown error')}")
+                return False
+                
+    except urllib.error.HTTPError as e:
+        print(f"❌ HTTP Error {e.code}: {e.reason}")
+        try:
+            error_data = json.loads(e.read().decode('utf-8'))
+            print(f"   {error_data.get('error', 'Unknown error')}")
+        except:
+            pass
+        return False
+        
+    except urllib.error.URLError as e:
+        print(f"❌ Connection failed: {e.reason}")
+        print(f"   Make sure Second Brain is running at {api_url}")
+        return False
+        
+    except Exception as e:
+        print(f"❌ Upload error: {e}")
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='Device Scanner - Catalog files and detect duplicates',
@@ -337,6 +406,13 @@ Examples:
         help='Verbose output (show errors)',
     )
     
+    parser.add_argument(
+        '--upload',
+        type=str,
+        default=None,
+        help='Upload results to Second Brain API (e.g., http://localhost:3000 or https://brain.6eyes.dev)',
+    )
+    
     args = parser.parse_args()
     
     # Expand and validate directory
@@ -368,14 +444,22 @@ Examples:
         timestamp = datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')
         output_file = Path(f"scan-{args.device_id}-{timestamp}.json")
     
-    # Write JSON output
-    try:
-        with open(output_file, 'w') as f:
-            json.dump(result, f, indent=2)
-        print(f"💾 Saved: {output_file.resolve()}")
-    except IOError as e:
-        print(f"❌ Error writing output: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Write JSON output (if output specified or no upload)
+    if args.output or not args.upload:
+        try:
+            with open(output_file, 'w') as f:
+                json.dump(result, f, indent=2)
+            print(f"💾 Saved: {output_file.resolve()}")
+        except IOError as e:
+            print(f"❌ Error writing output: {e}", file=sys.stderr)
+            sys.exit(1)
+    
+    # Upload to API if requested
+    if args.upload:
+        success = upload_scan_results(result, args.upload)
+        if not success:
+            print(f"⚠️  Upload failed, but local file saved: {output_file.resolve()}")
+            sys.exit(1)
     
     print(f"✨ Done!\n")
 
