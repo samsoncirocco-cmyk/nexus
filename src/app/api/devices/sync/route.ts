@@ -13,7 +13,9 @@ import {
   updateDevice,
   saveScanResults,
   rotateScanHistory,
+  saveRecommendations,
 } from '@/lib/devices';
+import { generateRecommendations } from '@/lib/recommendations';
 import { readJsonFile, writeJsonFile, getVaultFilePath } from '@/lib/vault-io';
 
 // Maximum payload size (50 MB)
@@ -161,6 +163,12 @@ export async function POST(request: NextRequest) {
     // Rotate old scans (keep last 7)
     await rotateScanHistory(deviceId, 7);
 
+    // Generate recommendations from scan data
+    const recsData = generateRecommendations(scanResult);
+    await saveRecommendations(deviceId, recsData.recommendations);
+    device.recommendationCount = recsData.summary.pending;
+    console.log(`Generated ${recsData.recommendations.length} recommendations for ${deviceId}`);
+
     // Update device registry
     await updateDevice(device);
     console.log(`Updated device registry: ${deviceId}`);
@@ -189,6 +197,7 @@ export async function POST(request: NextRequest) {
         totalSize,
         duplicateGroups,
       },
+      recommendations: recsData.recommendations.length,
       message: 'Scan results synced successfully',
     });
 

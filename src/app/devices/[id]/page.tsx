@@ -92,6 +92,15 @@ export default async function DeviceDetailPage({ params }: PageProps) {
                 </>
               )}
             </div>
+            <div className="mt-2">
+              <Link
+                href={`/graph?focus=device:${device.id}`}
+                className="inline-flex items-center gap-1.5 text-xs text-sky-400 hover:text-sky-300 transition-colors"
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: 14 }}>hub</span>
+                View in Knowledge Graph
+              </Link>
+            </div>
           </div>
         </div>
       </div>

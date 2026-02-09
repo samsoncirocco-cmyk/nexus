@@ -1,5 +1,311 @@
 [
   {
+    "timestamp": "2026-02-09T13:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T13:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T13:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T13:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T13:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:38:42Z",
+    "type": "completed",
+    "agent": "gdrive-backfill",
+    "message": "Google Drive backfill: 8 PDFs indexed with embeddings"
+  },
+  {
+    "timestamp": "2026-02-09T05:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
     "timestamp": "2026-02-09T05:24:04Z",
     "type": "alert",
     "agent": "outlook-poller",
@@ -1206,437 +1512,6 @@
     "summary": "PIN-based login, session management, route protection \u2014 Second Brain is now secured",
     "output": [],
     "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "6b3e8d75",
-    "timestamp": "2026-02-07T21:03:06Z",
-    "agent": "nexus-deploy",
-    "type": "deployed",
-    "title": "\ud83d\ude80 Nexus Deployed",
-    "summary": "Nexus content engine live with README and clean deployment",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "25a4f7ad",
-    "timestamp": "2026-02-07T21:01:28Z",
-    "agent": "divorce-book",
-    "type": "completed",
-    "title": "\ud83d\udcd6 Divorce Book Assembled",
-    "summary": "All 16 chapters from 26 source files assembled into divorce-manuscript.md",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "backfill-3-16766",
-    "timestamp": "2026-02-07T21:00:00Z",
-    "agent": "paul",
-    "type": "completed",
-    "message": "Second Brain: resolve build conflicts from 12 parallel agents, deploy to production",
-    "title": "Second Brain: resolve build conflicts from 12 parallel agents, deploy to production",
-    "summary": "Second Brain: resolve build conflicts from 12 parallel agents, deploy to production",
-    "tags": [
-      "backfill"
-    ],
-    "status": "done",
-    "source": "vault"
-  },
-  {
-    "id": "174cf2bc",
-    "timestamp": "2026-02-07T20:59:53Z",
-    "agent": "ui-audit",
-    "type": "deployed",
-    "title": "\ud83d\udd0d Full UI Audit & Polish",
-    "summary": "All 11 pages audited for consistency, mobile responsiveness, and build cleanliness",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "94d86675",
-    "timestamp": "2026-02-07T20:56:57Z",
-    "agent": "marketing-copy",
-    "type": "completed",
-    "title": "\ud83d\udcdd README + Marketing Copy",
-    "summary": "Professional README, landing page copy, and Product Hunt launch materials",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "de4ab240",
-    "timestamp": "2026-02-07T20:53:21Z",
-    "agent": "book-ch5",
-    "type": "completed",
-    "title": "\ud83d\udcd6 Book Chapter 5: Sales",
-    "summary": "Chapter 5 written/edited in manuscript.md \u2014 career, rejection, identity",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "be8c502e",
-    "timestamp": "2026-02-07T20:50:04Z",
-    "agent": "erate-batch2",
-    "type": "completed",
-    "title": "\ud83c\udfaf E-Rate Batch 2: Top 10 Leads",
-    "summary": "Research dossiers for 10 priority E-Rate leads with talking points",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "585fef33",
-    "timestamp": "2026-02-07T20:46:52Z",
-    "agent": "settings-polish",
-    "type": "deployed",
-    "title": "\u2699\ufe0f Settings + Dashboard Polish",
-    "summary": "Settings page with config, connected services, and polished home dashboard",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "d966bae4",
-    "timestamp": "2026-02-07T20:42:00Z",
-    "agent": "knowledge-graph",
-    "type": "deployed",
-    "title": "\ud83d\udd78\ufe0f Knowledge Graph",
-    "summary": "Interactive visualization of vault document connections at brain.6eyes.dev/graph",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "e03d1934",
-    "timestamp": "2026-02-07T20:40:45Z",
-    "agent": "pwa",
-    "type": "deployed",
-    "title": "\ud83d\udcf1 PWA + Notifications",
-    "summary": "Second Brain is now installable on mobile with offline support and notification banners",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "436a2134",
-    "timestamp": "2026-02-07T20:37:16Z",
-    "agent": "analytics",
-    "type": "deployed",
-    "title": "\ud83d\udcca Analytics Dashboard",
-    "summary": "Agent performance, task metrics, and activity timeline at brain.6eyes.dev/analytics",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "4ad37a1a",
-    "timestamp": "2026-02-07T20:33:20Z",
-    "agent": "chat-ui",
-    "type": "deployed",
-    "title": "\ud83d\udcac Chat Interface",
-    "summary": "Talk to Paul directly from Second Brain at brain.6eyes.dev/chat",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "74376ec8",
-    "timestamp": "2026-02-07T20:30:31Z",
-    "agent": "tunnel",
-    "type": "completed",
-    "title": "\ud83d\udd17 Gateway Tunnel",
-    "summary": "OpenClaw Gateway now reachable from the internet \u2014 Second Brain bridge fully operational",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "backfill-2-74543",
-    "timestamp": "2026-02-07T20:30:00Z",
-    "agent": "paul",
-    "type": "fixed",
-    "message": "Second Brain: EROFS fix \u2014 vault writes redirected to /tmp on Vercel",
-    "title": "Second Brain: EROFS fix \u2014 vault writes redirected to /tmp on Vercel",
-    "summary": "Second Brain: EROFS fix \u2014 vault writes redirected to /tmp on Vercel",
-    "tags": [
-      "backfill"
-    ],
-    "status": "done",
-    "source": "vault"
-  },
-  {
-    "id": "402bdf5c",
-    "timestamp": "2026-02-07T20:24:56Z",
-    "agent": "gateway-bridge",
-    "type": "deployed",
-    "title": "\ud83c\udf09 Gateway Bridge",
-    "summary": "Second Brain can now proxy commands to OpenClaw Gateway \u2014 the foundation for real agent orchestration",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "65cc5321",
-    "timestamp": "2026-02-07T20:22:35Z",
-    "agent": "yc-pitch",
-    "type": "completed",
-    "title": "\ud83d\udcca YC Pitch Materials",
-    "summary": "Pitch deck outline, investor one-pager, and financial model for TatT",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "08504e84",
-    "timestamp": "2026-02-07T20:13:27Z",
-    "agent": "nexus-redesign",
-    "type": "completed",
-    "title": "\ud83c\udfa8 Nexus Stitch UI Rebuild",
-    "summary": "Integrated Stitch-generated designs into Nexus \u2014 landing page and dashboard",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "abc78322",
-    "timestamp": "2026-02-07T20:12:31Z",
-    "agent": "tatt-redesign",
-    "type": "completed",
-    "title": "\ud83c\udfa8 TatT Stitch UI Rebuild",
-    "summary": "Integrated Stitch-generated designs \u2014 new landing page and app screen for YC demo",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "d65714e1",
-    "timestamp": "2026-02-07T20:12:25Z",
-    "agent": "agent-dashboard",
-    "type": "deployed",
-    "title": "\ud83e\udd16 Agent Management Dashboard",
-    "summary": "Live agent status, auto-refresh, running agent cards at brain.6eyes.dev/agents",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "3decfaf6",
-    "timestamp": "2026-02-07T20:11:53Z",
-    "agent": "platform-spec",
-    "type": "completed",
-    "title": "\ud83d\udccb Second Brain Platform Spec",
-    "summary": "Full product spec for Second Brain as an AI orchestration platform \u2014 the better OpenClaw",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "d7e29986",
-    "timestamp": "2026-02-07T20:09:12Z",
-    "agent": "gog-automations",
-    "type": "completed",
-    "title": "\ud83d\udd04 Google Workspace Automations",
-    "summary": "Gmail triage, calendar sync, and Drive watch scripts built and tested",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "backfill-1-61588",
-    "timestamp": "2026-02-07T20:00:00Z",
-    "agent": "paul",
-    "type": "completed",
-    "message": "Second Brain: unified search page with source filters",
-    "title": "Second Brain: unified search page with source filters",
-    "summary": "Second Brain: unified search page with source filters",
-    "tags": [
-      "backfill"
-    ],
-    "status": "done",
-    "source": "vault"
-  },
-  {
-    "id": "backfill-0-55248",
-    "timestamp": "2026-02-07T19:00:00Z",
-    "agent": "paul",
-    "type": "completed",
-    "message": "Second Brain: 104+ features via 5-agent parallel rewrite (11 pages rebuilt)",
-    "title": "Second Brain: 104+ features via 5-agent parallel rewrite (11 pages rebuilt)",
-    "summary": "Second Brain: 104+ features via 5-agent parallel rewrite (11 pages rebuilt)",
-    "tags": [
-      "backfill"
-    ],
-    "status": "done",
-    "source": "vault"
-  },
-  {
-    "id": "e00a3d16",
-    "timestamp": "2026-02-07T18:08:44Z",
-    "agent": "paul",
-    "type": "completed",
-    "title": "\ud83d\udd27 Infrastructure Day",
-    "summary": "Installed Homebrew, Gemini CLI, gog CLI, ClawHub. Authenticated Google ADC + Stitch API. Generated 9 Stitch UI screens (5 Second Brain, 2 Nexus, 2 TatT).",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "e7824ec2",
-    "timestamp": "2026-02-07T18:08:44Z",
-    "agent": "paul",
-    "type": "deployed",
-    "title": "\ud83c\udfa8 Second Brain Stitch Redesign",
-    "summary": "Rebuilt all 5 pages with Stitch-generated designs. Oregon Ducks theme, Space Grotesk font, gold accents. Live at brain.6eyes.dev",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "71432db9",
-    "timestamp": "2026-02-07T18:08:44Z",
-    "agent": "paul",
-    "type": "deployed",
-    "title": "\ud83e\udde0 Second Brain AI Agent",
-    "summary": "Added /ask page powered by Gemini. Indexes all 53 vault docs. Ask your brain questions and get answers with source citations. Live at brain.6eyes.dev/ask",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "9a620e1c",
-    "timestamp": "2026-02-07T18:08:44Z",
-    "agent": "paul",
-    "type": "fixed",
-    "title": "\ud83d\udee1\ufe0f Heartbeat Spiral Fix",
-    "summary": "Upgraded heartbeat model to Gemini 3 Pro. Simplified HEARTBEAT.md to prevent incoherent responses. Added safety valve for overwhelming context.",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "act-006",
-    "timestamp": "2026-02-07T15:30:00.000Z",
-    "agent": "linkedin-buddy-build",
-    "type": "completed",
-    "title": "\ud83d\udd17 Nexus: LinkedIn Content Tool \u2014 Spec & MVP",
-    "summary": "Full product spec, competitive research, and MVP build for LinkedIn-focused AI content tool. Researched Taplio, AuthoredUp, Shield, Supergrow. Created SPEC.md (11 features, 5 personas, pricing tiers), COMPETITORS.md (gap analysis), ARCHITECTURE.md (tech stack, AI pipeline, database schema). Built Next.js 16 MVP with Oregon Ducks theme: landing page, dashboard, content composer, post history. All pages building successfully.",
-    "output": [
-      "projects/linkedin-buddy/SPEC.md",
-      "projects/linkedin-buddy/COMPETITORS.md",
-      "projects/linkedin-buddy/ARCHITECTURE.md",
-      "projects/linkedin-buddy/app/src/app/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/compose/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/history/page.tsx"
-    ],
-    "tags": [
-      "dev",
-      "product",
-      "ai",
-      "linkedin"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-005",
-    "timestamp": "2026-02-07T15:23:00.000Z",
-    "agent": "second-brain-redesign",
-    "type": "completed",
-    "title": "\ud83e\udd86 Oregon Ducks \u00d7 Nike Theme Redesign",
-    "summary": "Complete redesign of Second Brain with Oregon Ducks/Nike theme. Forest green (#154733) + gold (#FEE123) color palette. Mobile-first responsive: hamburger menu, bottom nav, touch-friendly 44px tap targets. Updated 7 files: globals.css, layout.tsx, Sidebar.tsx, page.tsx, tasks/page.tsx, activity/page.tsx, deals/page.tsx, doc page. Build passes, deployed to Vercel.",
-    "output": [
-      "src/app/globals.css",
-      "src/components/Sidebar.tsx",
-      "src/app/page.tsx",
-      "src/app/tasks/page.tsx",
-      "src/app/activity/page.tsx",
-      "src/app/deals/page.tsx"
-    ],
-    "tags": [
-      "dev",
-      "design",
-      "second-brain"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-004",
-    "timestamp": "2026-02-07T15:08:00.000Z",
-    "agent": "yc-research",
-    "type": "completed",
-    "title": "YCombinator Prep Package",
-    "summary": "Created comprehensive YC prep: application guide (S26 deadline Feb 9!), TatT vs IRL analysis (TatT wins 10-0), market sizing ($60B+ TAM), draft YC application, competitive moat analysis, and 1-minute demo video script. 6 documents, ~52KB total.",
-    "output": [
-      "projects/yc-prep/README.md",
-      "projects/yc-prep/01-yc-application-guide.md",
-      "projects/yc-prep/02-tatt-vs-irl-analysis.md",
-      "projects/yc-prep/03-tatt-market-analysis.md",
-      "projects/yc-prep/04-draft-yc-application.md",
-      "projects/yc-prep/05-competitive-moat-analysis.md"
-    ],
-    "tags": [
-      "yc",
-      "founder",
-      "tatt"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-003",
-    "timestamp": "2026-02-07T15:07:00.000Z",
-    "agent": "workhorse",
-    "type": "completed",
-    "title": "TatT Test Suite + TypeScript Migration",
-    "summary": "Fixed TatT test suite \u2014 129 tests now passing (was 0 runnable). Migrated 7 files to TypeScript: Button, Input, Card components + 4 services with proper types. Also added 18 tests to Second Brain. 6 commits pushed to main.",
-    "output": [
-      "repos/TatT/src/components/ui/Button.tsx",
-      "repos/TatT/src/components/ui/Input.tsx",
-      "repos/TatT/src/components/ui/Card.tsx"
-    ],
-    "tags": [
-      "dev",
-      "tatt",
-      "testing"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-002",
-    "timestamp": "2026-02-07T14:53:00.000Z",
-    "agent": "nightshift-erate-outreach",
-    "type": "completed",
-    "title": "E-Rate Outreach: 3 Fortinet-Tagged Leads",
-    "summary": "Researched and drafted personalized outreach emails for Ogallala NE (FortiGate 600F, Feb 24 deadline), Parkston SD (FortiGate 70G + Meraki displacement, Feb 26), and Deshler NE (43x FortiSwitch, Mar 3). Includes research dossier with contact details, LinkedIn profiles, and revenue estimates (~$120-170K total).",
-    "output": [
-      "projects/sled-toolkit/erate-fortinet-outreach/ogallala-ne-fortigate-600f.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/parkston-sd-fortigate-70g.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/deshler-ne-fortiswitch-148f.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/research-summary.md"
-    ],
-    "tags": [
-      "sled",
-      "erate",
-      "revenue"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-001",
-    "timestamp": "2026-02-07T14:52:00.000Z",
-    "agent": "nightshift-book-ch4",
-    "type": "completed",
-    "title": "Book Chapter 4: Kids (and Other Tiny Terrorists)",
-    "summary": "Drafted ~2,200 words covering the Pinterest parenting lie, the roommate phase, and the reality of raising tiny terrorists. Matches Samson's voice from the working copy.",
-    "output": [
-      "projects/book-toolkit/drafts/chapter-04-kids.md"
-    ],
-    "tags": [
-      "book"
-    ],
     "status": "done"
   }
 ]

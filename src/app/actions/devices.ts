@@ -16,6 +16,7 @@ import {
   type ScanResult,
   type Recommendation,
 } from '@/lib/devices';
+import { readJsonFile, writeJsonFile, getVaultFilePath } from '@/lib/vault-io';
 
 /**
  * Get all devices
@@ -62,22 +63,59 @@ export async function getRecommendations(id: string): Promise<Recommendation[]> 
 }
 
 /**
+ * Log to activity feed
+ */
+async function logActivity(message: string, type: string = 'note'): Promise<void> {
+  try {
+    const activityPath = getVaultFilePath('activity.json');
+    const activity = await readJsonFile<Array<{ timestamp: string; type: string; source: string; message: string }>>(activityPath, []);
+    activity.unshift({
+      timestamp: new Date().toISOString(),
+      type,
+      source: 'device-cleaner',
+      message,
+    });
+    if (activity.length > 1000) activity.splice(1000);
+    await writeJsonFile(activityPath, activity);
+  } catch (error) {
+    console.error('Failed to log activity:', error);
+  }
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
+}
+
+/**
  * Mark recommendation as done
  */
 export async function markRecommendationDone(deviceId: string, recId: string): Promise<void> {
+  // Get rec before updating so we can log it
+  const recs = await getRecommendationsLib(deviceId);
+  const rec = recs.find(r => r.id === recId);
+
   await updateRecommendationStatusLib(deviceId, recId, 'done');
-  
-  // TODO: Log to activity feed
-  // const recs = await getRecommendationsLib(deviceId);
-  // const rec = recs.find(r => r.id === recId);
-  // if (rec) {
-  //   await logActivity(`Completed recommendation: ${rec.title}`, 'completed');
-  // }
+
+  if (rec) {
+    const savingsStr = rec.savings > 0 ? ` — saved ${formatBytes(rec.savings)}` : '';
+    await logActivity(`Completed: ${rec.title}${savingsStr}`, 'completed');
+  }
 }
 
 /**
  * Mark recommendation as dismissed
  */
 export async function markRecommendationDismissed(deviceId: string, recId: string): Promise<void> {
+  const recs = await getRecommendationsLib(deviceId);
+  const rec = recs.find(r => r.id === recId);
+
   await updateRecommendationStatusLib(deviceId, recId, 'dismissed');
+
+  if (rec) {
+    await logActivity(`Dismissed: ${rec.title}`, 'note');
+  }
 }
