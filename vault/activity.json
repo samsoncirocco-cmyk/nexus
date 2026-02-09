@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-08T23:13:41Z",
+    "type": "note",
+    "agent": "auto-deploy",
+    "message": "Second Brain build OK, deploy skipped (no token)"
+  },
+  {
     "timestamp": "2026-02-08T20:11:55Z",
     "type": "completed",
     "agent": "device-kg-phase3",
