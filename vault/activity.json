@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-02-09T14:04:01Z",
+    "type": "deployed",
+    "agent": "dkg-deploy",
+    "message": "Device Knowledge Graph V1 MVP \u2014 merged to main, deployed to production. All 5 phases complete."
+  },
+  {
     "timestamp": "2026-02-09T14:02:09Z",
     "type": "completed",
     "agent": "dkg-phase4",
@@ -1479,16 +1485,5 @@
     ],
     "status": "done",
     "source": "vault"
-  },
-  {
-    "id": "17a08208",
-    "timestamp": "2026-02-07T21:46:09Z",
-    "agent": "Nexus multi-platform upgrade complete \u2014 all 7 features now platform-aware for LinkedIn, X, Substack, Medium, Instagram, TikTok. Platform intelligence engine, per-platform voice profiles, comparison view, platform command center.",
-    "type": "update",
-    "title": "Activity update",
-    "summary": "",
-    "output": [],
-    "tags": [],
-    "status": "done"
   }
 ]
