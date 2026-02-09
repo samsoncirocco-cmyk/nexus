@@ -1,5 +1,47 @@
 [
   {
+    "timestamp": "2026-02-09T05:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:14:09Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:04:19Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:54:19Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:44:19Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:34:19Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:22:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
     "timestamp": "2026-02-09T04:20:36Z",
     "type": "completed",
     "agent": "outlook-poller",
