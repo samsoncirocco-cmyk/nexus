@@ -164,8 +164,9 @@ export async function POST(request: NextRequest) {
     await rotateScanHistory(deviceId, 7);
 
     // Generate recommendations from scan data
-    const recsData = generateRecommendations(scanResult);
-    await saveRecommendations(deviceId, recsData.recommendations);
+    const recsData = generateRecommendations(scanResult as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await saveRecommendations(deviceId, recsData.recommendations as any);
     device.recommendationCount = recsData.summary.pending;
     console.log(`Generated ${recsData.recommendations.length} recommendations for ${deviceId}`);
 

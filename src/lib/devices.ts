@@ -91,7 +91,7 @@ export interface Recommendation {
   savings: number; // bytes
   files: string[];
   confidence: number; // 0.0 - 1.0
-  action: 'delete' | 'review' | 'move';
+  action: 'delete' | 'review' | 'archive';
   status?: 'pending' | 'done' | 'dismissed';
   createdAt: string;
 }

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import RecommendationCard from '@/components/devices/RecommendationCard';
-import { markRecommendationDone, markRecommendationDismissed } from '@/app/actions/devices';
 import type { Recommendation } from '@/lib/devices.types';
 
 interface RecommendationsClientProps {
@@ -17,14 +16,6 @@ export default function RecommendationsClient({
   resolved,
 }: RecommendationsClientProps) {
   const [showResolved, setShowResolved] = useState(false);
-
-  async function handleStatusChange(recId: string, status: 'done' | 'dismissed') {
-    if (status === 'done') {
-      await markRecommendationDone(deviceId, recId);
-    } else {
-      await markRecommendationDismissed(deviceId, recId);
-    }
-  }
 
   return (
     <div className="px-4">
@@ -43,7 +34,6 @@ export default function RecommendationsClient({
                 key={rec.id}
                 recommendation={rec}
                 deviceId={deviceId}
-                onStatusChange={handleStatusChange}
               />
             ))}
           </div>
@@ -70,7 +60,6 @@ export default function RecommendationsClient({
                   key={rec.id}
                   recommendation={rec}
                   deviceId={deviceId}
-                  onStatusChange={handleStatusChange}
                 />
               ))}
             </div>

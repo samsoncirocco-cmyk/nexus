@@ -1,22 +1,14 @@
-import { getDeviceDetails, getRecommendations } from '@/app/actions/devices';
+import { getDeviceDetails } from '@/app/actions/devices';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import RecommendationCard from '@/components/devices/RecommendationCard';
-import type { RecommendationType } from '@/lib/devices.types';
+import RecommendationsClient from './RecommendationsClient';
+import type { Recommendation } from '@/lib/devices.types';
 
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
-
-const DEVICE_ICONS: Record<string, string> = {
-  mac: 'laptop_mac',
-  windows: 'computer',
-  linux: 'developer_board',
-  iphone: 'smartphone',
-  android: 'phone_android',
-};
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return '0 B';
@@ -26,14 +18,6 @@ function formatBytes(bytes: number): string {
   return `${(bytes / Math.pow(k, i)).toFixed(1)} ${sizes[i]}`;
 }
 
-const TYPE_LABELS: Record<RecommendationType, { label: string; icon: string; color: string }> = {
-  duplicates: { label: 'Duplicate Files', icon: 'content_copy', color: 'text-amber-400' },
-  'old-downloads': { label: 'Old Downloads', icon: 'download', color: 'text-blue-400' },
-  'large-files': { label: 'Large Files', icon: 'hard_drive', color: 'text-red-400' },
-  'old-screenshots': { label: 'Old Screenshots', icon: 'screenshot_monitor', color: 'text-purple-400' },
-  'empty-folders': { label: 'Empty Folders', icon: 'folder_off', color: 'text-zinc-400' },
-};
-
 export default async function RecommendationsPage({ params }: PageProps) {
   const { id } = await params;
   const data = await getDeviceDetails(id);
@@ -42,23 +26,12 @@ export default async function RecommendationsPage({ params }: PageProps) {
     notFound();
   }
 
-  const { device, recommendations } = data;
-
-  // Separate pending and resolved
+  const { device } = data;
+  // Cast to the shared types (the shapes are identical, just exported from different files)
+  const recommendations = data.recommendations as unknown as Recommendation[];
   const pending = recommendations.filter(r => r.status === 'pending');
-  const resolved = recommendations.filter(r => r.status !== 'pending');
-
-  // Group pending by type
-  const groupedPending = new Map<RecommendationType, typeof pending>();
-  for (const rec of pending) {
-    const group = groupedPending.get(rec.type) || [];
-    group.push(rec);
-    groupedPending.set(rec.type, group);
-  }
-
-  // Calculate stats
+  const resolved = recommendations.filter(r => r.status === 'done' || r.status === 'dismissed');
   const totalSavings = pending.reduce((sum, r) => sum + r.savings, 0);
-  const totalPending = pending.length;
 
   return (
     <div className="min-h-screen bg-bg-dark pb-28 md:pb-6">
@@ -82,46 +55,36 @@ export default async function RecommendationsPage({ params }: PageProps) {
             <h1 className="text-2xl font-display font-bold text-white mb-1">
               Cleanup Recommendations
             </h1>
-            <div className="flex items-center gap-3 text-sm text-zinc-400">
-              <span>{device.name}</span>
-              <span className="text-zinc-600">•</span>
-              <span>{totalPending} pending</span>
+            <p className="text-sm text-zinc-400">
+              {pending.length} recommendation{pending.length !== 1 ? 's' : ''}
               {totalSavings > 0 && (
-                <>
-                  <span className="text-zinc-600">•</span>
-                  <span className="text-primary font-medium">{formatBytes(totalSavings)} savable</span>
-                </>
+                <> · <span className="text-primary font-medium">{formatBytes(totalSavings)}</span> potential savings</>
               )}
-            </div>
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Summary Stats */}
-      {totalPending > 0 && (
+      {/* Stats Bar */}
+      {recommendations.length > 0 && (
         <div className="px-4 mb-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {Array.from(groupedPending.entries()).map(([type, recs]) => {
-              const meta = TYPE_LABELS[type];
-              const typeSavings = recs.reduce((sum, r) => sum + r.savings, 0);
-              return (
-                <div
-                  key={type}
-                  className="bg-gradient-to-br from-secondary-dark to-bg-dark rounded-xl p-3 border border-primary/10"
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`material-symbols-outlined text-sm ${meta.color}`}>
-                      {meta.icon}
-                    </span>
-                    <span className="text-xs text-zinc-400">{meta.label}</span>
-                  </div>
-                  <div className="text-lg font-bold text-white">{recs.length}</div>
-                  {typeSavings > 0 && (
-                    <div className="text-xs text-primary">{formatBytes(typeSavings)}</div>
-                  )}
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-gradient-to-br from-secondary-dark to-bg-dark rounded-xl p-3 border border-primary/10 text-center">
+              <div className="text-xl font-bold text-primary">{pending.length}</div>
+              <div className="text-xs text-zinc-400">Pending</div>
+            </div>
+            <div className="bg-gradient-to-br from-secondary-dark to-bg-dark rounded-xl p-3 border border-emerald-500/10 text-center">
+              <div className="text-xl font-bold text-emerald-400">
+                {recommendations.filter(r => r.status === 'done').length}
+              </div>
+              <div className="text-xs text-zinc-400">Completed</div>
+            </div>
+            <div className="bg-gradient-to-br from-secondary-dark to-bg-dark rounded-xl p-3 border border-zinc-500/10 text-center">
+              <div className="text-xl font-bold text-zinc-400">
+                {recommendations.filter(r => r.status === 'dismissed').length}
+              </div>
+              <div className="text-xs text-zinc-400">Dismissed</div>
+            </div>
           </div>
         </div>
       )}
@@ -136,51 +99,22 @@ export default async function RecommendationsPage({ params }: PageProps) {
               </span>
             </div>
             <h2 className="text-xl font-display font-bold text-white mb-2">
-              All Clean!
+              Your device is clean! ✨
             </h2>
             <p className="text-zinc-400">
-              No cleanup recommendations right now. Run a new scan to check again.
+              No cleanup recommendations at this time. Run another scan to check again.
             </p>
           </div>
         </div>
       )}
 
-      {/* Pending Recommendations */}
-      {pending.length > 0 && (
-        <div className="px-4 mb-6">
-          <h2 className="text-lg font-display font-bold text-white mb-4 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">pending_actions</span>
-            Action Needed
-          </h2>
-          <div className="space-y-3">
-            {pending.map((rec) => (
-              <RecommendationCard
-                key={rec.id}
-                recommendation={rec}
-                deviceId={device.id}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Resolved Recommendations */}
-      {resolved.length > 0 && (
-        <div className="px-4 mb-6">
-          <h2 className="text-lg font-display font-bold text-white mb-4 flex items-center gap-2">
-            <span className="material-symbols-outlined text-zinc-500">history</span>
-            Resolved
-          </h2>
-          <div className="space-y-3">
-            {resolved.map((rec) => (
-              <RecommendationCard
-                key={rec.id}
-                recommendation={rec}
-                deviceId={device.id}
-              />
-            ))}
-          </div>
-        </div>
+      {/* Recommendations List */}
+      {recommendations.length > 0 && (
+        <RecommendationsClient
+          deviceId={device.id}
+          pending={pending}
+          resolved={resolved}
+        />
       )}
     </div>
   );
