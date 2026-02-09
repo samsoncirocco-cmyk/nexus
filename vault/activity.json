@@ -1,5 +1,23 @@
 [
   {
+    "timestamp": "2026-02-09T04:20:36Z",
+    "type": "completed",
+    "agent": "outlook-poller",
+    "message": "Outlook email ingestion pipeline deployed and running"
+  },
+  {
+    "timestamp": "2026-02-09T04:18:37Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T04:15:05Z",
+    "type": "note",
+    "agent": "auto-deploy",
+    "message": "Second Brain build OK, deploy skipped (no token)"
+  },
+  {
     "timestamp": "2026-02-08T23:13:41Z",
     "type": "note",
     "agent": "auto-deploy",
