@@ -1,5 +1,17 @@
 [
   {
+    "timestamp": "2026-02-09T14:02:09Z",
+    "type": "completed",
+    "agent": "dkg-phase4",
+    "message": "Device Knowledge Graph Phase 4 complete \u2014 Recommendations Engine"
+  },
+  {
+    "timestamp": "2026-02-09T14:01:11Z",
+    "type": "completed",
+    "agent": "dkg-phase4",
+    "message": "Device Knowledge Graph Phase 4 complete \u2014 Recommendations Engine"
+  },
+  {
     "timestamp": "2026-02-09T13:58:21Z",
     "type": "completed",
     "agent": "dkg-phase5",
@@ -1478,30 +1490,5 @@
     "output": [],
     "tags": [],
     "status": "done"
-  },
-  {
-    "id": "496b7037",
-    "timestamp": "2026-02-07T21:35:37Z",
-    "agent": "nexus-product",
-    "type": "deployed",
-    "title": "\ud83d\ude80 Nexus: Full Product Build",
-    "summary": "AI composer, 9-metric scoring engine, brain dump, account analyzer, reply engine, voice learning \u2014 all functional with Gemini API",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "backfill-4-85607",
-    "timestamp": "2026-02-07T21:30:00Z",
-    "agent": "paul",
-    "type": "completed",
-    "message": "Second Brain: in-browser vault document editor with live preview",
-    "title": "Second Brain: in-browser vault document editor with live preview",
-    "summary": "Second Brain: in-browser vault document editor with live preview",
-    "tags": [
-      "backfill"
-    ],
-    "status": "done",
-    "source": "vault"
   }
 ]

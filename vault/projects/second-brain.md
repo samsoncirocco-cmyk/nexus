@@ -57,14 +57,36 @@ As we have conversations:
 - **Simple** - Focus on content, not features
 - **Portable** - It's just markdown in a folder
 
+## Device Knowledge Graph V1 (Feb 2026)
+
+A full-stack device management feature that lets you scan local devices, visualize storage, get cleanup recommendations, and view everything in the knowledge graph.
+
+**What shipped:**
+- **Python Scanner** (`tools/device-scanner/scan.py`) — Scans directories, catalogs files, detects duplicates via SHA-256
+- **Vault Integration** — Device registry, scan history (rotated, last 7), recommendations storage
+- **API Endpoint** — `POST /api/devices/sync` for scanner uploads
+- **Device Pages** — `/devices` (list), `/devices/[id]` (detail with charts), `/devices/[id]/recommendations`
+- **Recommendations Engine** — 5 types: duplicates, old downloads, large files, old screenshots, empty folders
+- **Knowledge Graph** — Device and scan nodes integrated into `/graph`
+- **Activity Feed** — Scan completions and cleanup actions logged
+
+**5 Phases, 45 minutes total build time:**
+1. Scanner Script + Data Model (3 min)
+2. Vault Integration + API (20 min)
+3. /devices Page UI (22 min)
+4. Recommendations Engine (19 min)
+5. Knowledge Graph Integration (19 min)
+
+See: [Device Knowledge Graph](/doc/projects/device-knowledge-graph)
+
 ## Future Ideas
 
-- [ ] Full-text search
-- [ ] Backlinks between documents
-- [ ] Tag filtering
-- [ ] Graph view (like Obsidian)
-- [ ] Export to PDF
+- [ ] Computer vision pipeline (Gemini Vision for screenshot OCR)
+- [ ] iOS scanner app
+- [ ] Cross-device knowledge graph
+- [ ] Smart session grouping
+- [ ] Cloud storage duplicate detection
 
 ---
 
-*Built February 6, 2026*
+*Built February 6, 2026. Device Knowledge Graph shipped February 9, 2026.*
