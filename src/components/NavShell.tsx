@@ -26,6 +26,7 @@ const SIDEBAR_LINKS = [
   { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul' },
   { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet' },
   { href: '/analytics', icon: 'analytics', label: 'Analytics' },
+  { href: '/devices', icon: 'storage', label: 'Devices' },
   { href: '/commands', icon: 'bolt', label: 'Commands' },
   { href: '/ask', icon: 'neurology', label: 'Ask Brain' },
   { href: '/tasks', icon: 'checklist', label: 'Task Board' },

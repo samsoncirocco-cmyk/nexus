@@ -1,6 +1,6 @@
 ---
 title: "Second Brain"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, second-brain, public]
 description: "Knowledge base & mission control (Vercel)"
 category: repos
@@ -13,21 +13,21 @@ Knowledge base & mission control (Vercel)
 ## Repository
 - **GitHub:** [samsoncirocco-cmyk/second-brain](https://github.com/samsoncirocco-cmyk/second-brain)
 - **Visibility:** Public
-- **Branch:** main
+- **Branch:** feature/device-knowledge-graph
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 161
-- **Files:** 35479
+- **Total Commits:** 187
+- **Files:** 35501
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)Td9a5114113aab8ba9ffb9703dcdb135d6085069e:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> feature/device-knowledge-graph, origin/feature/device-knowledge-graph)T88873c7b5af08591e1fbbf717eef80fa68c3cd2d:%M:HEADZ
 
 ## Recent Commits
-- d9a5114 auto: update 2 files (.planning/REQUIREMENTS.md,vault/activity.json)
-- 9861d75 feat: GSD project init — Device Knowledge Graph spec
-- 14b5d52 auto: vault data update 2026-02-08T16:37:41Z
-- 3a58059 auto: update 2 files (vault/activity.json,vault/repos/second-brain.md)
-- e50b143 feat: /directives page — DOE framework visibility
+- 88873c7 auto: update 11 files (src/app/actions/devices.ts,src/app/api/devices/sync/route.ts,src/app/api/graph/route.ts)
+- bce8722 auto: vault data update 2026-02-09T05:32:46Z
+- 21dbded auto: update vault/activity.json
+- 086771d auto: vault data update 2026-02-09T04:21:03Z
+- c74b9d7 auto: update vault/activity.json
 
 ## Status
-Last commit: `d9a5114 auto: update 2 files (.planning/REQUIREMENTS.md,vault/activity.json)`
+Last commit: `88873c7 auto: update 11 files (src/app/actions/devices.ts,src/app/api/devices/sync/route.ts,src/app/api/graph/route.ts)`

@@ -1,6 +1,6 @@
 ---
 title: "SFDC"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, sfdc, private]
 description: "Salesforce tools, SLED toolkit, outlook automation"
 category: repos

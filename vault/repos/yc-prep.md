@@ -1,6 +1,6 @@
 ---
 title: "YC Prep"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, yc-prep, private]
 description: "YC application materials & strategy"
 category: repos

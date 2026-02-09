@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { Suspense, useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 /* ================================================================
@@ -49,6 +50,8 @@ const CATEGORY_COLORS: Record<string, string> = {
   root: '#9ca3af',
   'data-source': '#10b981',
   repos: '#f59e0b',
+  device: '#38bdf8',   // sky-400 — distinct from other categories
+  scan: '#818cf8',     // indigo-400 — scans are children of devices
 };
 
 const CATEGORY_GLOW: Record<string, string> = {
@@ -62,6 +65,15 @@ const CATEGORY_GLOW: Record<string, string> = {
   root: 'rgba(156,163,175,0.4)',
   'data-source': 'rgba(16,185,129,0.4)',
   repos: 'rgba(245,158,11,0.4)',
+  device: 'rgba(56,189,248,0.4)',
+  scan: 'rgba(129,140,248,0.4)',
+};
+
+/** Map category to Material Symbols icon name for special node types */
+const CATEGORY_ICONS: Record<string, string> = {
+  device: 'devices',
+  scan: 'document_scanner',
+  'data-source': 'database',
 };
 
 function getColor(cat: string) {
@@ -168,7 +180,22 @@ function simulationTick(
    COMPONENT
    ================================================================ */
 
-export default function GraphPage() {
+export default function GraphPageWrapper() {
+  return (
+    <Suspense fallback={
+      <div className="relative w-full h-screen overflow-hidden flex items-center justify-center" style={{ background: '#0a0f0c' }}>
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-full border-2 border-primary/20 border-t-primary animate-spin mx-auto mb-4" />
+          <div className="text-sm text-foreground-muted">Building knowledge graph...</div>
+        </div>
+      </div>
+    }>
+      <GraphPageInner />
+    </Suspense>
+  );
+}
+
+function GraphPageInner() {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const nodesRef = useRef<GraphNode[]>([]);
@@ -204,6 +231,8 @@ export default function GraphPage() {
   }>({ type: null, startX: 0, startY: 0, startCamX: 0, startCamY: 0 });
 
   const [stats, setStats] = useState<Record<string, number>>({});
+  const searchParams = useSearchParams();
+  const initialFocusDone = useRef(false);
 
   /* ---- Fetch data ---- */
   useEffect(() => {
@@ -293,6 +322,20 @@ export default function GraphPage() {
     }
     return allNodesRef.current.filter(n => connected.has(n.id)).slice(0, 6);
   }, []);
+
+  /* ---- Auto-focus from ?focus= query param ---- */
+  useEffect(() => {
+    if (!loaded || initialFocusDone.current) return;
+    const focusId = searchParams.get('focus');
+    if (focusId) {
+      // Wait a brief moment for simulation to settle a bit
+      const timer = setTimeout(() => {
+        focusOnNode(focusId);
+        initialFocusDone.current = true;
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [loaded, searchParams, focusOnNode]);
 
   /* ---- Animation loop ---- */
   useEffect(() => {
@@ -446,18 +489,52 @@ export default function GraphPage() {
         g.appendChild(pulse);
       }
 
-      // Node circle
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('cx', String(node.x));
-      circle.setAttribute('cy', String(node.y));
-      circle.setAttribute('r', String(radius));
-      circle.setAttribute('fill', `${color}22`);
-      circle.setAttribute('stroke', color);
-      circle.setAttribute('stroke-width', (isHovered || isFocused) ? '3' : '2');
-      circle.setAttribute('filter', 'url(#glow)');
-      circle.setAttribute('style', 'cursor: pointer;');
-      circle.setAttribute('data-node-id', node.id);
-      g.appendChild(circle);
+      // Node shape — device/scan get a rounded-rect with icon, others get a circle
+      const iconName = CATEGORY_ICONS[node.category];
+      if (iconName) {
+        // Rounded rect for device/scan nodes
+        const rectSize = radius * 2.2;
+        const rx = 4;
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', String(node.x - rectSize / 2));
+        rect.setAttribute('y', String(node.y - rectSize / 2));
+        rect.setAttribute('width', String(rectSize));
+        rect.setAttribute('height', String(rectSize));
+        rect.setAttribute('rx', String(rx));
+        rect.setAttribute('ry', String(rx));
+        rect.setAttribute('fill', `${color}22`);
+        rect.setAttribute('stroke', color);
+        rect.setAttribute('stroke-width', (isHovered || isFocused) ? '3' : '2');
+        rect.setAttribute('filter', 'url(#glow)');
+        rect.setAttribute('style', 'cursor: pointer;');
+        rect.setAttribute('data-node-id', node.id);
+        g.appendChild(rect);
+
+        // Material Symbols icon text inside
+        const iconText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        iconText.setAttribute('x', String(node.x));
+        iconText.setAttribute('y', String(node.y + radius * 0.35));
+        iconText.setAttribute('text-anchor', 'middle');
+        iconText.setAttribute('fill', color);
+        iconText.setAttribute('font-family', 'Material Symbols Outlined');
+        iconText.setAttribute('font-size', String(Math.max(12, radius * 1.1)));
+        iconText.setAttribute('style', 'cursor: pointer; font-variation-settings: "FILL" 1;');
+        iconText.textContent = iconName;
+        g.appendChild(iconText);
+      } else {
+        // Standard circle for vault doc nodes
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', String(node.x));
+        circle.setAttribute('cy', String(node.y));
+        circle.setAttribute('r', String(radius));
+        circle.setAttribute('fill', `${color}22`);
+        circle.setAttribute('stroke', color);
+        circle.setAttribute('stroke-width', (isHovered || isFocused) ? '3' : '2');
+        circle.setAttribute('filter', 'url(#glow)');
+        circle.setAttribute('style', 'cursor: pointer;');
+        circle.setAttribute('data-node-id', node.id);
+        g.appendChild(circle);
+      }
 
       // Label on hover
       if (isHovered || isFocused) {
@@ -677,7 +754,7 @@ export default function GraphPage() {
             Knowledge Graph
           </h1>
           <p className="text-xs text-foreground-muted mt-0.5">
-            {visibleCount} documents · {visibleEdgeCount} connections
+            {visibleCount} nodes · {visibleEdgeCount} connections
             {(search || hiddenCategories.size > 0) && (
               <span className="text-primary ml-1">(filtered)</span>
             )}
@@ -846,13 +923,38 @@ export default function GraphPage() {
             </div>
           )}
 
-          <Link
-            href={`/doc/${selected.node.id}`}
-            className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors"
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>open_in_new</span>
-            Open Document
-          </Link>
+          {selected.node.category === 'device' ? (
+            <Link
+              href={`/devices/${selected.node.id.replace('device:', '')}`}
+              className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 14 }}>open_in_new</span>
+              Open Device
+            </Link>
+          ) : selected.node.category === 'scan' ? (
+            (() => {
+              // scan id format: "scan:device-id:scan-TIMESTAMP"
+              const parts = selected.node.id.split(':');
+              const deviceId = parts[1] || '';
+              return (
+                <Link
+                  href={`/devices/${deviceId}`}
+                  className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: 14 }}>open_in_new</span>
+                  Open Device
+                </Link>
+              );
+            })()
+          ) : (
+            <Link
+              href={`/doc/${selected.node.id}`}
+              className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 14 }}>open_in_new</span>
+              Open Document
+            </Link>
+          )}
         </div>
       )}
 
