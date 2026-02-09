@@ -1,6 +1,6 @@
 ---
 title: "Book Toolkit"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, book-toolkit, private]
 description: "Both books: manuscripts, editing tools"
 category: repos

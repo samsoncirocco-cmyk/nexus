@@ -1,6 +1,6 @@
 ---
 title: "Server Config"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, server-config, private]
 description: "Mac Pro Ubuntu server setup & configs"
 category: repos

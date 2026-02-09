@@ -1,6 +1,6 @@
 ---
 title: "IRL"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, irl, public]
 description: "B2B infrastructure platform"
 category: repos
