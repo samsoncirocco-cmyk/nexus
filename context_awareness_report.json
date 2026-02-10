@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-02-09T08:24:20.733491",
+  "summary": {
+    "email_count": 0,
+    "task_count": 0,
+    "contact_count": 0,
+    "analysis_count": 0,
+    "lead_count": 0,
+    "total_pipeline_value": 0,
+    "stale_pipeline_value": 0
+  },
+  "emails": [],
+  "tasks": [],
+  "contacts": [],
+  "analyses": [],
+  "search_results": {},
+  "leads": []
+}
