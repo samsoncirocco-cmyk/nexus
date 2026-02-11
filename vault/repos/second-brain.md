@@ -1,6 +1,6 @@
 ---
 title: "Second Brain"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, second-brain, public]
 description: "Knowledge base & mission control (Vercel)"
 category: repos
@@ -13,21 +13,21 @@ Knowledge base & mission control (Vercel)
 ## Repository
 - **GitHub:** [samsoncirocco-cmyk/second-brain](https://github.com/samsoncirocco-cmyk/second-brain)
 - **Visibility:** Public
-- **Branch:** main
+- **Branch:** feature/device-knowledge-graph
 - **Local Path:** `projects/second-brain`
 
 ## Stats
-- **Total Commits:** 110
-- **Files:** 33811
+- **Total Commits:** 187
+- **Files:** 35501
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)T0ec87e24094d7f25abf729b87f0937b90badc7aa:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> feature/device-knowledge-graph, origin/feature/device-knowledge-graph)T88873c7b5af08591e1fbbf717eef80fa68c3cd2d:%M:HEADZ
 
 ## Recent Commits
-- 0ec87e2 auto: update 5 files (src/app/api/what-matters/route.ts,src/app/page.tsx,src/components/WhatMattersWidget.tsx)
-- 8d24a56 auto: vault data update 2026-02-08T06:40:32Z
-- 45a0891 auto: update 3 files (src/app/search/page.js,vault/activity.json,vault/heartbeat-status.json)
-- 2ab5c5d feat: unified search page with source filters and mock data (frontend-only, API fallback to mock)
-- ca859ab auto: vault data update 2026-02-08T06:26:15Z
+- 88873c7 auto: update 11 files (src/app/actions/devices.ts,src/app/api/devices/sync/route.ts,src/app/api/graph/route.ts)
+- bce8722 auto: vault data update 2026-02-09T05:32:46Z
+- 21dbded auto: update vault/activity.json
+- 086771d auto: vault data update 2026-02-09T04:21:03Z
+- c74b9d7 auto: update vault/activity.json
 
 ## Status
-Last commit: `0ec87e2 auto: update 5 files (src/app/api/what-matters/route.ts,src/app/page.tsx,src/components/WhatMattersWidget.tsx)`
+Last commit: `88873c7 auto: update 11 files (src/app/actions/devices.ts,src/app/api/devices/sync/route.ts,src/app/api/graph/route.ts)`

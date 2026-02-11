@@ -488,6 +488,7 @@ export function InsightsCard({
 
 /* ─── Quick Actions FAB (Mobile) ─── */
 const FAB_ACTIONS = [
+  { href: '/doc/new', icon: 'note_add', label: 'New Doc' },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat' },
   { href: '/commands', icon: 'bolt', label: 'Command' },
   { href: '/ask', icon: 'neurology', label: 'Ask Brain' },

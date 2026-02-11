@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { loadVaultDocs, VaultDoc } from '@/lib/vault-index';
+import { loadVaultDocs, VaultDoc, loadDeviceGraphData } from '@/lib/vault-index';
 
 interface GraphNode {
   id: string;
@@ -150,6 +150,39 @@ export async function GET() {
 
     // Add data source nodes to graph
     graph.nodes.push(...dataSources);
+
+    // ---- Device & Scan nodes ----
+    try {
+      const deviceGraph = await loadDeviceGraphData();
+
+      for (const dNode of deviceGraph.nodes) {
+        graph.nodes.push({
+          id: dNode.id,
+          title: dNode.title,
+          category: dNode.category, // 'device' or 'scan'
+          tags: dNode.tags,
+          connections: dNode.connections,
+        });
+      }
+
+      for (const dEdge of deviceGraph.edges) {
+        graph.edges.push({
+          source: dEdge.source,
+          target: dEdge.target,
+          type: 'reference', // reuse existing edge type for rendering
+        });
+      }
+
+      // Update connection counts for device nodes
+      for (const dEdge of deviceGraph.edges) {
+        const srcNode = graph.nodes.find(n => n.id === dEdge.source);
+        const tgtNode = graph.nodes.find(n => n.id === dEdge.target);
+        if (srcNode) srcNode.connections = (srcNode.connections || 0);
+        if (tgtNode) tgtNode.connections = (tgtNode.connections || 0);
+      }
+    } catch (error) {
+      console.error('Failed to load device graph nodes:', error);
+    }
 
     return NextResponse.json(graph);
   } catch (error) {

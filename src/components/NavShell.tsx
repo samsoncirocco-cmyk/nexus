@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
 import Breadcrumbs from './Breadcrumbs';
+import PageTransition from './PageTransition';
 
 /* ── Badge config: which nav items show unread counts ── */
 const BADGE_MAP: Record<string, number> = {
@@ -15,9 +16,9 @@ const BADGE_MAP: Record<string, number> = {
 const NAV_ITEMS = [
   { href: '/', icon: 'home', label: 'Home', fill: true },
   { href: '/tasks', icon: 'checklist', label: 'Tasks', fill: true },
+  { href: '/doc', icon: 'folder_open', label: 'Docs', fill: true },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat', fill: true },
-  { href: '/commands', icon: 'bolt', label: 'Commands', fill: true },
-  { href: '/agents', icon: 'smart_toy', label: 'Agents', fill: true },
+  { href: '/activity', icon: 'data_usage', label: 'Activity', fill: true },
 ];
 
 const SIDEBAR_LINKS = [
@@ -25,6 +26,7 @@ const SIDEBAR_LINKS = [
   { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul' },
   { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet' },
   { href: '/analytics', icon: 'analytics', label: 'Analytics' },
+  { href: '/devices', icon: 'storage', label: 'Devices' },
   { href: '/commands', icon: 'bolt', label: 'Commands' },
   { href: '/ask', icon: 'neurology', label: 'Ask Brain' },
   { href: '/tasks', icon: 'checklist', label: 'Task Board' },
@@ -32,6 +34,7 @@ const SIDEBAR_LINKS = [
   { href: '/deals', icon: 'rocket_launch', label: 'Sales Pipeline' },
   { href: '/graph', icon: 'hub', label: 'Knowledge Graph' },
   { href: '/doc', icon: 'folder_open', label: 'Documents' },
+  { href: '/directives', icon: 'description', label: 'Directives' },
   { href: '/settings', icon: 'settings', label: 'Settings' },
 ];
 
@@ -277,9 +280,9 @@ export default function NavShell({ children }: { children: React.ReactNode }) {
       {/* ==================== MAIN CONTENT ==================== */}
       <main id="main-content" role="main" className="flex-1 overflow-y-auto min-h-screen pb-24 md:pb-0">
         <Breadcrumbs />
-        <div className="page-enter">
+        <PageTransition>
           {children}
-        </div>
+        </PageTransition>
       </main>
 
       {/* ==================== MOBILE BOTTOM NAV ==================== */}

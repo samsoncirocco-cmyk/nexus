@@ -1,6 +1,6 @@
 ---
 title: "TatT"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, tatt, public]
 description: "AI tattoo try-on app (YC candidate)"
 category: repos

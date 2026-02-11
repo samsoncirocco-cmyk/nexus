@@ -6,6 +6,8 @@ import NavigationProgress from "@/components/NavigationProgress";
 import { NotificationProvider } from "@/components/NotificationBanner";
 import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 import GlobalSearchShortcut from "@/components/GlobalSearchShortcut";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
 
 export const metadata: Metadata = {
   title: "Second Brain",
@@ -56,22 +58,25 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className="antialiased overflow-x-hidden font-body">
-        <NotificationProvider>
-          <NavigationProgress />
-          <CommandPalette />
-          <NavShell>{children}</NavShell>
-          <ServiceWorkerRegistrar />
-          <GlobalSearchShortcut />
-        
-          {/* Background ambient glow effects */}
-        <div className="fixed inset-0 pointer-events-none -z-10 opacity-40" style={{ animation: 'gradientShift 20s ease-in-out infinite', backgroundSize: '200% 200%' }}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_35%,_#fade290a_0%,_transparent_20%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_65%,_#15473315_0%,_transparent_25%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_90%,_#fade2906_0%,_transparent_30%)]" />
-        </div>
-        {/* Grain overlay */}
-        <div className="fixed inset-0 pointer-events-none z-[9999] grain-overlay" />
-        </NotificationProvider>
+        <ErrorBoundary>
+          <NotificationProvider>
+            <OfflineIndicator />
+            <NavigationProgress />
+            <CommandPalette />
+            <NavShell>{children}</NavShell>
+            <ServiceWorkerRegistrar />
+            <GlobalSearchShortcut />
+          
+            {/* Background ambient glow effects */}
+          <div className="fixed inset-0 pointer-events-none -z-10 opacity-40" style={{ animation: 'gradientShift 20s ease-in-out infinite', backgroundSize: '200% 200%' }}>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_35%,_#fade290a_0%,_transparent_20%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_65%,_#15473315_0%,_transparent_25%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_90%,_#fade2906_0%,_transparent_30%)]" />
+          </div>
+          {/* Grain overlay */}
+          <div className="fixed inset-0 pointer-events-none z-[9999] grain-overlay" />
+          </NotificationProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

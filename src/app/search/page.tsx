@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { filterMockResults, type SearchResult } from '@/lib/searchMock';
 
+export const dynamic = 'force-dynamic';
+
 type SourceType = 'note' | 'email' | 'task' | 'agent';
 
 const SOURCE_FILTERS = [

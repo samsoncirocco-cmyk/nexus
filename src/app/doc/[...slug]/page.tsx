@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import DocSidebar from '@/components/DocSidebar';
 import RecentDocTracker from './RecentDocTracker';
 import DocReaderClient from './DocReaderClient';
+import RelatedNotes from '@/components/RelatedNotes';
 
 export const dynamic = 'force-dynamic';
 
@@ -98,7 +99,9 @@ export default async function DocumentPage({ params }: PageProps) {
       <DocSidebar documents={documentsByCategory} activeSlug={slugPath} />
       <RecentDocTracker slug={slugPath} />
 
-      <div className="flex-1 w-full max-w-2xl mx-auto px-4 pt-8 pb-24">
+      <div className="flex-1 w-full lg:flex lg:gap-6 lg:max-w-6xl mx-auto px-4 pt-8 pb-24">
+        {/* Main content column */}
+        <div className="flex-1 max-w-2xl lg:max-w-none">
         {/* TopAppBar */}
         <header className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-1">
@@ -209,6 +212,12 @@ export default async function DocumentPage({ params }: PageProps) {
             </Link>
           </div>
         </footer>
+        </div>
+
+        {/* Sidebar column - Related Notes */}
+        <aside className="lg:w-80 lg:shrink-0 mt-8 lg:mt-0 lg:sticky lg:top-8 lg:h-fit">
+          <RelatedNotes docPath={`${slugPath}.md`} />
+        </aside>
       </div>
     </div>
   );

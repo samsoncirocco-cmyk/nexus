@@ -1,6 +1,6 @@
 ---
 title: "Nexus"
-date: 2026-02-08
+date: 2026-02-09
 tags: [repo, github, nexus, public]
 description: "Multi-platform professional content engine"
 category: repos
@@ -18,16 +18,16 @@ Multi-platform professional content engine
 
 ## Stats
 - **Total Commits:** 5
-- **Files:** 10293
+- **Files:** 10285
 - **Languages:** TypeScript, React, Python, Markdown
-- **Last Updated:** %Y->- (HEAD -> main, origin/main)T158ff24e4f4401a5c009a8473b2a33b50cdad5b5:%M:HEADZ
+- **Last Updated:** %Y->- (HEAD -> main, origin/main)Ta977545198276029cdd422331a0d16255ed8c06b:%M:HEADZ
 
 ## Recent Commits
-- 158ff24 docs: add 3-layer architecture (CLAUDE.md, directives/, execution/)
-- 881d42d feat: full multi-platform support — platform intelligence engine, per-platform voice profiles, platform-aware scoring/braindump/analyzer/replies, comparison view, platform command center dashboard
-- b462342 feat: full product build — composer, scoring, braindump, analyzer, replies, voice
-- cb9f0e1 docs: Add professional README and clean up gitignore
-- d3c72d8 feat: Stitch-designed UI rebuild
+- a977545 docs: add all spec documents (DATABASE, API, PROMPTS, INTEGRATIONS, PRICING, COMPOSE_FLOW, SPEC, COMPETITORS, ARCHITECTURE)
+- 7564238 feat: implement auth + database foundation
+- 4840339 feat: Build Nexus Compose Flow with multi-platform AI adaptation
+- 9d54f6d Nexus v2: multi-platform professional content engine - LinkedIn, X, Substack, Medium, Instagram, TikTok
+- 18b71ad Initial commit: Nexus MVP - multi-platform professional content engine
 
 ## Status
-Last commit: `158ff24 docs: add 3-layer architecture (CLAUDE.md, directives/, execution/)`
+Last commit: `a977545 docs: add all spec documents (DATABASE, API, PROMPTS, INTEGRATIONS, PRICING, COMPOSE_FLOW, SPEC, COMPETITORS, ARCHITECTURE)`

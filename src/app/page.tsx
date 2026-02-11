@@ -8,6 +8,7 @@ import { getInsights, getRecentEvents } from '@/app/actions/datalake';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import CommandBar from '@/components/CommandBar';
+import CalendarWidget from '@/components/CalendarWidget';
 import {
   Greeting,
   LiveClock,
@@ -20,6 +21,8 @@ import {
   InsightsCard,
   DatalakeEventsBadge,
 } from '@/components/DashboardClient';
+import EmailDigest from '@/components/EmailDigest';
+import { InsightsWidget } from '@/components/InsightsWidget';
 
 export const dynamic = 'force-dynamic';
 
@@ -116,6 +119,7 @@ export default async function Home() {
   };
 
   const QUICK_LINKS = [
+    { href: '/doc/new', icon: 'note_add', label: 'New Document', desc: 'Create new doc', gradient: 'from-primary/10 to-secondary-dark/30' },
     { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul', desc: 'Talk to your AI', gradient: 'from-primary/10 to-secondary-dark/30' },
     { href: '/tasks', icon: 'checklist', label: 'Task Board', desc: `${activeTasks} active`, gradient: 'from-emerald-900/20 to-secondary-dark/30' },
     { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet', desc: `${runningAgents.length} running`, gradient: 'from-teal-900/20 to-secondary-dark/30' },
@@ -123,6 +127,7 @@ export default async function Home() {
     { href: '/ask', icon: 'neurology', label: 'Ask Brain', desc: 'Search knowledge', gradient: 'from-blue-900/15 to-secondary-dark/30' },
     { href: '/commands', icon: 'bolt', label: 'Commands', desc: 'Issue orders', gradient: 'from-amber-900/15 to-secondary-dark/30' },
     { href: '/analytics', icon: 'analytics', label: 'Analytics', desc: 'Insights', gradient: '' },
+    { href: '/devices', icon: 'storage', label: 'Devices', desc: 'Storage & cleanup', gradient: 'from-emerald-900/15 to-secondary-dark/30' },
     { href: '/activity', icon: 'data_usage', label: 'Activity Feed', desc: `${totalActivity} entries`, gradient: '' },
     { href: '/graph', icon: 'hub', label: 'Knowledge Graph', desc: `${allDocs.length} nodes`, gradient: '' },
     { href: '/doc', icon: 'folder_open', label: 'Documents', desc: `${Object.keys(documentsByCategory).length} categories`, gradient: '' },
@@ -298,6 +303,19 @@ export default async function Home() {
       {(insightAnalyses.length > 0 || insightObservations.length > 0) && (
         <InsightsCard analyses={insightAnalyses} observations={insightObservations} />
       )}
+
+      {/* Activity Insights Widget */}
+      <InsightsWidget />
+
+      {/* Email Digest */}
+      <div className="px-6 mb-6 animate-slide-up delay-5">
+        <EmailDigest />
+      </div>
+
+      {/* Calendar Widget */}
+      <div className="px-6 mb-6 animate-slide-up delay-6">
+        <CalendarWidget />
+      </div>
 
       {/* What's New */}
       <div className="px-6 mb-6">

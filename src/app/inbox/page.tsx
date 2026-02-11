@@ -197,15 +197,28 @@ export default function InboxPage() {
 
       {/* Email List */}
       {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="bg-secondary-dark/40 border border-primary/5 rounded-xl p-4 animate-pulse">
+        <div className="space-y-2">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} className="bg-secondary-dark/40 border border-primary/5 rounded-xl p-4">
               <div className="flex items-start gap-3">
-                <div className="size-10 rounded-full bg-primary/10" />
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-primary/10 rounded w-1/3" />
-                  <div className="h-3 bg-primary/10 rounded w-2/3" />
-                  <div className="h-3 bg-primary/10 rounded w-1/2" />
+                {/* Unread dot */}
+                <div className="size-2 mt-2 shrink-0 rounded-full bg-primary/10 animate-shimmer" />
+                
+                {/* Avatar */}
+                <div className="size-10 rounded-full bg-secondary-dark/30 border border-primary/10 animate-shimmer" />
+
+                {/* Email content skeleton */}
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-12 rounded-full bg-primary/10 animate-shimmer" />
+                      <div className="h-3 w-32 rounded bg-primary/10 animate-shimmer" />
+                    </div>
+                    <div className="h-3 w-16 rounded bg-primary/10 animate-shimmer" />
+                  </div>
+                  <div className="h-4 w-3/4 rounded bg-primary/10 animate-shimmer" />
+                  <div className="h-3 w-full rounded bg-primary/10 animate-shimmer" />
+                  <div className="h-3 w-2/3 rounded bg-primary/10 animate-shimmer" />
                 </div>
               </div>
             </div>

@@ -1,5 +1,981 @@
 [
   {
+    "timestamp": "2026-02-09T14:04:01Z",
+    "type": "deployed",
+    "agent": "dkg-deploy",
+    "message": "Device Knowledge Graph V1 MVP \u2014 merged to main, deployed to production. All 5 phases complete."
+  },
+  {
+    "timestamp": "2026-02-09T14:02:09Z",
+    "type": "completed",
+    "agent": "dkg-phase4",
+    "message": "Device Knowledge Graph Phase 4 complete \u2014 Recommendations Engine"
+  },
+  {
+    "timestamp": "2026-02-09T14:01:11Z",
+    "type": "completed",
+    "agent": "dkg-phase4",
+    "message": "Device Knowledge Graph Phase 4 complete \u2014 Recommendations Engine"
+  },
+  {
+    "timestamp": "2026-02-09T13:58:21Z",
+    "type": "completed",
+    "agent": "dkg-phase5",
+    "message": "Device Knowledge Graph Phase 5 complete \u2014 Knowledge Graph Integration"
+  },
+  {
+    "timestamp": "2026-02-09T13:51:24Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
+    "timestamp": "2026-02-09T13:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T13:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T13:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T13:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T13:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T12:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T11:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T10:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T09:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T08:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T07:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:14:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T06:04:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:54:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:44:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:38:42Z",
+    "type": "completed",
+    "agent": "gdrive-backfill",
+    "message": "Google Drive backfill: 8 PDFs indexed with embeddings"
+  },
+  {
+    "timestamp": "2026-02-09T05:34:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:24:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:14:09Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T05:04:19Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:54:19Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:44:19Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:34:19Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:22:04Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: The operation was aborted due to timeout"
+  },
+  {
+    "timestamp": "2026-02-09T04:20:36Z",
+    "type": "completed",
+    "agent": "outlook-poller",
+    "message": "Outlook email ingestion pipeline deployed and running"
+  },
+  {
+    "timestamp": "2026-02-09T04:18:37Z",
+    "type": "alert",
+    "agent": "outlook-poller",
+    "message": "Outlook API unreachable after 3 retries: fetch failed"
+  },
+  {
+    "timestamp": "2026-02-09T04:15:05Z",
+    "type": "note",
+    "agent": "auto-deploy",
+    "message": "Second Brain build OK, deploy skipped (no token)"
+  },
+  {
+    "timestamp": "2026-02-08T23:13:41Z",
+    "type": "note",
+    "agent": "auto-deploy",
+    "message": "Second Brain build OK, deploy skipped (no token)"
+  },
+  {
+    "timestamp": "2026-02-08T20:11:55Z",
+    "type": "completed",
+    "agent": "device-kg-phase3",
+    "message": "Phase 3 complete: /devices page UI with storage visualizations"
+  },
+  {
+    "timestamp": "2026-02-08T20:09:17Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
+    "timestamp": "2026-02-08T20:07:17Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
+    "timestamp": "2026-02-08T20:01:02Z",
+    "type": "completed",
+    "agent": "device-kg-phase2",
+    "message": "Phase 2 complete: API endpoint + vault integration"
+  },
+  {
+    "timestamp": "2026-02-08T19:44:16Z",
+    "type": "completed",
+    "agent": "device-kg-phase1",
+    "message": "Phase 1 complete: Device scanner script + data model"
+  },
+  {
+    "timestamp": "2026-02-08T19:16:01Z",
+    "type": "completed",
+    "agent": "gsd-init",
+    "message": "GSD project initialized for Device Knowledge Graph \u2014 PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md created"
+  },
+  {
+    "timestamp": "2026-02-08T19:12:27Z",
+    "type": "completed",
+    "agent": "gsd-init-agent",
+    "message": "GSD project initialized for Device Knowledge Graph \u2014 PROJECT.md, REQUIREMENTS.md, ROADMAP.md created with phased build plan"
+  },
+  {
+    "timestamp": "2026-02-08T16:33:53Z",
+    "type": "completed",
+    "agent": "directives-page-builder",
+    "message": "Built /directives page in Second Brain \u2014 surfaces all 14 DOE directives with categories, search, and expand/collapse"
+  },
+  {
+    "id": "backfill-38-20526",
+    "timestamp": "2026-02-08T15:30:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Nexus: All 9 spec docs pushed to GitHub (9,139 lines)",
+    "title": "Nexus: All 9 spec docs pushed to GitHub (9,139 lines)",
+    "summary": "Nexus: All 9 spec docs pushed to GitHub (9,139 lines)",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-37-78827",
+    "timestamp": "2026-02-08T15:29:00Z",
+    "agent": "paul",
+    "type": "deployed",
+    "message": "Second Brain: All 21 NIGHTSHIFT features deployed to brain.6eyes.dev",
+    "title": "Second Brain: All 21 NIGHTSHIFT features deployed to brain.6eyes.dev",
+    "summary": "Second Brain: All 21 NIGHTSHIFT features deployed to brain.6eyes.dev",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T15:23:38Z",
+    "type": "completed",
+    "agent": "insight-extraction-fix",
+    "message": "Insight Extraction (NIGHTSHIFT #21): Auto-extract key insights from activity feed. API route /api/insights analyzes patterns, InsightsWidget shows 3-5 cards (task completion, active agents, deployments). Build passes. Committed & pushed."
+  },
+  {
+    "timestamp": "2026-02-08T15:22:27Z",
+    "type": "completed",
+    "agent": "calendar-widget-fix",
+    "message": "Calendar widget already implemented and committed - verified implementation matches all requirements (API route with mock data, themed widget component with calendar_today icon, integrated into home page)"
+  },
+  {
+    "id": "backfill-36-49267",
+    "timestamp": "2026-02-08T15:20:00Z",
+    "agent": "email-digest-v2",
+    "type": "completed",
+    "message": "Second Brain: Email digest widget \u2014 Gmail + NAU unread on home page",
+    "title": "Second Brain: Email digest widget \u2014 Gmail + NAU unread on home page",
+    "summary": "Second Brain: Email digest widget \u2014 Gmail + NAU unread on home page",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T15:19:59Z",
+    "type": "completed",
+    "agent": "email-digest-fix",
+    "message": "Email digest widget task verified - feature already implemented and working"
+  },
+  {
+    "timestamp": "2026-02-08T15:19:32Z",
+    "type": "completed",
+    "agent": "email-digest-v2",
+    "message": "Second Brain: email digest widget on home page"
+  },
+  {
+    "timestamp": "2026-02-08T15:19:14Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
+    "id": "backfill-35-8685",
+    "timestamp": "2026-02-08T15:19:00Z",
+    "agent": "insight-extraction",
+    "type": "completed",
+    "message": "Second Brain: Insight extraction widget \u2014 auto-surfaces patterns from activity feed",
+    "title": "Second Brain: Insight extraction widget \u2014 auto-surfaces patterns from activity feed",
+    "summary": "Second Brain: Insight extraction widget \u2014 auto-surfaces patterns from activity feed",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T15:18:39Z",
+    "type": "completed",
+    "agent": "insight-extraction",
+    "message": "Second Brain: insight extraction widget on home page"
+  },
+  {
+    "timestamp": "2026-02-08T15:18:21Z",
+    "type": "completed",
+    "agent": "calendar-widget",
+    "message": "Second Brain: calendar widget on home page"
+  },
+  {
+    "id": "backfill-34-86902",
+    "timestamp": "2026-02-08T15:18:00Z",
+    "agent": "calendar-widget",
+    "type": "completed",
+    "message": "Second Brain: Calendar widget on home page \u2014 next 48h events grouped by day",
+    "title": "Second Brain: Calendar widget on home page \u2014 next 48h events grouped by day",
+    "summary": "Second Brain: Calendar widget on home page \u2014 next 48h events grouped by day",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T15:17:52Z",
+    "type": "completed",
+    "agent": "email-digest",
+    "message": "Second Brain: email digest widget on home page"
+  },
+  {
+    "timestamp": "2026-02-08T08:27:24Z",
+    "type": "completed",
+    "agent": "page-transitions",
+    "message": "Second Brain: smooth page transitions"
+  },
+  {
+    "id": "backfill-33-88712",
+    "timestamp": "2026-02-08T08:27:00Z",
+    "agent": "nexus-pricing",
+    "type": "completed",
+    "message": "Nexus: PRICING.md spec \u2014 3 tiers, Stripe integration, revenue projections",
+    "title": "Nexus: PRICING.md spec \u2014 3 tiers, Stripe integration, revenue projections",
+    "summary": "Nexus: PRICING.md spec \u2014 3 tiers, Stripe integration, revenue projections",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-27-64744",
+    "timestamp": "2026-02-08T08:25:00Z",
+    "agent": "page-transitions",
+    "type": "completed",
+    "message": "Second Brain: Smooth page transitions (fade/slide, 250ms ease-out)",
+    "title": "Second Brain: Smooth page transitions (fade/slide, 250ms ease-out)",
+    "summary": "Second Brain: Smooth page transitions (fade/slide, 250ms ease-out)",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T08:23:48Z",
+    "type": "completed",
+    "agent": "nexus-api-spec",
+    "message": "Nexus: API specification complete"
+  },
+  {
+    "timestamp": "2026-02-08T08:22:05Z",
+    "type": "completed",
+    "agent": "offline-indicator",
+    "message": "Offline indicator: Show banner when app is offline, cache critical pages for PWA. Uses navigator.onLine API, Material Symbols icons, theme colors (#154733, #FEE123). Enhanced SW to cache /memory, /vault, /tasks routes."
+  },
+  {
+    "id": "backfill-26-81750",
+    "timestamp": "2026-02-08T08:20:00Z",
+    "agent": "offline-indicator",
+    "type": "completed",
+    "message": "Second Brain: Offline indicator + service worker caching (v3)",
+    "title": "Second Brain: Offline indicator + service worker caching (v3)",
+    "summary": "Second Brain: Offline indicator + service worker caching (v3)",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-32-86805",
+    "timestamp": "2026-02-08T08:20:00Z",
+    "agent": "nexus-specs",
+    "type": "completed",
+    "message": "Nexus: INTEGRATIONS.md spec \u2014 LinkedIn, X, Substack, Medium, IG, TikTok APIs",
+    "title": "Nexus: INTEGRATIONS.md spec \u2014 LinkedIn, X, Substack, Medium, IG, TikTok APIs",
+    "summary": "Nexus: INTEGRATIONS.md spec \u2014 LinkedIn, X, Substack, Medium, IG, TikTok APIs",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T08:19:20Z",
+    "type": "completed",
+    "agent": "error-boundaries",
+    "message": "Implemented comprehensive error boundaries with themed UI - catches runtime errors gracefully on all pages"
+  },
+  {
+    "timestamp": "2026-02-08T08:18:33Z",
+    "type": "completed",
+    "agent": "mobile-bottom-nav",
+    "message": "Mobile bottom nav complete - Shows Home, Tasks, Docs, Chat, Activity with Material Symbols icons. Only visible on mobile (md:hidden), highlights active page, matches theme (dark green #154733, gold #FEE123). Already committed in a6d1624."
+  },
+  {
+    "timestamp": "2026-02-08T08:17:03Z",
+    "type": "completed",
+    "agent": "loading-skeletons",
+    "message": "Implemented skeleton loaders across all Second Brain pages - Created reusable Skeleton component system with shimmer/pulse animations - Added page-specific skeletons (TaskCard, ActivityItem, StatCard, EmailItem, QuickLink) - Created loading.tsx files for dashboard, tasks, activity, inbox, deals, agents, and docs - Updated inbox page with improved skeleton loader - All skeletons match theme (dark green #154733, gold #FEE123) - Mobile-first responsive design - Build passes successfully"
+  },
+  {
+    "id": "backfill-25-91075",
+    "timestamp": "2026-02-08T08:15:00Z",
+    "agent": "mobile-bottom-nav",
+    "type": "completed",
+    "message": "Second Brain: Mobile bottom navigation bar for PWA",
+    "title": "Second Brain: Mobile bottom navigation bar for PWA",
+    "summary": "Second Brain: Mobile bottom navigation bar for PWA",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-31-96953",
+    "timestamp": "2026-02-08T08:15:00Z",
+    "agent": "nexus-specs",
+    "type": "completed",
+    "message": "Nexus: PROMPTS.md spec \u2014 AI prompt templates for multi-platform adaptation",
+    "title": "Nexus: PROMPTS.md spec \u2014 AI prompt templates for multi-platform adaptation",
+    "summary": "Nexus: PROMPTS.md spec \u2014 AI prompt templates for multi-platform adaptation",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T08:14:17Z",
+    "type": "completed",
+    "agent": "command-palette",
+    "message": "Enhanced command palette with vault docs and tasks search - Cmd+K now searches across app pages, vault documents, and tasks with mobile-first design"
+  },
+  {
+    "timestamp": "2026-02-08T08:10:13Z",
+    "type": "completed",
+    "agent": "breadcrumb-nav",
+    "message": "Enhanced breadcrumb navigation - Now shows actual document titles with icons, handles dynamic routes properly, mobile-first design with theme colors"
+  },
+  {
+    "id": "backfill-24-62986",
+    "timestamp": "2026-02-08T08:10:00Z",
+    "agent": "error-boundaries",
+    "type": "completed",
+    "message": "Second Brain: Error boundaries \u2014 themed error pages instead of white screens",
+    "title": "Second Brain: Error boundaries \u2014 themed error pages instead of white screens",
+    "summary": "Second Brain: Error boundaries \u2014 themed error pages instead of white screens",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-30-18392",
+    "timestamp": "2026-02-08T08:10:00Z",
+    "agent": "nexus-specs",
+    "type": "completed",
+    "message": "Nexus: API.md spec \u2014 52KB, all endpoints with request/response shapes",
+    "title": "Nexus: API.md spec \u2014 52KB, all endpoints with request/response shapes",
+    "summary": "Nexus: API.md spec \u2014 52KB, all endpoints with request/response shapes",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T08:07:32Z",
+    "type": "completed",
+    "agent": "nexus-auth",
+    "message": "Nexus: built auth flow + database schema + dashboard layout"
+  },
+  {
+    "timestamp": "2026-02-08T08:05:36Z",
+    "type": "completed",
+    "agent": "nexus-compose",
+    "message": "Nexus: built compose flow with platform previews and AI adaptation"
+  },
+  {
+    "id": "backfill-23-34605",
+    "timestamp": "2026-02-08T08:05:00Z",
+    "agent": "loading-skeletons",
+    "type": "completed",
+    "message": "Second Brain: Loading skeletons on all 7 pages \u2014 gold shimmer on dark green",
+    "title": "Second Brain: Loading skeletons on all 7 pages \u2014 gold shimmer on dark green",
+    "summary": "Second Brain: Loading skeletons on all 7 pages \u2014 gold shimmer on dark green",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-29-40200",
+    "timestamp": "2026-02-08T08:05:00Z",
+    "agent": "nexus-specs",
+    "type": "completed",
+    "message": "Nexus: DATABASE.md spec \u2014 10 tables, RLS policies, vector support",
+    "title": "Nexus: DATABASE.md spec \u2014 10 tables, RLS policies, vector support",
+    "summary": "Nexus: DATABASE.md spec \u2014 10 tables, RLS policies, vector support",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T08:04:58Z",
+    "type": "completed",
+    "agent": "vault-doc-creation",
+    "message": "Vault doc creation UI complete: New doc button on dashboard + tags field on creation form. Build passes. Deploy blocked by rate limit (100/day) - will auto-deploy on next push."
+  },
+  {
+    "id": "backfill-22-33910",
+    "timestamp": "2026-02-08T08:00:00Z",
+    "agent": "command-palette",
+    "type": "completed",
+    "message": "Second Brain: Command palette (Cmd+K) \u2014 searches docs, tasks, and pages",
+    "title": "Second Brain: Command palette (Cmd+K) \u2014 searches docs, tasks, and pages",
+    "summary": "Second Brain: Command palette (Cmd+K) \u2014 searches docs, tasks, and pages",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T07:58:38Z",
+    "type": "completed",
+    "agent": "related-notes-sidebar",
+    "message": "Related Notes sidebar deployed \u2014 Shows related vault docs on activity items, and related activity on vault docs. Fixed edit route structure (/doc/edit/[...slug]). Live at brain.6eyes.dev"
+  },
+  {
+    "id": "backfill-21-42530",
+    "timestamp": "2026-02-08T07:50:00Z",
+    "agent": "breadcrumb-nav",
+    "type": "completed",
+    "message": "Second Brain: Breadcrumb navigation with document titles and category icons",
+    "title": "Second Brain: Breadcrumb navigation with document titles and category icons",
+    "summary": "Second Brain: Breadcrumb navigation with document titles and category icons",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T07:48:06Z",
+    "type": "completed",
+    "agent": "task-age-indicators",
+    "message": "Task age indicators \u2014 color-coded by time in column (green <1d, yellow 1-3d, red >3d)"
+  },
+  {
+    "timestamp": "2026-02-08T07:44:59Z",
+    "type": "completed",
+    "agent": "task-creation",
+    "message": "Task creation from UI \u2014 add new tasks via modal form"
+  },
+  {
+    "timestamp": "2026-02-08T07:40:16Z",
+    "type": "completed",
+    "agent": "task-drag-drop",
+    "message": "Task board drag-and-drop \u2014 tasks can now be moved between columns"
+  },
+  {
+    "id": "backfill-20-75357",
+    "timestamp": "2026-02-08T07:40:00Z",
+    "agent": "task-age",
+    "type": "completed",
+    "message": "Second Brain: Task age indicators \u2014 color-coded by staleness",
+    "title": "Second Brain: Task age indicators \u2014 color-coded by staleness",
+    "summary": "Second Brain: Task age indicators \u2014 color-coded by staleness",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-19-18831",
+    "timestamp": "2026-02-08T07:35:00Z",
+    "agent": "task-create",
+    "type": "completed",
+    "message": "Second Brain: Task creation UI with modal form",
+    "title": "Second Brain: Task creation UI with modal form",
+    "summary": "Second Brain: Task creation UI with modal form",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T07:31:46Z",
+    "type": "completed",
+    "agent": "live-agent-status",
+    "message": "Live agent status on /agents page \u2014 shows running agents with elapsed time"
+  },
+  {
+    "id": "backfill-18-283",
+    "timestamp": "2026-02-08T07:30:00Z",
+    "agent": "task-dnd",
+    "type": "completed",
+    "message": "Second Brain: Task board drag-and-drop between columns",
+    "title": "Second Brain: Task board drag-and-drop between columns",
+    "summary": "Second Brain: Task board drag-and-drop between columns",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-17-70870",
+    "timestamp": "2026-02-08T07:25:00Z",
+    "agent": "vault-creation",
+    "type": "completed",
+    "message": "Second Brain: Vault doc creation from dashboard \u2014 New Doc button with frontmatter",
+    "title": "Second Brain: Vault doc creation from dashboard \u2014 New Doc button with frontmatter",
+    "summary": "Second Brain: Vault doc creation from dashboard \u2014 New Doc button with frontmatter",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-16-31522",
+    "timestamp": "2026-02-08T07:20:00Z",
+    "agent": "doc-edit-route",
+    "type": "completed",
+    "message": "Second Brain: Doc edit route restored for in-browser editing",
+    "title": "Second Brain: Doc edit route restored for in-browser editing",
+    "summary": "Second Brain: Doc edit route restored for in-browser editing",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T07:19:18Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
+    "timestamp": "2026-02-08T07:16:35Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
+    "id": "backfill-15-83904",
+    "timestamp": "2026-02-08T07:15:00Z",
+    "agent": "related-notes-v2",
+    "type": "completed",
+    "message": "Second Brain: Related Notes sidebar on activity feed and vault docs",
+    "title": "Second Brain: Related Notes sidebar on activity feed and vault docs",
+    "summary": "Second Brain: Related Notes sidebar on activity feed and vault docs",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "timestamp": "2026-02-08T07:13:04Z",
+    "type": "alert",
+    "agent": "auto-deploy",
+    "message": "Second Brain build FAILED"
+  },
+  {
+    "id": "backfill-14-90998",
+    "timestamp": "2026-02-08T07:10:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: live agent status on /agents page",
+    "title": "Second Brain: live agent status on /agents page",
+    "summary": "Second Brain: live agent status on /agents page",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-13-59973",
+    "timestamp": "2026-02-08T07:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: Heartbeat \u2192 Brain sync \u2014 task auto-sync, dashboard widget",
+    "title": "Second Brain: Heartbeat \u2192 Brain sync \u2014 task auto-sync, dashboard widget",
+    "summary": "Second Brain: Heartbeat \u2192 Brain sync \u2014 task auto-sync, dashboard widget",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-28-12733",
+    "timestamp": "2026-02-08T07:00:00Z",
+    "agent": "nexus-auth",
+    "type": "completed",
+    "message": "Nexus: Auth + database foundation \u2014 Supabase schema, signup/login, dashboard layout",
+    "title": "Nexus: Auth + database foundation \u2014 Supabase schema, signup/login, dashboard layout",
+    "summary": "Nexus: Auth + database foundation \u2014 Supabase schema, signup/login, dashboard layout",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T06:55:00Z",
     "type": "completed",
     "agent": "what-matters-widget",
@@ -36,6 +1012,20 @@
     "message": "Unified Search Page built: search bar with debounce, source filter pills (Notes/Email/Tasks/Agents), result cards with highlighting and relevance scores, loading skeletons, empty states, and Cmd+K global keyboard shortcut. Mock data ready for API swap."
   },
   {
+    "id": "backfill-12-83297",
+    "timestamp": "2026-02-08T06:30:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: 'What Matters Now' widget \u2014 hot topics, action items, stale alerts",
+    "title": "Second Brain: 'What Matters Now' widget \u2014 hot topics, action items, stale alerts",
+    "summary": "Second Brain: 'What Matters Now' widget \u2014 hot topics, action items, stale alerts",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T06:27:04Z",
     "type": "alert",
     "agent": "auto-deploy",
@@ -60,6 +1050,20 @@
     "message": "Wired heartbeats into Second Brain: task auto-sync, heartbeat status dashboard widget, stale task detection"
   },
   {
+    "id": "backfill-11-47904",
+    "timestamp": "2026-02-08T06:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: semantic search API deployed via Cloud Function",
+    "title": "Second Brain: semantic search API deployed via Cloud Function",
+    "summary": "Second Brain: semantic search API deployed via Cloud Function",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "timestamp": "2026-02-08T05:44:55Z",
     "type": "completed",
     "agent": "vercel-fix",
@@ -70,6 +1074,20 @@
     "type": "completed",
     "agent": "memory-archival",
     "message": "MEMORY.md archival: slimmed from 315 to 140 lines, created archive system with 5 topic files"
+  },
+  {
+    "id": "backfill-10-4542",
+    "timestamp": "2026-02-08T05:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: Wire all APIs \u2014 BigQuery analytics, context-aware chat, live dashboard insights",
+    "title": "Second Brain: Wire all APIs \u2014 BigQuery analytics, context-aware chat, live dashboard insights",
+    "summary": "Second Brain: Wire all APIs \u2014 BigQuery analytics, context-aware chat, live dashboard insights",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
     "timestamp": "2026-02-08T04:51:34Z",
@@ -366,6 +1384,48 @@
     "message": "Rotated all API keys \u2014 scrubbed hardcoded secrets from 3 source files and 11 docs. New gateway + hook tokens deployed."
   },
   {
+    "id": "backfill-9-89223",
+    "timestamp": "2026-02-07T23:45:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: mobile PWA polish + functional settings page",
+    "title": "Second Brain: mobile PWA polish + functional settings page",
+    "summary": "Second Brain: mobile PWA polish + functional settings page",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-8-80485",
+    "timestamp": "2026-02-07T23:30:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: full-text vault search + smart command bar",
+    "title": "Second Brain: full-text vault search + smart command bar",
+    "summary": "Second Brain: full-text vault search + smart command bar",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
+    "id": "backfill-7-75603",
+    "timestamp": "2026-02-07T23:00:00Z",
+    "agent": "paul",
+    "type": "completed",
+    "message": "Second Brain: route chat through OpenClaw gateway for real Paul access",
+    "title": "Second Brain: route chat through OpenClaw gateway for real Paul access",
+    "summary": "Second Brain: route chat through OpenClaw gateway for real Paul access",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
+  },
+  {
     "id": "9288eb4f",
     "timestamp": "2026-02-07T22:45:54Z",
     "agent": "Book Chapters 1-4 deep edit \u2014 tightened, cut redundancy, improved transitions",
@@ -399,422 +1459,31 @@
     "status": "done"
   },
   {
-    "id": "17a08208",
-    "timestamp": "2026-02-07T21:46:09Z",
-    "agent": "Nexus multi-platform upgrade complete \u2014 all 7 features now platform-aware for LinkedIn, X, Substack, Medium, Instagram, TikTok. Platform intelligence engine, per-platform voice profiles, comparison view, platform command center.",
-    "type": "update",
-    "title": "Activity update",
-    "summary": "",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "496b7037",
-    "timestamp": "2026-02-07T21:35:37Z",
-    "agent": "nexus-product",
-    "type": "deployed",
-    "title": "\ud83d\ude80 Nexus: Full Product Build",
-    "summary": "AI composer, 9-metric scoring engine, brain dump, account analyzer, reply engine, voice learning \u2014 all functional with Gemini API",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "e83a1da4",
-    "timestamp": "2026-02-07T21:07:05Z",
-    "agent": "sync-index",
-    "type": "completed",
-    "title": "\ud83d\udccb Drive Sync + Vault Index",
-    "summary": "Google Drive synced, vault index created, task board updated",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "384593b9",
-    "timestamp": "2026-02-07T21:06:50Z",
-    "agent": "auth",
-    "type": "deployed",
-    "title": "\ud83d\udd10 Authentication",
-    "summary": "PIN-based login, session management, route protection \u2014 Second Brain is now secured",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "6b3e8d75",
-    "timestamp": "2026-02-07T21:03:06Z",
-    "agent": "nexus-deploy",
-    "type": "deployed",
-    "title": "\ud83d\ude80 Nexus Deployed",
-    "summary": "Nexus content engine live with README and clean deployment",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "25a4f7ad",
-    "timestamp": "2026-02-07T21:01:28Z",
-    "agent": "divorce-book",
-    "type": "completed",
-    "title": "\ud83d\udcd6 Divorce Book Assembled",
-    "summary": "All 16 chapters from 26 source files assembled into divorce-manuscript.md",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "174cf2bc",
-    "timestamp": "2026-02-07T20:59:53Z",
-    "agent": "ui-audit",
-    "type": "deployed",
-    "title": "\ud83d\udd0d Full UI Audit & Polish",
-    "summary": "All 11 pages audited for consistency, mobile responsiveness, and build cleanliness",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "94d86675",
-    "timestamp": "2026-02-07T20:56:57Z",
-    "agent": "marketing-copy",
-    "type": "completed",
-    "title": "\ud83d\udcdd README + Marketing Copy",
-    "summary": "Professional README, landing page copy, and Product Hunt launch materials",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "de4ab240",
-    "timestamp": "2026-02-07T20:53:21Z",
-    "agent": "book-ch5",
-    "type": "completed",
-    "title": "\ud83d\udcd6 Book Chapter 5: Sales",
-    "summary": "Chapter 5 written/edited in manuscript.md \u2014 career, rejection, identity",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "be8c502e",
-    "timestamp": "2026-02-07T20:50:04Z",
-    "agent": "erate-batch2",
-    "type": "completed",
-    "title": "\ud83c\udfaf E-Rate Batch 2: Top 10 Leads",
-    "summary": "Research dossiers for 10 priority E-Rate leads with talking points",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "585fef33",
-    "timestamp": "2026-02-07T20:46:52Z",
-    "agent": "settings-polish",
-    "type": "deployed",
-    "title": "\u2699\ufe0f Settings + Dashboard Polish",
-    "summary": "Settings page with config, connected services, and polished home dashboard",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "d966bae4",
-    "timestamp": "2026-02-07T20:42:00Z",
-    "agent": "knowledge-graph",
-    "type": "deployed",
-    "title": "\ud83d\udd78\ufe0f Knowledge Graph",
-    "summary": "Interactive visualization of vault document connections at brain.6eyes.dev/graph",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "e03d1934",
-    "timestamp": "2026-02-07T20:40:45Z",
-    "agent": "pwa",
-    "type": "deployed",
-    "title": "\ud83d\udcf1 PWA + Notifications",
-    "summary": "Second Brain is now installable on mobile with offline support and notification banners",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "436a2134",
-    "timestamp": "2026-02-07T20:37:16Z",
-    "agent": "analytics",
-    "type": "deployed",
-    "title": "\ud83d\udcca Analytics Dashboard",
-    "summary": "Agent performance, task metrics, and activity timeline at brain.6eyes.dev/analytics",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "4ad37a1a",
-    "timestamp": "2026-02-07T20:33:20Z",
-    "agent": "chat-ui",
-    "type": "deployed",
-    "title": "\ud83d\udcac Chat Interface",
-    "summary": "Talk to Paul directly from Second Brain at brain.6eyes.dev/chat",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "74376ec8",
-    "timestamp": "2026-02-07T20:30:31Z",
-    "agent": "tunnel",
-    "type": "completed",
-    "title": "\ud83d\udd17 Gateway Tunnel",
-    "summary": "OpenClaw Gateway now reachable from the internet \u2014 Second Brain bridge fully operational",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "402bdf5c",
-    "timestamp": "2026-02-07T20:24:56Z",
-    "agent": "gateway-bridge",
-    "type": "deployed",
-    "title": "\ud83c\udf09 Gateway Bridge",
-    "summary": "Second Brain can now proxy commands to OpenClaw Gateway \u2014 the foundation for real agent orchestration",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "65cc5321",
-    "timestamp": "2026-02-07T20:22:35Z",
-    "agent": "yc-pitch",
-    "type": "completed",
-    "title": "\ud83d\udcca YC Pitch Materials",
-    "summary": "Pitch deck outline, investor one-pager, and financial model for TatT",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "08504e84",
-    "timestamp": "2026-02-07T20:13:27Z",
-    "agent": "nexus-redesign",
-    "type": "completed",
-    "title": "\ud83c\udfa8 Nexus Stitch UI Rebuild",
-    "summary": "Integrated Stitch-generated designs into Nexus \u2014 landing page and dashboard",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "abc78322",
-    "timestamp": "2026-02-07T20:12:31Z",
-    "agent": "tatt-redesign",
-    "type": "completed",
-    "title": "\ud83c\udfa8 TatT Stitch UI Rebuild",
-    "summary": "Integrated Stitch-generated designs \u2014 new landing page and app screen for YC demo",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "d65714e1",
-    "timestamp": "2026-02-07T20:12:25Z",
-    "agent": "agent-dashboard",
-    "type": "deployed",
-    "title": "\ud83e\udd16 Agent Management Dashboard",
-    "summary": "Live agent status, auto-refresh, running agent cards at brain.6eyes.dev/agents",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "3decfaf6",
-    "timestamp": "2026-02-07T20:11:53Z",
-    "agent": "platform-spec",
-    "type": "completed",
-    "title": "\ud83d\udccb Second Brain Platform Spec",
-    "summary": "Full product spec for Second Brain as an AI orchestration platform \u2014 the better OpenClaw",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "d7e29986",
-    "timestamp": "2026-02-07T20:09:12Z",
-    "agent": "gog-automations",
-    "type": "completed",
-    "title": "\ud83d\udd04 Google Workspace Automations",
-    "summary": "Gmail triage, calendar sync, and Drive watch scripts built and tested",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "e00a3d16",
-    "timestamp": "2026-02-07T18:08:44Z",
+    "id": "backfill-6-2120",
+    "timestamp": "2026-02-07T22:30:00Z",
     "agent": "paul",
     "type": "completed",
-    "title": "\ud83d\udd27 Infrastructure Day",
-    "summary": "Installed Homebrew, Gemini CLI, gog CLI, ClawHub. Authenticated Google ADC + Stitch API. Generated 9 Stitch UI screens (5 Second Brain, 2 Nexus, 2 TatT).",
-    "output": [],
-    "tags": [],
-    "status": "done"
+    "message": "Second Brain: interactive Kanban task board",
+    "title": "Second Brain: interactive Kanban task board",
+    "summary": "Second Brain: interactive Kanban task board",
+    "tags": [
+      "backfill"
+    ],
+    "status": "done",
+    "source": "vault"
   },
   {
-    "id": "e7824ec2",
-    "timestamp": "2026-02-07T18:08:44Z",
+    "id": "backfill-5-3872",
+    "timestamp": "2026-02-07T22:00:00Z",
     "agent": "paul",
-    "type": "deployed",
-    "title": "\ud83c\udfa8 Second Brain Stitch Redesign",
-    "summary": "Rebuilt all 5 pages with Stitch-generated designs. Oregon Ducks theme, Space Grotesk font, gold accents. Live at brain.6eyes.dev",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "71432db9",
-    "timestamp": "2026-02-07T18:08:44Z",
-    "agent": "paul",
-    "type": "deployed",
-    "title": "\ud83e\udde0 Second Brain AI Agent",
-    "summary": "Added /ask page powered by Gemini. Indexes all 53 vault docs. Ask your brain questions and get answers with source citations. Live at brain.6eyes.dev/ask",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "9a620e1c",
-    "timestamp": "2026-02-07T18:08:44Z",
-    "agent": "paul",
-    "type": "fixed",
-    "title": "\ud83d\udee1\ufe0f Heartbeat Spiral Fix",
-    "summary": "Upgraded heartbeat model to Gemini 3 Pro. Simplified HEARTBEAT.md to prevent incoherent responses. Added safety valve for overwhelming context.",
-    "output": [],
-    "tags": [],
-    "status": "done"
-  },
-  {
-    "id": "act-006",
-    "timestamp": "2026-02-07T15:30:00.000Z",
-    "agent": "linkedin-buddy-build",
     "type": "completed",
-    "title": "\ud83d\udd17 Nexus: LinkedIn Content Tool \u2014 Spec & MVP",
-    "summary": "Full product spec, competitive research, and MVP build for LinkedIn-focused AI content tool. Researched Taplio, AuthoredUp, Shield, Supergrow. Created SPEC.md (11 features, 5 personas, pricing tiers), COMPETITORS.md (gap analysis), ARCHITECTURE.md (tech stack, AI pipeline, database schema). Built Next.js 16 MVP with Oregon Ducks theme: landing page, dashboard, content composer, post history. All pages building successfully.",
-    "output": [
-      "projects/linkedin-buddy/SPEC.md",
-      "projects/linkedin-buddy/COMPETITORS.md",
-      "projects/linkedin-buddy/ARCHITECTURE.md",
-      "projects/linkedin-buddy/app/src/app/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/compose/page.tsx",
-      "projects/linkedin-buddy/app/src/app/dashboard/history/page.tsx"
-    ],
+    "message": "Second Brain: live agent dashboard with gateway session data",
+    "title": "Second Brain: live agent dashboard with gateway session data",
+    "summary": "Second Brain: live agent dashboard with gateway session data",
     "tags": [
-      "dev",
-      "product",
-      "ai",
-      "linkedin"
+      "backfill"
     ],
-    "status": "done"
-  },
-  {
-    "id": "act-005",
-    "timestamp": "2026-02-07T15:23:00.000Z",
-    "agent": "second-brain-redesign",
-    "type": "completed",
-    "title": "\ud83e\udd86 Oregon Ducks \u00d7 Nike Theme Redesign",
-    "summary": "Complete redesign of Second Brain with Oregon Ducks/Nike theme. Forest green (#154733) + gold (#FEE123) color palette. Mobile-first responsive: hamburger menu, bottom nav, touch-friendly 44px tap targets. Updated 7 files: globals.css, layout.tsx, Sidebar.tsx, page.tsx, tasks/page.tsx, activity/page.tsx, deals/page.tsx, doc page. Build passes, deployed to Vercel.",
-    "output": [
-      "src/app/globals.css",
-      "src/components/Sidebar.tsx",
-      "src/app/page.tsx",
-      "src/app/tasks/page.tsx",
-      "src/app/activity/page.tsx",
-      "src/app/deals/page.tsx"
-    ],
-    "tags": [
-      "dev",
-      "design",
-      "second-brain"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-004",
-    "timestamp": "2026-02-07T15:08:00.000Z",
-    "agent": "yc-research",
-    "type": "completed",
-    "title": "YCombinator Prep Package",
-    "summary": "Created comprehensive YC prep: application guide (S26 deadline Feb 9!), TatT vs IRL analysis (TatT wins 10-0), market sizing ($60B+ TAM), draft YC application, competitive moat analysis, and 1-minute demo video script. 6 documents, ~52KB total.",
-    "output": [
-      "projects/yc-prep/README.md",
-      "projects/yc-prep/01-yc-application-guide.md",
-      "projects/yc-prep/02-tatt-vs-irl-analysis.md",
-      "projects/yc-prep/03-tatt-market-analysis.md",
-      "projects/yc-prep/04-draft-yc-application.md",
-      "projects/yc-prep/05-competitive-moat-analysis.md"
-    ],
-    "tags": [
-      "yc",
-      "founder",
-      "tatt"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-003",
-    "timestamp": "2026-02-07T15:07:00.000Z",
-    "agent": "workhorse",
-    "type": "completed",
-    "title": "TatT Test Suite + TypeScript Migration",
-    "summary": "Fixed TatT test suite \u2014 129 tests now passing (was 0 runnable). Migrated 7 files to TypeScript: Button, Input, Card components + 4 services with proper types. Also added 18 tests to Second Brain. 6 commits pushed to main.",
-    "output": [
-      "repos/TatT/src/components/ui/Button.tsx",
-      "repos/TatT/src/components/ui/Input.tsx",
-      "repos/TatT/src/components/ui/Card.tsx"
-    ],
-    "tags": [
-      "dev",
-      "tatt",
-      "testing"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-002",
-    "timestamp": "2026-02-07T14:53:00.000Z",
-    "agent": "nightshift-erate-outreach",
-    "type": "completed",
-    "title": "E-Rate Outreach: 3 Fortinet-Tagged Leads",
-    "summary": "Researched and drafted personalized outreach emails for Ogallala NE (FortiGate 600F, Feb 24 deadline), Parkston SD (FortiGate 70G + Meraki displacement, Feb 26), and Deshler NE (43x FortiSwitch, Mar 3). Includes research dossier with contact details, LinkedIn profiles, and revenue estimates (~$120-170K total).",
-    "output": [
-      "projects/sled-toolkit/erate-fortinet-outreach/ogallala-ne-fortigate-600f.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/parkston-sd-fortigate-70g.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/deshler-ne-fortiswitch-148f.md",
-      "projects/sled-toolkit/erate-fortinet-outreach/research-summary.md"
-    ],
-    "tags": [
-      "sled",
-      "erate",
-      "revenue"
-    ],
-    "status": "done"
-  },
-  {
-    "id": "act-001",
-    "timestamp": "2026-02-07T14:52:00.000Z",
-    "agent": "nightshift-book-ch4",
-    "type": "completed",
-    "title": "Book Chapter 4: Kids (and Other Tiny Terrorists)",
-    "summary": "Drafted ~2,200 words covering the Pinterest parenting lie, the roommate phase, and the reality of raising tiny terrorists. Matches Samson's voice from the working copy.",
-    "output": [
-      "projects/book-toolkit/drafts/chapter-04-kids.md"
-    ],
-    "tags": [
-      "book"
-    ],
-    "status": "done"
+    "status": "done",
+    "source": "vault"
   }
 ]

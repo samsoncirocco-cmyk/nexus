@@ -372,10 +372,10 @@
     "id": "600",
     "title": "Fix Notion API key compromise",
     "description": "Key exposed Feb 6. Needs rotation.",
-    "column": "todo",
+    "column": "done",
     "priority": "low",
     "createdAt": "2026-02-06T21:50:00.000Z",
-    "updatedAt": "2026-02-07T15:15:00.000Z",
+    "updatedAt": "2026-02-08T15:24:19.240304+00:00",
     "tags": [
       "security"
     ],
@@ -572,11 +572,12 @@
   },
   {
     "title": "🔧 TatT: Fix 20 broken imports (agent running)",
-    "column": "in-progress",
+    "column": "done",
     "priority": "critical",
     "tags": [
       "tatt"
-    ]
+    ],
+    "updatedAt": "2026-02-08T15:17:59.997912+00:00"
   },
   {
     "title": "🔧 TatT: Error boundaries + demo mode (agent running)",

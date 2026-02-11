@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { getTaskAge, getAgeBorderClass, getAgeTextClass } from '@/lib/tasks';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -528,8 +530,6 @@ function KbdHint() {
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
-  const [dragOverCol, setDragOverCol] = useState<Column | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ message: string; onConfirm: () => void } | null>(null);
@@ -700,26 +700,31 @@ export default function TasksPage() {
     });
   };
 
-  // Drag handlers
-  const handleDragStart = (e: React.DragEvent, id: string) => {
-    setDraggedTaskId(id); e.dataTransfer.effectAllowed = 'move';
-  };
-  const handleDragOver = (e: React.DragEvent, col: Column) => {
-    e.preventDefault(); e.dataTransfer.dropEffect = 'move';
-    setDragOverCol(col);
-  };
-  const handleDragLeave = () => { setDragOverCol(null); };
-  const handleDrop = (e: React.DragEvent, targetColumn: Column) => {
-    e.preventDefault();
-    setDragOverCol(null);
-    if (!draggedTaskId) return;
-    const task = tasks.find(t => t.id === draggedTaskId);
-    if (task && task.column !== targetColumn) {
-      const updated = tasks.map(t => t.id === draggedTaskId ? { ...t, column: targetColumn, updatedAt: new Date().toISOString() } : t);
-      persistTasks(updated, `Moved "${task.title}" to ${targetColumn}`);
-      syncToApi('PUT', { id: draggedTaskId, column: targetColumn, updatedAt: new Date().toISOString() });
+  // Drag-and-drop handler
+  const handleDragEnd = (result: DropResult) => {
+    const { source, destination, draggableId } = result;
+    
+    // Dropped outside any droppable or in the same position
+    if (!destination || (source.droppableId === destination.droppableId && source.index === destination.index)) {
+      return;
     }
-    setDraggedTaskId(null);
+
+    const sourceColumn = source.droppableId as Column;
+    const destColumn = destination.droppableId as Column;
+    const taskId = draggableId;
+    const task = tasks.find(t => t.id === taskId);
+
+    if (!task) return;
+
+    // Update task column
+    const updated = tasks.map(t => 
+      t.id === taskId 
+        ? { ...t, column: destColumn, updatedAt: new Date().toISOString() } 
+        : t
+    );
+
+    persistTasks(updated, `Moved "${task.title}" to ${destColumn}`);
+    syncToApi('PUT', { id: taskId, column: destColumn, updatedAt: new Date().toISOString() });
   };
 
   const moveTask = (taskId: string, direction: 'left' | 'right') => {
@@ -851,6 +856,8 @@ export default function TasksPage() {
   };
 
   if (loading) {
+    // Use Next.js loading.tsx (TasksLoading component)
+    // This fallback shouldn't normally show, but provides consistency
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-primary font-bold animate-pulse">Loading tasks...</div>
@@ -899,74 +906,92 @@ export default function TasksPage() {
         />
 
         {/* Kanban Board */}
-        <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
-          {COLUMNS.map((col) => {
-            const columnTasks = sortTasks(filteredTasks.filter(t => t.column === col), sortMode);
-            const isDragOver = dragOverCol === col;
-            return (
-              <div
-                key={col}
-                className="flex flex-col min-w-[280px] md:min-w-[300px] lg:min-w-[320px] flex-1"
-                onDragOver={(e) => handleDragOver(e, col)}
-                onDragLeave={handleDragLeave}
-                onDrop={(e) => handleDrop(e, col)}
-              >
-                {/* Column Header */}
-                <div className={`flex items-center gap-3 px-4 py-3 rounded-t-xl bg-gradient-to-b ${colGradients[col]} border border-primary/10 border-b-0`}>
-                  <span className="material-symbols-outlined text-primary" style={{ fontSize: 18 }}>
-                    {colIcons[col]}
-                  </span>
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-foreground flex-1">{col}</h2>
-                  <CountBadge count={columnTasks.length} />
-                </div>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
+            {COLUMNS.map((col) => {
+              const columnTasks = sortTasks(filteredTasks.filter(t => t.column === col), sortMode);
+              return (
+                <div
+                  key={col}
+                  className="flex flex-col min-w-[280px] md:min-w-[300px] lg:min-w-[320px] flex-1"
+                >
+                  {/* Column Header */}
+                  <div className={`flex items-center gap-3 px-4 py-3 rounded-t-xl bg-gradient-to-b ${colGradients[col]} border border-primary/10 border-b-0`}>
+                    <span className="material-symbols-outlined text-primary" style={{ fontSize: 18 }}>
+                      {colIcons[col]}
+                    </span>
+                    <h2 className="text-sm font-bold uppercase tracking-wider text-foreground flex-1">{col}</h2>
+                    <CountBadge count={columnTasks.length} />
+                  </div>
 
-                {/* Column Body */}
-                <div className={`flex-1 bg-card-dark rounded-b-xl p-3 border border-t-0 min-h-[300px] md:min-h-[400px] space-y-3 transition-colors duration-200 ${isDragOver ? 'border-primary/30 bg-primary/5' : 'border-white/5'}`}>
-                  {columnTasks.map((task, idx) => {
-                    const colIdx = COLUMNS.indexOf(col);
-                    const canMoveLeft = colIdx > 0;
-                    const canMoveRight = colIdx < COLUMNS.length - 1;
-                    const isDone = col === 'Done';
-                    const dueBadge = getDueBadge(task.dueDate, task.column);
-                    const isSelected = selectedIds.has(task.id);
-                    return (
-                    <div
-                      key={task.id}
-                      draggable={!batchMode}
-                      onDragStart={(e) => handleDragStart(e, task.id)}
-                      onClick={batchMode ? () => toggleSelect(task.id) : undefined}
-                      className={`rounded-xl border border-l-4 ${priorityStripe[task.priority]} bg-bg-dark p-4 card-hover group animate-slide-up ${batchMode ? 'cursor-pointer' : ''} ${isSelected ? 'border-primary/50 ring-1 ring-primary/30' : 'border-white/10'} ${idx === 0 ? '' : idx === 1 ? 'delay-1' : idx === 2 ? 'delay-2' : idx === 3 ? 'delay-3' : idx === 4 ? 'delay-4' : 'delay-5'}`}
-                    >
-                      {/* Selection checkbox + Priority badge + due date + edit */}
-                      <div className="flex items-center gap-2 mb-3 flex-wrap">
-                        {batchMode && (
-                          <div className={`size-5 rounded border flex items-center justify-center transition-all shrink-0 ${isSelected ? 'bg-primary border-primary' : 'border-border'}`}>
-                            {isSelected && <span className="material-symbols-outlined text-bg-dark" style={{ fontSize: 14 }}>check</span>}
-                          </div>
-                        )}
-                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${getPriorityStyles(task.priority)}`}>
-                          {task.priority}
-                        </span>
-                        {dueBadge}
-                        {task.assignedTo && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-foreground-muted bg-white/5 px-2 py-0.5 rounded-full">
-                            <span className="material-symbols-outlined" style={{ fontSize: 11 }}>smart_toy</span>
-                            {getAgentLabel(task.assignedTo)}
-                          </span>
-                        )}
-                        {!batchMode && (
-                          <button
-                            onClick={() => openEditModal(task)}
-                            className="ml-auto text-foreground-muted hover:text-primary transition-colors p-1"
-                          >
-                            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>edit</span>
-                          </button>
-                        )}
-                      </div>
+                  {/* Column Body with Droppable */}
+                  <Droppable droppableId={col}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={`flex-1 bg-card-dark rounded-b-xl p-3 border border-t-0 min-h-[300px] md:min-h-[400px] space-y-3 transition-colors duration-200 ${snapshot.isDraggingOver ? 'border-primary/30 bg-primary/5' : 'border-white/5'}`}
+                      >
+                        {columnTasks.map((task, idx) => {
+                          const colIdx = COLUMNS.indexOf(col);
+                          const canMoveLeft = colIdx > 0;
+                          const canMoveRight = colIdx < COLUMNS.length - 1;
+                          const isDone = col === 'Done';
+                          const dueBadge = getDueBadge(task.dueDate, task.column);
+                          const isSelected = selectedIds.has(task.id);
+                          const taskAge = getTaskAge(task, task.column);
+                          return (
+                            <Draggable key={task.id} draggableId={task.id} index={idx} isDragDisabled={batchMode}>
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  onClick={batchMode ? () => toggleSelect(task.id) : undefined}
+                                  className={`relative rounded-xl border border-l-4 bg-bg-dark p-4 group animate-slide-up ${batchMode ? 'cursor-pointer' : 'cursor-grab active:cursor-grabbing'} ${isSelected ? 'border-primary/50 ring-1 ring-primary/30' : 'border-white/10'} ${snapshot.isDragging ? 'shadow-2xl shadow-primary/20 scale-105 rotate-2' : 'card-hover'} transition-all ${idx === 0 ? '' : idx === 1 ? 'delay-1' : idx === 2 ? 'delay-2' : idx === 3 ? 'delay-3' : idx === 4 ? 'delay-4' : 'delay-5'}`}
+                                  style={{ borderLeftColor: taskAge.borderColor }}
+                                >
+                                  {/* Drag handle (mobile visual indicator) + Selection checkbox + Priority badge + due date + edit */}
+                                  <div className="flex items-center gap-2 mb-3 flex-wrap">
+                                    {!batchMode && (
+                                      <div className="md:hidden text-foreground-muted pointer-events-none">
+                                        <span className="material-symbols-outlined" style={{ fontSize: 18 }}>drag_handle</span>
+                                      </div>
+                                    )}
+                                    {batchMode && (
+                                      <div className={`size-5 rounded border flex items-center justify-center transition-all shrink-0 ${isSelected ? 'bg-primary border-primary' : 'border-border'}`}>
+                                        {isSelected && <span className="material-symbols-outlined text-bg-dark" style={{ fontSize: 14 }}>check</span>}
+                                      </div>
+                                    )}
+                                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full border ${getPriorityStyles(task.priority)}`}>
+                                      {task.priority}
+                                    </span>
+                                    {/* Task age indicator */}
+                                    <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${getAgeTextClass(taskAge)} bg-opacity-15`} style={{ backgroundColor: `${taskAge.color}20` }}>
+                                      <span className="material-symbols-outlined" style={{ fontSize: 11 }}>schedule</span>
+                                      <span className="hidden sm:inline">{taskAge.label} in {task.column}</span>
+                                      <span className="sm:hidden">{taskAge.label}</span>
+                                    </span>
+                                    {dueBadge}
+                                    {task.assignedTo && (
+                                      <span className="inline-flex items-center gap-1 text-[10px] font-medium text-foreground-muted bg-white/5 px-2 py-0.5 rounded-full">
+                                        <span className="material-symbols-outlined" style={{ fontSize: 11 }}>smart_toy</span>
+                                        {getAgentLabel(task.assignedTo)}
+                                      </span>
+                                    )}
+                                    {!batchMode && (
+                                      <button
+                                        onClick={() => openEditModal(task)}
+                                        className="ml-auto text-foreground-muted hover:text-primary transition-colors p-1"
+                                      >
+                                        <span className="material-symbols-outlined" style={{ fontSize: 16 }}>edit</span>
+                                      </button>
+                                    )}
+                                  </div>
 
-                      <h3 className={`font-semibold group-hover:text-primary transition-colors mb-2 leading-snug ${isDone ? 'line-through text-foreground-muted' : 'text-foreground'}`}>
-                        {task.title}
-                      </h3>
+                                  <h3 className={`font-semibold group-hover:text-primary transition-colors mb-2 leading-snug ${isDone ? 'line-through text-foreground-muted' : 'text-foreground'}`}>
+                                    {task.title}
+                                  </h3>
                       {task.description && (
                         <p className="text-xs text-foreground-muted line-clamp-2 mb-3">{task.description}</p>
                       )}
@@ -1004,45 +1029,51 @@ export default function TasksPage() {
                         </div>
                       )}
 
-                      {/* Action buttons (hidden in batch mode) */}
-                      {!batchMode && (
-                        <div className="flex items-center gap-2 pt-2 border-t border-white/5">
-                          <button
-                            onClick={() => moveTask(task.id, 'left')}
-                            disabled={!canMoveLeft}
-                            className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
-                          >
-                            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>arrow_back</span>
-                          </button>
-                          {!isDone && (
-                            <button
-                              onClick={() => markDone(task.id)}
-                              className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold bg-primary/20 text-primary hover:bg-primary hover:text-bg-dark transition-all active:scale-95"
-                            >
-                              <span className="material-symbols-outlined" style={{ fontSize: 14 }}>check</span>
-                              Done
-                            </button>
-                          )}
-                          <button
-                            onClick={() => moveTask(task.id, 'right')}
-                            disabled={!canMoveRight}
-                            className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
-                          >
-                            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>arrow_forward</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                    );
-                  })}
-                  {columnTasks.length === 0 && (
-                    <EmptyColumn column={col} />
-                  )}
+                                  {/* Action buttons (hidden in batch mode) */}
+                                  {!batchMode && (
+                                    <div className="flex items-center gap-2 pt-2 border-t border-white/5">
+                                      <button
+                                        onClick={() => moveTask(task.id, 'left')}
+                                        disabled={!canMoveLeft}
+                                        className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                                      >
+                                        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>arrow_back</span>
+                                      </button>
+                                      {!isDone && (
+                                        <button
+                                          onClick={() => markDone(task.id)}
+                                          className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-bold bg-primary/20 text-primary hover:bg-primary hover:text-bg-dark transition-all active:scale-95"
+                                        >
+                                          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>check</span>
+                                          Done
+                                        </button>
+                                      )}
+                                      <button
+                                        onClick={() => moveTask(task.id, 'right')}
+                                        disabled={!canMoveRight}
+                                        className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                                      >
+                                        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>arrow_forward</span>
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                        {columnTasks.length === 0 && (
+                          <EmptyColumn column={col} />
+                        )}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </DragDropContext>
 
         <KbdHint />
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import LiveAgents from '@/components/LiveAgents';
 
 /* ─── Types ─── */
 interface AgentEntry {
@@ -897,6 +898,9 @@ export default function AgentsPage() {
 
       {/* Main Content */}
       <main className="flex-1 px-6 pb-32 space-y-4">
+        {/* Live Agents Status */}
+        <LiveAgents />
+
         {/* Performance Metrics Panel */}
         {showMetrics && agents.length > 0 && (
           <div className="rounded-xl border border-primary/15 bg-gradient-to-br from-secondary-dark/60 to-bg-dark p-5 animate-slide-up">
