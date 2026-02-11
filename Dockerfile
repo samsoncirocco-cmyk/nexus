@@ -21,6 +21,9 @@ FROM node:18-alpine AS runner
 
 WORKDIR /app
 
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
 # Create a non-root user and switch to it
 # The default Next.js standalone server runs as root, which is insecure.
 # Creating a dedicated non-root user 'nextjs'
@@ -35,6 +38,10 @@ COPY --from=builder --chown=nextjs:nextjs /app/package.json ./package.json
 
 # Expose the port Next.js serves on
 EXPOSE 3000
+
+# Healthcheck for the frontend
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000 || exit 1
 
 # Command to run the Next.js standalone server
 CMD ["node", "server.js"]

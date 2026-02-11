@@ -1,0 +1,54 @@
+# kubernetes/backend.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        # Replace with your actual image path from your container registry
+        image: your-dockerhub-username/second-brain-backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          # Example of using secrets in Kubernetes
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: DATABASE_URL
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: backend-secrets
+              key: OPENAI_API_KEY
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+# kubernetes/backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: ClusterIP # Internal service, not exposed externally
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000

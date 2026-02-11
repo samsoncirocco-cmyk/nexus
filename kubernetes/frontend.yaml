@@ -1,0 +1,47 @@
+# kubernetes/frontend.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 2 # Example of running 2 replicas for scalability
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        # Replace with your actual image path from your container registry
+        image: your-dockerhub-username/second-brain-frontend:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NEXT_PUBLIC_BACKEND_URL
+          value: "http://backend-service:8000" # K8s service name
+        - name: NODE_ENV
+          value: "production"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+# kubernetes/frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: LoadBalancer # Exposes the service externally
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 80 # External port
+    targetPort: 3000 # Container port

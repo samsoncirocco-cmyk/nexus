@@ -21,6 +21,14 @@ services:
       - backend
     # Start the dev server
     command: npm run dev
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   backend:
     build:
@@ -30,16 +38,24 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app # Hot-reloading for backend code
+    env_file:
+      - .env # Load environment variables from .env file
     environment:
       # These variables are examples, adjust as needed
       - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
-      # Example of pulling from host .env for local development
-      # Add other sensitive keys here, or manage them via a .env file loaded by compose
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # OPENAI_API_KEY is now loaded from the .env file
     depends_on:
       - db
     # Override CMD in Dockerfile for development if needed, otherwise use Dockerfile's CMD
     # command: python execution/run_local.py # Or whatever command starts your dev server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   db:
     image: postgres:13-alpine # A lightweight PostgreSQL image for development
@@ -56,6 +72,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
 volumes:
   db_data:

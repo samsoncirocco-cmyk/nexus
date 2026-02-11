@@ -5,10 +5,10 @@ FROM python:3.9-slim-buster
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies if any (none explicitly listed for now, but good practice)
-# RUN apt-get update && apt-get install -y --no-install-recommends 
-#     build-essential 
-#     && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file and install Python dependencies
 COPY requirements.txt .
@@ -23,6 +23,10 @@ USER appuser
 
 # Expose the port the app runs on (e.g., 8000 for many Python web frameworks)
 EXPOSE 8000
+
+# Healthcheck for the backend
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
 
 # Command to run the application (assuming run_local.py is the entry point)
 # This might need adjustment based on the actual entry point of your backend application
