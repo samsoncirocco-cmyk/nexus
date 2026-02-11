@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src # Hot-reloading for frontend code
+      - ./public:/app/public # Hot-reloading for public assets
+      - ./next.config.ts:/app/next.config.ts # For config changes
+      - ./package.json:/app/package.json # For dependency changes
+      - ./package-lock.json:/app/package-lock.json # For dependency changes
+    environment:
+      # These variables are examples, adjust as needed
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:8000
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    # Start the dev server
+    command: npm run dev
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app # Hot-reloading for backend code
+    environment:
+      # These variables are examples, adjust as needed
+      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+      # Example of pulling from host .env for local development
+      # Add other sensitive keys here, or manage them via a .env file loaded by compose
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - db
+    # Override CMD in Dockerfile for development if needed, otherwise use Dockerfile's CMD
+    # command: python execution/run_local.py # Or whatever command starts your dev server
+
+  db:
+    image: postgres:13-alpine # A lightweight PostgreSQL image for development
+    ports:
+      - "5432:5432" # Expose for local access if needed (e.g., via a DB client)
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/postgresql/data # Persistent data for the database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:

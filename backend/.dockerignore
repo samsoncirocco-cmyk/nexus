@@ -1,0 +1,14 @@
+# Backend .dockerignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+env/
+venv/
+.git
+.gitignore
+.env
+.env.development
+.vscode/
+*.egg-info/
