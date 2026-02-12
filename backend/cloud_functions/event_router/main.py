@@ -18,6 +18,12 @@ NLP_TABLE_ID = (
 )
 
 
+def insert_events_idempotent(table_id, rows):
+    """Insert rows using event_id as BigQuery insertId for dedupe on retries."""
+    row_ids = [r.get("event_id") or None for r in rows]
+    return bq.insert_rows_json(table_id, rows, row_ids=row_ids)
+
+
 def route_event(event, context):
     """
     Pub/Sub Cloud Function: Consumes events and routes to appropriate destinations.
@@ -37,7 +43,7 @@ def route_event(event, context):
         logger.info(f"Routing event {event_id}: {source}/{event_type}")
 
         # Ensure event is in BigQuery (idempotent - deduplication by event_id)
-        errors = bq.insert_rows_json(f"{PROJECT_ID}.openclaw.events", [data])
+        errors = insert_events_idempotent(f"{PROJECT_ID}.openclaw.events", [data])
         if errors:
             logger.error(f"BigQuery insert errors for {event_id}: {errors}")
         else:
@@ -60,7 +66,9 @@ def route_event(event, context):
                         "language": enrichment.get("language"),
                         "raw_text": raw_text,
                     }
-                    nlp_errors = bq.insert_rows_json(NLP_TABLE_ID, [nlp_row])
+                    nlp_errors = bq.insert_rows_json(
+                        NLP_TABLE_ID, [nlp_row], row_ids=[f"{event_id}-nlp"]
+                    )
                     if nlp_errors:
                         logger.error(
                             f"BigQuery NLP insert errors for {event_id}: {nlp_errors}"

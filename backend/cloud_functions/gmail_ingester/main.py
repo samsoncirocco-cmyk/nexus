@@ -21,6 +21,12 @@ TOPIC = os.environ.get("PUBSUB_TOPIC") or f"projects/{PROJECT_ID}/topics/opencla
 TABLE_ID = os.environ.get("BQ_EVENTS_TABLE") or f"{PROJECT_ID}.openclaw.events"
 
 
+def insert_events_idempotent(table_id, rows):
+    """Insert rows using event_id as BigQuery insertId for dedupe on retries."""
+    row_ids = [r.get("event_id") or None for r in rows]
+    return bq.insert_rows_json(table_id, rows, row_ids=row_ids)
+
+
 def extract_body_text(payload):
     """Recursively extract plain text body from Gmail message payload."""
     body_text = ""
@@ -132,7 +138,7 @@ def gmail_webhook(request):
                     logger.error(f"Failed to publish {event['event_id']} to Pub/Sub: {pub_error}")
 
                 # Also write to BigQuery (idempotent insert)
-                errors = bq.insert_rows_json(TABLE_ID, [event])
+                errors = insert_events_idempotent(TABLE_ID, [event])
                 if errors:
                     logger.error(f"BigQuery insert errors for {event['event_id']}: {errors}")
                 else:

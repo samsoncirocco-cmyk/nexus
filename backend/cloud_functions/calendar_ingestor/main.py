@@ -1,7 +1,7 @@
 import base64
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 
 from google.auth import default
@@ -20,6 +20,13 @@ PROJECT_ID = os.environ.get("PROJECT_ID") or os.environ.get("GOOGLE_PROJECT_ID")
 TOPIC = os.environ.get("PUBSUB_TOPIC") or f"projects/{PROJECT_ID}/topics/openclaw-events"
 TABLE_ID = os.environ.get("BQ_EVENTS_TABLE") or f"{PROJECT_ID}.openclaw.events"
 CALENDAR_ID = os.environ.get("CALENDAR_ID", "primary")
+CALENDAR_LOOKBACK_SECONDS = int(os.environ.get("CALENDAR_LOOKBACK_SECONDS", "900"))
+
+
+def insert_events_idempotent(table_id, rows):
+    """Insert rows using event_id as BigQuery insertId for dedupe on retries."""
+    row_ids = [r.get("event_id") or None for r in rows]
+    return bq.insert_rows_json(table_id, rows, row_ids=row_ids)
 
 
 def extract_meeting_link(event):
@@ -76,8 +83,12 @@ def normalize_calendar_event(cal_event, change_type="updated"):
     recurrence = cal_event.get("recurrence", [])
     recurring_event_id = cal_event.get("recurringEventId", "")
 
+    update_marker = cal_event.get("updated") or start_time or datetime.utcnow().isoformat() + "Z"
+    stable_marker = "".join(ch for ch in update_marker if ch.isalnum())
+    versioned_event_id = f"calendar-{event_id}-{stable_marker[:32]}"
+
     return {
-        "event_id": f"calendar-{event_id}",
+        "event_id": versioned_event_id,
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "agent_id": None,
         "event_type": "calendar_created" if change_type == "created" else "webhook_received",
@@ -137,15 +148,15 @@ def calendar_webhook(request):
         # Fetch recent calendar events via Calendar API
         service = build("calendar", "v3", credentials=credentials)
 
-        # Use sync token if stored, otherwise fetch recent events
-        # For push notifications, fetch events updated in the last few minutes
-        now = datetime.utcnow()
-        time_min = (now.replace(second=0, microsecond=0)).isoformat() + "Z"
+        # Fetch a short lookback window to avoid dropping updates when push delivery is delayed.
+        # Duplicates from overlap are absorbed by idempotent insertIds (event_id).
+        updated_min = (
+            datetime.utcnow() - timedelta(seconds=CALENDAR_LOOKBACK_SECONDS)
+        ).replace(microsecond=0).isoformat() + "Z"
 
-        # Fetch updated events using updatedMin to get recently changed events
         events_result = service.events().list(
             calendarId=CALENDAR_ID,
-            updatedMin=request.headers.get("X-Goog-Updated", time_min),
+            updatedMin=updated_min,
             singleEvents=True,
             orderBy="updated",
             maxResults=50,
@@ -173,7 +184,7 @@ def calendar_webhook(request):
                 logger.error(f"Failed to publish {event['event_id']} to Pub/Sub: {pub_error}")
 
             # Write to BigQuery (idempotent insert)
-            errors = bq.insert_rows_json(TABLE_ID, [event])
+            errors = insert_events_idempotent(TABLE_ID, [event])
             if errors:
                 logger.error(f"BigQuery insert errors for {event['event_id']}: {errors}")
             else:
@@ -237,7 +248,7 @@ def setup_calendar_watch(request):
             }),
             "processed": True,
         }
-        bq.insert_rows_json(TABLE_ID, [watch_event])
+        insert_events_idempotent(TABLE_ID, [watch_event])
 
         return json.dumps({
             "channel_id": channel_id,

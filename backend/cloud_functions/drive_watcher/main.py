@@ -24,6 +24,7 @@ TOPIC = os.environ.get("PUBSUB_TOPIC") or f"projects/{PROJECT_ID}/topics/opencla
 TABLE_ID = os.environ.get("BQ_EVENTS_TABLE") or f"{PROJECT_ID}.openclaw.events"
 VISION_TABLE_ID = os.environ.get("BQ_VISION_TABLE") or f"{PROJECT_ID}.openclaw.vision_enrichment"
 NLP_TABLE_ID = os.environ.get("BQ_NLP_TABLE") or f"{PROJECT_ID}.openclaw.nlp_enrichment"
+TOKEN_FILE = os.environ.get("DRIVE_TOKEN_FILE", "/tmp/drive_start_page_token.txt")
 
 # MIME types that trigger Vision API enrichment
 IMAGE_MIME_TYPES = {"image/jpeg", "image/png", "image/gif", "image/bmp", "image/webp"}
@@ -64,6 +65,39 @@ def normalize_drive_event(file_metadata, event_type):
         ),
         "processed": False,
     }
+
+
+def insert_events_idempotent(table_id, rows):
+    """Insert rows using event_id as BigQuery insertId for dedupe on retries."""
+    row_ids = [r.get("event_id") or None for r in rows]
+    return bq.insert_rows_json(table_id, rows, row_ids=row_ids)
+
+
+def load_saved_page_token():
+    """Load Drive start page token from env or warm-instance file."""
+    token = os.environ.get("DRIVE_START_PAGE_TOKEN")
+    if token:
+        return token
+    try:
+        if os.path.exists(TOKEN_FILE):
+            with open(TOKEN_FILE, "r", encoding="utf-8") as f:
+                stored = f.read().strip()
+                if stored:
+                    return stored
+    except Exception as exc:
+        logger.warning(f"Failed reading token file {TOKEN_FILE}: {exc}")
+    return None
+
+
+def persist_page_token(token):
+    """Persist token for subsequent warm invocations."""
+    if not token:
+        return
+    try:
+        with open(TOKEN_FILE, "w", encoding="utf-8") as f:
+            f.write(token)
+    except Exception as exc:
+        logger.warning(f"Failed writing token file {TOKEN_FILE}: {exc}")
 
 
 def enrich_with_vision(file_id, drive_service, event_id):
@@ -199,11 +233,11 @@ def drive_webhook(request):
 
         # Get the saved start page token (stored in env or fetched fresh)
         # In production, persist this token in Datastore/Firestore between invocations
-        start_token = os.environ.get("DRIVE_START_PAGE_TOKEN")
+        start_token = load_saved_page_token()
         if not start_token:
             token_response = drive_service.changes().getStartPageToken().execute()
             start_token = token_response.get("startPageToken")
-            logger.warning("No saved page token, using current. May miss changes.")
+            logger.warning("No saved page token, using current baseline token.")
 
         changes_response = drive_service.changes().list(
             pageToken=start_token,
@@ -242,7 +276,7 @@ def drive_webhook(request):
                 logger.error(f"Failed to publish {event['event_id']} to Pub/Sub: {pub_error}")
 
             # Also write to BigQuery (idempotent insert)
-            errors = bq.insert_rows_json(TABLE_ID, [event])
+            errors = insert_events_idempotent(TABLE_ID, [event])
             if errors:
                 logger.error(f"BigQuery insert errors for {event['event_id']}: {errors}")
             else:
@@ -263,7 +297,9 @@ def drive_webhook(request):
                             "dominant_colors": vision_result["dominant_colors"],
                             "safe_search": vision_result["safe_search"],
                         }
-                        v_errors = bq.insert_rows_json(VISION_TABLE_ID, [vision_row])
+                        v_errors = bq.insert_rows_json(
+                            VISION_TABLE_ID, [vision_row], row_ids=[f"{event['event_id']}-vision"]
+                        )
                         if v_errors:
                             logger.error(f"BigQuery vision insert errors for {file_id}: {v_errors}")
                         else:
@@ -286,7 +322,9 @@ def drive_webhook(request):
                                 "language": None,
                                 "raw_text": ocr_text[:10000],
                             }
-                            nlp_errors = bq.insert_rows_json(NLP_TABLE_ID, [nlp_row])
+                            nlp_errors = bq.insert_rows_json(
+                                NLP_TABLE_ID, [nlp_row], row_ids=[f"{event['event_id']}-ocr"]
+                            )
                             if nlp_errors:
                                 logger.error(f"BigQuery NLP insert errors for OCR {file_id}: {nlp_errors}")
                             else:
@@ -309,7 +347,9 @@ def drive_webhook(request):
                             "language": None,
                             "raw_text": extracted_text[:10000],
                         }
-                        nlp_errors = bq.insert_rows_json(NLP_TABLE_ID, [nlp_row])
+                        nlp_errors = bq.insert_rows_json(
+                            NLP_TABLE_ID, [nlp_row], row_ids=[f"{event['event_id']}-doc"]
+                        )
                         if nlp_errors:
                             logger.error(f"BigQuery NLP insert errors for doc {file_id}: {nlp_errors}")
                         else:
@@ -320,7 +360,8 @@ def drive_webhook(request):
         # Store the new page token for next invocation
         new_token = changes_response.get("newStartPageToken")
         if new_token:
-            logger.info(f"New start page token: {new_token} (persist this for next call)")
+            persist_page_token(new_token)
+            logger.info(f"Persisted new start page token to {TOKEN_FILE}")
 
         logger.info(f"Successfully processed {len(events)} Drive changes")
         return "OK", 200
