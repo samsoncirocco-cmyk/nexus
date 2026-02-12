@@ -5,7 +5,10 @@
 The Content Adaptation Engine transforms a single idea into platform-native content for 6 platforms: LinkedIn, X/Twitter, Substack, Medium, Instagram, and TikTok.
 
 **DOE Layer:** Directive (SOP)  
-**Execution Script:** `execution/content/adapt_content.py`
+**Execution Scripts:** 
+- `execution/content/adapt_content.py` - Main adaptation engine
+- `execution/content/prompt_builder.py` - Platform-specific prompt builder
+- `execution/content/voice_analyzer.py` - Voice analysis module
 
 ---
 
@@ -685,5 +688,158 @@ When adaptation quality degrades:
 
 ---
 
-**Last Updated:** 2026-02-08  
-**Version:** 1.0
+## Execution Layer Reference
+
+### Module Structure
+
+```
+execution/content/
+├── __init__.py              # Module exports
+├── adapt_content.py         # Main adaptation engine (19KB)
+├── prompt_builder.py        # Platform-specific prompts (14KB)
+└── voice_analyzer.py        # Voice analysis module (17KB)
+```
+
+### `adapt_content.py` - Main Engine
+
+**Key Classes:**
+- `AdaptationRequest` - Input request dataclass with cache key generation
+- `AdaptationResult` - Output result dataclass
+- `PlatformContent` - Per-platform content structure
+- `ContentCache` - In-memory LRU cache with TTL (default 1 hour)
+- `AIAdapter` - Claude primary / GPT-4 fallback handler
+- `ContentAdaptationEngine` - Main orchestration class
+
+**Main Function:**
+```python
+async def adapt_content(
+    idea: str,
+    platforms: List[str],
+    user_id: str,
+    voice_profile: Optional[Dict] = None,
+    voice_style: str = "professional",
+    include_hooks: bool = True,
+    include_ctas: bool = True,
+    context: Optional[Dict] = None
+) -> Dict[str, Any]
+```
+
+**Features:**
+- Parallel processing for all platforms
+- SHA256-based caching for identical requests
+- Claude 3.5 Sonnet primary, GPT-4 fallback
+- Input validation and error handling
+- Comprehensive platform content structures
+
+### `prompt_builder.py` - Prompt Builder
+
+**Key Classes:**
+- `PlatformRules` - Platform-specific rules dataclass
+- `PromptBuilder` - Prompt construction with voice/context integration
+
+**Usage:**
+```python
+builder = PromptBuilder()
+prompt = builder.build_prompt(
+    idea="Your idea",
+    platform="linkedin",
+    voice_style="professional",
+    voice_profile=None,
+    include_hooks=True,
+    include_ctas=True,
+    context={"industry": "b2b_saas"}
+)
+```
+
+**Supported Platforms:**
+- `linkedin` - Professional feed posts, 800-1300 chars
+- `x` / `twitter` - Punchy tweets or threads
+- `substack` - Long-form narrative (1500-2500 words)
+- `medium` - Structured analytical (800-1500 words)
+- `instagram` - Carousel + caption format
+- `tiktok` - 15-60 second video scripts
+
+### `voice_analyzer.py` - Voice Analysis
+
+**Key Classes:**
+- `VoiceCharacteristics` - Structured voice profile
+- `VoiceAnalyzer` - Analysis engine
+
+**Extracted Characteristics:**
+| Metric | Range | Description |
+|--------|-------|-------------|
+| `formality` | 0.0-1.0 | Formal vs casual language |
+| `avg_sentence_length` | words | Average sentence length |
+| `emoji_usage` | none/minimal/moderate/heavy | Emoji frequency |
+| `humor_level` | 0.0-1.0 | Detected humor markers |
+| `contraction_usage` | 0.0-1.0 | Contraction frequency |
+| `question_frequency` | per 100 sentences | Question usage |
+| `exclamation_frequency` | per 100 sentences | Exclamation usage |
+| `capitalization_style` | standard/title/lower/mixed | Cap preferences |
+| `vocabulary_richness` | 0.0-1.0 | Type-token ratio |
+| `tone_descriptors` | list | Auto-generated labels |
+
+**Usage:**
+```python
+analyzer = VoiceAnalyzer()
+profile = analyzer.analyze_voice(sample_posts)
+# Returns: Dict with all characteristics
+
+# Compare two voices
+similarity = analyzer.compare_voices(profile1, profile2)
+# Returns: 0.0-1.0 similarity score
+```
+
+### Environment Variables
+
+Required:
+```bash
+ANTHROPIC_API_KEY=sk-ant-...
+OPENAI_API_KEY=sk-...
+```
+
+### API Response Example
+
+```json
+{
+  "status": "success",
+  "adaptations": {
+    "linkedin": {
+      "platform": "linkedin",
+      "content": "Most B2B sales teams...\n\n#B2BSales #SaaS",
+      "char_count": 1240,
+      "estimated_engagement": "high",
+      "hashtag_count": 4
+    },
+    "x": {
+      "platform": "x",
+      "content": "The biggest mistake...",
+      "char_count": 278,
+      "estimated_engagement": "high",
+      "is_thread": false,
+      "thread_options": []
+    }
+  },
+  "meta": {
+    "processing_time_ms": 2450,
+    "platforms_processed": 2,
+    "platforms_requested": 2,
+    "cached": false,
+    "errors": null
+  },
+  "error": null
+}
+```
+
+### Error Handling
+
+The engine handles:
+- **API timeouts**: Exponential backoff (1s, 2s, 4s), then fallback
+- **Rate limits**: Automatic queue with retry
+- **Invalid inputs**: Validation before API calls
+- **Partial failures**: Returns successful platforms with error list
+
+---
+
+**Last Updated:** 2026-02-11  
+**Version:** 1.1
