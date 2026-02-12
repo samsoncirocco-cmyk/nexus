@@ -2,6 +2,13 @@
 """
 LinkedIn OAuth 2.0 Flow Handler
 Deterministic execution for LinkedIn OAuth operations.
+
+Functions:
+- initiate_auth(user_id) → returns auth URL
+- handle_callback(code, state) → exchanges for tokens
+- refresh_token(refresh_token) → new access_token
+- post_content(access_token, content) → publishes post
+- get_profile(access_token) → user profile data
 """
 
 import argparse
@@ -12,19 +19,70 @@ import base64
 import json
 import sys
 from datetime import datetime, timedelta
-from urllib.parse import urlencode, parse_qs, urlparse
+from urllib.parse import urlencode
 import requests
-from typing import Optional, Dict, Any
+from typing import Dict, Any, Optional
+from dataclasses import dataclass
 
 # Load environment variables
 LINKEDIN_CLIENT_ID = os.getenv('LINKEDIN_CLIENT_ID')
 LINKEDIN_CLIENT_SECRET = os.getenv('LINKEDIN_CLIENT_SECRET')
-LINKEDIN_REDIRECT_URI = os.getenv('LINKEDIN_REDIRECT_URI', 'http://localhost:3000/api/auth/linkedin/callback')
+LINKEDIN_REDIRECT_URI = os.getenv('LINKEDIN_REDIRECT_URI', 'http://localhost:3000/api/platforms/linkedin/callback')
+
+# LinkedIn OAuth endpoints
 LINKEDIN_AUTH_URL = 'https://www.linkedin.com/oauth/v2/authorization'
 LINKEDIN_TOKEN_URL = 'https://www.linkedin.com/oauth/v2/accessToken'
 
+# LinkedIn API endpoints
+LINKEDIN_API_BASE = 'https://api.linkedin.com/v2'
 
-def generate_pkce() -> Dict[str, str]:
+
+@dataclass
+class PKCEData:
+    """PKCE code verifier and challenge data."""
+    verifier: str
+    challenge: str
+    method: str = 'S256'
+
+
+@dataclass
+class AuthResult:
+    """Result of initiate_auth."""
+    auth_url: str
+    state: str
+    pkce_verifier: str
+    expires_at: str
+
+
+@dataclass
+class TokenResult:
+    """Result of handle_callback or refresh_token."""
+    access_token: str
+    refresh_token: str
+    expires_at: str
+    scope: str
+    token_type: str = 'Bearer'
+
+
+@dataclass
+class PostResult:
+    """Result of post_content."""
+    id: str
+    permalink: str
+    created_at: str
+
+
+@dataclass
+class ProfileResult:
+    """Result of get_profile."""
+    id: str
+    first_name: str
+    last_name: str
+    profile_picture: Optional[str]
+    vanity_name: Optional[str] = None
+
+
+def _generate_pkce() -> PKCEData:
     """Generate PKCE code verifier and challenge."""
     code_verifier = base64.urlsafe_b64encode(
         secrets.token_bytes(32)
@@ -34,26 +92,32 @@ def generate_pkce() -> Dict[str, str]:
         hashlib.sha256(code_verifier.encode()).digest()
     ).decode('utf-8').rstrip('=')
     
-    return {
-        'verifier': code_verifier,
-        'challenge': code_challenge,
-        'method': 'S256'
-    }
+    return PKCEData(verifier=code_verifier, challenge=code_challenge)
 
 
-def initiate_oauth(user_id: str, dry_run: bool = False) -> Dict[str, Any]:
-    """Generate OAuth URL and state for LinkedIn connection."""
-    if dry_run:
-        print(f"[DRY RUN] Would initiate OAuth for user: {user_id}")
-        return {
-            'auth_url': 'https://linkedin.com/oauth/v2/authorization?dry_run=true',
-            'state': 'dry_run_state',
-            'pkce_verifier': 'dry_run_verifier'
-        }
+def initiate_auth(user_id: str) -> AuthResult:
+    """
+    Initiate LinkedIn OAuth flow for a user.
+    
+    Args:
+        user_id: Internal user ID (from Supabase auth)
+        
+    Returns:
+        AuthResult with auth_url, state, pkce_verifier, and expiration
+        
+    Note:
+        Caller must store state and pkce_verifier temporarily (10 min expiry)
+        for retrieval during callback handling.
+    """
+    if not LINKEDIN_CLIENT_ID:
+        raise ValueError("LINKEDIN_CLIENT_ID environment variable not set")
     
     # Generate state and PKCE
     state = secrets.token_urlsafe(32)
-    pkce = generate_pkce()
+    pkce = _generate_pkce()
+    
+    # Required scopes for Nexus
+    scopes = 'r_liteprofile w_member_social'
     
     # Build OAuth URL
     params = {
@@ -61,42 +125,48 @@ def initiate_oauth(user_id: str, dry_run: bool = False) -> Dict[str, Any]:
         'client_id': LINKEDIN_CLIENT_ID,
         'redirect_uri': LINKEDIN_REDIRECT_URI,
         'state': state,
-        'scope': 'r_basicprofile r_organization_social w_member_social r_member_social',
-        'code_challenge': pkce['challenge'],
-        'code_challenge_method': pkce['method']
+        'scope': scopes,
+        'code_challenge': pkce.challenge,
+        'code_challenge_method': pkce.method
     }
     
     auth_url = f"{LINKEDIN_AUTH_URL}?{urlencode(params)}"
     
-    # Store state and verifier temporarily (in production: Redis/DB)
-    # For now, return them for the caller to store
-    return {
-        'auth_url': auth_url,
-        'state': state,
-        'pkce_verifier': pkce['verifier'],
-        'expires_at': (datetime.utcnow() + timedelta(minutes=10)).isoformat()
-    }
-
-
-def exchange_code(code: str, state: str, verifier: str, dry_run: bool = False) -> Dict[str, Any]:
-    """Exchange OAuth code for access token."""
-    if dry_run:
-        print(f"[DRY RUN] Would exchange code: {code[:10]}...")
-        return {
-            'access_token': 'dry_run_token',
-            'refresh_token': 'dry_run_refresh',
-            'expires_in': 5184000,  # 60 days
-            'scope': 'r_basicprofile w_member_social'
-        }
+    expires_at = (datetime.utcnow() + timedelta(minutes=10)).isoformat()
     
-    # Exchange code for token
+    return AuthResult(
+        auth_url=auth_url,
+        state=state,
+        pkce_verifier=pkce.verifier,
+        expires_at=expires_at
+    )
+
+
+def handle_callback(code: str, state: str, pkce_verifier: str) -> TokenResult:
+    """
+    Exchange OAuth authorization code for access and refresh tokens.
+    
+    Args:
+        code: Authorization code from LinkedIn callback
+        state: State parameter from LinkedIn callback (must match stored)
+        pkce_verifier: PKCE code verifier stored during initiate_auth
+        
+    Returns:
+        TokenResult with access_token, refresh_token, expires_at, scope
+        
+    Raises:
+        requests.HTTPError: If LinkedIn returns error response
+    """
+    if not all([LINKEDIN_CLIENT_ID, LINKEDIN_CLIENT_SECRET]):
+        raise ValueError("LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET must be set")
+    
     payload = {
         'grant_type': 'authorization_code',
         'code': code,
         'client_id': LINKEDIN_CLIENT_ID,
         'client_secret': LINKEDIN_CLIENT_SECRET,
         'redirect_uri': LINKEDIN_REDIRECT_URI,
-        'code_verifier': verifier
+        'code_verifier': pkce_verifier
     }
     
     response = requests.post(LINKEDIN_TOKEN_URL, data=payload)
@@ -104,27 +174,34 @@ def exchange_code(code: str, state: str, verifier: str, dry_run: bool = False) -
     
     token_data = response.json()
     
-    # Calculate expiration
-    expires_at = datetime.utcnow() + timedelta(seconds=token_data.get('expires_in', 5184000))
+    # Calculate expiration (default 60 days = 5184000 seconds)
+    expires_in = token_data.get('expires_in', 5184000)
+    expires_at = (datetime.utcnow() + timedelta(seconds=expires_in)).isoformat()
     
-    return {
-        'access_token': token_data['access_token'],
-        'refresh_token': token_data.get('refresh_token'),
-        'expires_at': expires_at.isoformat(),
-        'scope': token_data.get('scope', ''),
-        'token_type': token_data.get('token_type', 'Bearer')
-    }
+    return TokenResult(
+        access_token=token_data['access_token'],
+        refresh_token=token_data.get('refresh_token', ''),
+        expires_at=expires_at,
+        scope=token_data.get('scope', ''),
+        token_type=token_data.get('token_type', 'Bearer')
+    )
 
 
-def refresh_token(refresh_token: str, dry_run: bool = False) -> Dict[str, Any]:
-    """Refresh an expired access token."""
-    if dry_run:
-        print(f"[DRY RUN] Would refresh token: {refresh_token[:10]}...")
-        return {
-            'access_token': 'new_dry_run_token',
-            'refresh_token': refresh_token,
-            'expires_in': 5184000
-        }
+def refresh_token(refresh_token: str) -> TokenResult:
+    """
+    Refresh an expired access token.
+    
+    Args:
+        refresh_token: Valid refresh token from previous OAuth flow
+        
+    Returns:
+        TokenResult with new access_token, refresh_token (may be same or new), expires_at
+        
+    Note:
+        LinkedIn may return a new refresh_token - store both tokens after refresh.
+    """
+    if not all([LINKEDIN_CLIENT_ID, LINKEDIN_CLIENT_SECRET]):
+        raise ValueError("LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET must be set")
     
     payload = {
         'grant_type': 'refresh_token',
@@ -137,60 +214,125 @@ def refresh_token(refresh_token: str, dry_run: bool = False) -> Dict[str, Any]:
     response.raise_for_status()
     
     token_data = response.json()
-    expires_at = datetime.utcnow() + timedelta(seconds=token_data.get('expires_in', 5184000))
     
-    return {
-        'access_token': token_data['access_token'],
-        'refresh_token': token_data.get('refresh_token', refresh_token),
-        'expires_at': expires_at.isoformat(),
-        'scope': token_data.get('scope', '')
-    }
+    expires_in = token_data.get('expires_in', 5184000)
+    expires_at = (datetime.utcnow() + timedelta(seconds=expires_in)).isoformat()
+    
+    # LinkedIn may return new refresh_token or reuse existing
+    new_refresh_token = token_data.get('refresh_token', refresh_token)
+    
+    return TokenResult(
+        access_token=token_data['access_token'],
+        refresh_token=new_refresh_token,
+        expires_at=expires_at,
+        scope=token_data.get('scope', ''),
+        token_type=token_data.get('token_type', 'Bearer')
+    )
 
 
-def get_profile(access_token: str, dry_run: bool = False) -> Dict[str, Any]:
-    """Get LinkedIn profile for connected user."""
-    if dry_run:
-        return {
-            'id': 'dry_run_profile_id',
-            'firstName': 'Test',
-            'lastName': 'User',
-            'profilePicture': None
-        }
+def get_profile(access_token: str) -> ProfileResult:
+    """
+    Get LinkedIn profile for connected user.
     
+    Args:
+        access_token: Valid LinkedIn access token
+        
+    Returns:
+        ProfileResult with id, first_name, last_name, profile_picture, vanity_name
+        
+    Note:
+        Requires r_liteprofile scope
+    """
     headers = {
         'Authorization': f'Bearer {access_token}',
-        'X-Restli-Protocol-Version': '2.0.0'
+        'X-Restli-Protocol-Version': '2.0.0',
+        'LinkedIn-Version': '202304'
     }
     
-    # Get basic profile
+    # Get basic profile using r_liteprofile
     response = requests.get(
-        'https://api.linkedin.com/v2/me',
+        f'{LINKEDIN_API_BASE}/me',
         headers=headers
     )
     response.raise_for_status()
     
-    return response.json()
+    profile_data = response.json()
+    
+    # Extract profile ID
+    person_id = profile_data.get('id', '')
+    
+    # Extract localized name fields
+    first_name = ''
+    last_name = ''
+    
+    localized_first = profile_data.get('localizedFirstName', '')
+    localized_last = profile_data.get('localizedLastName', '')
+    
+    if localized_first:
+        first_name = localized_first
+    if localized_last:
+        last_name = localized_last
+    
+    # Try to get profile picture
+    profile_picture = None
+    profile_picture_data = profile_data.get('profilePicture', {})
+    display_image = profile_picture_data.get('displayImage~', {})
+    elements = display_image.get('elements', [])
+    if elements:
+        identifiers = elements[0].get('identifiers', [])
+        if identifiers:
+            profile_picture = identifiers[0].get('identifier')
+    
+    # Get vanity name (optional, requires additional permissions)
+    vanity_name = profile_data.get('vanityName')
+    
+    return ProfileResult(
+        id=person_id,
+        first_name=first_name,
+        last_name=last_name,
+        profile_picture=profile_picture,
+        vanity_name=vanity_name
+    )
 
 
-def post_content(access_token: str, content: str, dry_run: bool = False) -> Dict[str, Any]:
-    """Post content to LinkedIn."""
-    if dry_run:
-        print(f"[DRY RUN] Would post: {content[:50]}...")
-        return {
-            'id': 'dry_run_post_id',
-            'permalink': 'https://linkedin.com/posts/dry-run',
-            'created_at': datetime.utcnow().isoformat()
-        }
+def post_content(
+    access_token: str, 
+    content: str, 
+    visibility: str = 'PUBLIC',
+    author_urn: Optional[str] = None
+) -> PostResult:
+    """
+    Publish a text post to LinkedIn.
+    
+    Args:
+        access_token: Valid LinkedIn access token
+        content: Post text content (max 3000 chars recommended)
+        visibility: 'PUBLIC' or 'CONNECTIONS' (default: PUBLIC)
+        author_urn: Optional URN (auto-fetched if not provided)
+        
+    Returns:
+        PostResult with id, permalink, and created_at
+        
+    Raises:
+        requests.HTTPError: If LinkedIn returns error (401=unauthorized, 403=missing scope, etc.)
+    """
+    if not access_token:
+        raise ValueError("access_token is required")
+    
+    if not content:
+        raise ValueError("content is required")
     
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json',
-        'X-Restli-Protocol-Version': '2.0.0'
+        'X-Restli-Protocol-Version': '2.0.0',
+        'LinkedIn-Version': '202304'
     }
     
-    # Get profile ID first
-    profile = get_profile(access_token)
-    author_urn = f"urn:li:person:{profile['id']}"
+    # Get author URN if not provided
+    if not author_urn:
+        profile = get_profile(access_token)
+        author_urn = f"urn:li:person:{profile.id}"
     
     payload = {
         'author': author_urn,
@@ -204,72 +346,138 @@ def post_content(access_token: str, content: str, dry_run: bool = False) -> Dict
             }
         },
         'visibility': {
-            'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
+            'com.linkedin.ugc.MemberNetworkVisibility': visibility
         }
     }
     
     response = requests.post(
-        'https://api.linkedin.com/v2/ugcPosts',
+        f'{LINKEDIN_API_BASE}/ugcPosts',
         headers=headers,
         json=payload
     )
     response.raise_for_status()
     
-    return {
-        'id': response.headers.get('X-RestLi-Id', 'unknown'),
-        'permalink': f"https://linkedin.com/posts/{profile['id']}/detail/",
-        'created_at': datetime.utcnow().isoformat()
+    # Extract post ID from response header
+    post_id = response.headers.get('X-RestLi-Id', '')
+    
+    # Build permalink
+    person_id = author_urn.replace('urn:li:person:', '')
+    permalink = f"https://www.linkedin.com/posts/{person_id}/detail/"
+    
+    return PostResult(
+        id=post_id,
+        permalink=permalink,
+        created_at=datetime.utcnow().isoformat()
+    )
+
+
+def revoke_token(access_token: str) -> bool:
+    """
+    Revoke a LinkedIn access token.
+    
+    Args:
+        access_token: Token to revoke
+        
+    Returns:
+        True if successfully revoked
+    """
+    payload = {
+        'token': access_token,
+        'client_id': LINKEDIN_CLIENT_ID,
+        'client_secret': LINKEDIN_CLIENT_SECRET
     }
+    
+    response = requests.post(
+        'https://www.linkedin.com/oauth/v2/revoke',
+        data=payload
+    )
+    
+    return response.status_code == 200
 
 
+# CLI interface for testing
 def main():
     parser = argparse.ArgumentParser(description='LinkedIn OAuth Flow Handler')
-    parser.add_argument('--action', required=True, 
-                       choices=['initiate', 'callback', 'refresh', 'profile', 'post'])
-    parser.add_argument('--user_id', help='User ID for the connection')
-    parser.add_argument('--code', help='OAuth authorization code')
-    parser.add_argument('--state', help='OAuth state parameter')
-    parser.add_argument('--verifier', help='PKCE code verifier')
-    parser.add_argument('--refresh_token', help='Refresh token for token refresh')
-    parser.add_argument('--access_token', help='Access token for API calls')
-    parser.add_argument('--content', help='Content to post')
-    parser.add_argument('--dry-run', action='store_true', help='Run without making actual API calls')
+    subparsers = parser.add_subparsers(dest='command', help='Command to run')
+    
+    # initiate_auth command
+    init_parser = subparsers.add_parser('initiate_auth', help='Initiate OAuth flow')
+    init_parser.add_argument('user_id', help='User ID')
+    
+    # handle_callback command
+    callback_parser = subparsers.add_parser('handle_callback', help='Handle OAuth callback')
+    callback_parser.add_argument('code', help='Authorization code')
+    callback_parser.add_argument('state', help='State parameter')
+    callback_parser.add_argument('pkce_verifier', help='PKCE code verifier')
+    
+    # refresh_token command
+    refresh_parser = subparsers.add_parser('refresh_token', help='Refresh access token')
+    refresh_parser.add_argument('refresh_token', help='Refresh token')
+    
+    # get_profile command
+    profile_parser = subparsers.add_parser('get_profile', help='Get user profile')
+    profile_parser.add_argument('access_token', help='Access token')
+    
+    # post_content command
+    post_parser = subparsers.add_parser('post_content', help='Post content to LinkedIn')
+    post_parser.add_argument('access_token', help='Access token')
+    post_parser.add_argument('content', help='Post content')
+    post_parser.add_argument('--visibility', default='PUBLIC', choices=['PUBLIC', 'CONNECTIONS'])
     
     args = parser.parse_args()
     
+    if not args.command:
+        parser.print_help()
+        sys.exit(1)
+    
     try:
-        if args.action == 'initiate':
-            if not args.user_id:
-                print("Error: --user_id required for initiate", file=sys.stderr)
-                sys.exit(1)
-            result = initiate_oauth(args.user_id, args.dry_run)
+        if args.command == 'initiate_auth':
+            result = initiate_auth(args.user_id)
+            print(json.dumps({
+                'auth_url': result.auth_url,
+                'state': result.state,
+                'pkce_verifier': result.pkce_verifier,
+                'expires_at': result.expires_at
+            }, indent=2))
             
-        elif args.action == 'callback':
-            if not all([args.code, args.state, args.verifier]):
-                print("Error: --code, --state, and --verifier required for callback", file=sys.stderr)
-                sys.exit(1)
-            result = exchange_code(args.code, args.state, args.verifier, args.dry_run)
+        elif args.command == 'handle_callback':
+            result = handle_callback(args.code, args.state, args.pkce_verifier)
+            print(json.dumps({
+                'access_token': result.access_token,
+                'refresh_token': result.refresh_token,
+                'expires_at': result.expires_at,
+                'scope': result.scope,
+                'token_type': result.token_type
+            }, indent=2))
             
-        elif args.action == 'refresh':
-            if not args.refresh_token:
-                print("Error: --refresh_token required for refresh", file=sys.stderr)
-                sys.exit(1)
-            result = refresh_token(args.refresh_token, args.dry_run)
+        elif args.command == 'refresh_token':
+            result = refresh_token(args.refresh_token)
+            print(json.dumps({
+                'access_token': result.access_token,
+                'refresh_token': result.refresh_token,
+                'expires_at': result.expires_at,
+                'scope': result.scope,
+                'token_type': result.token_type
+            }, indent=2))
             
-        elif args.action == 'profile':
-            if not args.access_token:
-                print("Error: --access_token required for profile", file=sys.stderr)
-                sys.exit(1)
-            result = get_profile(args.access_token, args.dry_run)
+        elif args.command == 'get_profile':
+            result = get_profile(args.access_token)
+            print(json.dumps({
+                'id': result.id,
+                'first_name': result.first_name,
+                'last_name': result.last_name,
+                'profile_picture': result.profile_picture,
+                'vanity_name': result.vanity_name
+            }, indent=2))
             
-        elif args.action == 'post':
-            if not all([args.access_token, args.content]):
-                print("Error: --access_token and --content required for post", file=sys.stderr)
-                sys.exit(1)
-            result = post_content(args.access_token, args.content, args.dry_run)
-        
-        print(json.dumps(result, indent=2))
-        
+        elif args.command == 'post_content':
+            result = post_content(args.access_token, args.content, args.visibility)
+            print(json.dumps({
+                'id': result.id,
+                'permalink': result.permalink,
+                'created_at': result.created_at
+            }, indent=2))
+            
     except requests.exceptions.HTTPError as e:
         error_data = {
             'error': 'http_error',
@@ -282,7 +490,7 @@ def main():
         
     except Exception as e:
         error_data = {
-            'error': 'unexpected_error',
+            'error': type(e).__name__,
             'message': str(e)
         }
         print(json.dumps(error_data), file=sys.stderr)

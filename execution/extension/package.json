@@ -1,0 +1,55 @@
+{
+  "name": "nexus-extension",
+  "displayName": "Nexus - AI Content Assistant",
+  "version": "1.0.0",
+  "description": "Save content and compose AI-powered posts for LinkedIn and X",
+  "author": "Nexus Team",
+  "license": "MIT",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "plasmo": "0.89.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "lucide-react": "^0.460.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "typescript": "^5.4.0"
+  },
+  "manifest": {
+    "name": "Nexus - AI Content Assistant",
+    "version": "1.0.0",
+    "description": "Save content and compose AI-powered posts for LinkedIn and X",
+    "permissions": [
+      "storage",
+      "contextMenus",
+      "activeTab",
+      "scripting"
+    ],
+    "host_permissions": [
+      "https://www.linkedin.com/*",
+      "https://x.com/*",
+      "https://twitter.com/*"
+    ],
+    "icons": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  }
+}
