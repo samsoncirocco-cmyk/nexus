@@ -3,7 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  output: "standalone", // Enables standalone output for Docker optimization
+  // Note: "standalone" output removed — Vercel manages output natively.
+  // Use `output: "standalone"` only for Docker/self-hosted deployments.
   typescript: {
     // Phase 4 has pre-existing type conflicts (devices.types vs devices)
     // that are being resolved separately. Build passes compilation.
