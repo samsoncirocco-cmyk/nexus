@@ -23,6 +23,7 @@ const NAV_ITEMS = [
 
 const SIDEBAR_LINKS = [
   { href: '/', icon: 'home', label: 'Dashboard' },
+  { href: '/compose', icon: 'edit_note', label: 'Compose & Adapt' },
   { href: '/chat', icon: 'chat_bubble', label: 'Chat with Paul' },
   { href: '/agents', icon: 'smart_toy', label: 'Agent Fleet' },
   { href: '/analytics', icon: 'analytics', label: 'Analytics' },
