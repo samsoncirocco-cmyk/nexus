@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 type Platform = 'linkedin' | 'x' | 'substack' | 'medium' | 'instagram' | 'tiktok';
 
@@ -40,6 +40,21 @@ export default function ComposePage() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Platform | null>(null);
   const [copiedPlatform, setCopiedPlatform] = useState<Platform | null>(null);
+  const [voiceProfile, setVoiceProfile] = useState<Record<string, unknown> | null>(null);
+  const [voiceLoaded, setVoiceLoaded] = useState(false);
+
+  // Load Samson's voice profile on mount — powers authentic AI adaptations
+  useEffect(() => {
+    fetch('/voice-profile.json')
+      .then(r => r.ok ? r.json() : null)
+      .then(profile => {
+        if (profile) {
+          setVoiceProfile(profile);
+          setVoiceLoaded(true);
+        }
+      })
+      .catch(() => {/* Voice profile optional — adapt will still work */});
+  }, []);
 
   const togglePlatform = useCallback((platform: Platform) => {
     setSelectedPlatforms(prev =>
@@ -64,6 +79,7 @@ export default function ComposePage() {
           content: content.trim(),
           platforms: selectedPlatforms,
           tone,
+          voiceProfile: voiceProfile || undefined,
         }),
       });
 
@@ -107,6 +123,13 @@ export default function ComposePage() {
         <p className="text-[var(--text-secondary)] font-body text-sm">
           Write once → AI adapts for every platform. Powered by Grok-3.
         </p>
+        {voiceLoaded && (
+          <span className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-xs font-mono
+            bg-green-500/10 text-green-400 border border-green-500/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            Voice profile: Samson ✓
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
