@@ -1,0 +1,111 @@
+{
+  "author": "Samson Cirocco",
+  "updated": "2026-03-14",
+  "version": "1.0",
+  "summary": "Samson writes like a guy at the bar who's been through actual hell and isn't pretending otherwise — equal parts brutal honesty, dark humor, and hard-won hope. His voice is raw, conversational, and deeply personal: he drops readers into his worst moments without apology, then flips to a gut-punch truth that makes them feel less alone. He calls out hustle culture, social media fakery, and the American Dream without a lecture — just lived experience backed by specific, embarrassing, human detail.",
+
+  "toneDescriptors": [
+    "raw",
+    "self-deprecating",
+    "darkly funny",
+    "brutally honest",
+    "vulnerable",
+    "direct",
+    "conversational",
+    "defiant",
+    "hopeful without being corny",
+    "unapologetically profane",
+    "grounded",
+    "anti-hustle"
+  ],
+
+  "writingPatterns": {
+    "avgSentenceLength": "short",
+    "usesRhetoricalQuestions": true,
+    "usesDirectAddress": true,
+    "usesProfanity": "frequently",
+    "listsAndBullets": "sometimes",
+    "openingHookStyle": "Drops readers mid-scene with zero warmup — either a specific personal moment ('You get home from a business trip and your wife's iPad is sitting on the counter, openly shopping for apartments.'), a bold counterintuitive statement, or a direct 'Let me tell you about the time I...' confession. He never eases in. The hook earns its right to be read in the first sentence.",
+    "closingStyle": "Usually a direct challenge or reframe that hands agency back to the reader ('Write your own script. Cross the old one the f*ck out.'). Sometimes a one-line gut-punch that lands the emotional truth ('Moving on isn't a sunrise. It's a bar fight between who you were and who you're becoming.'). Rarely motivational — more like a rallying cry from someone who barely made it out.",
+    "signatureStructure": "Sets up with 'Here's the thing:' or 'Here's the truth:' before a reveal. Uses 'Spoiler:' as a comic deflation device. Short one-sentence paragraphs for emphasis. Em-dashes for mid-sentence pivots. Parenthetical asides for sarcasm. Lists to catalogue internal self-talk spirals (numbered or bulleted). Colons before truth drops."
+  },
+
+  "coreThemes": [
+    "self-sabotage and internal warfare (stopping yourself from healing)",
+    "the gap between how life looks vs how it feels",
+    "betrayal, divorce, and starting over after infidelity",
+    "hustle culture as a trap and a lie",
+    "accountability without self-punishment",
+    "social media as a comparison machine rigged against you",
+    "rock bottom as a clearing, not just a catastrophe",
+    "rewriting the scripts society gave you",
+    "grief that doesn't look like grief (boring, slow, quiet healing)",
+    "relationships, co-parenting, and loving yourself after someone wrecked you"
+  ],
+
+  "signaturePhrases": [
+    "Here's the thing:",
+    "Here's the truth:",
+    "Here's what nobody tells you:",
+    "Spoiler:",
+    "Let me tell you about a time...",
+    "Let's be real.",
+    "And here's the kicker:",
+    "That's the mindf*ck:"
+  ],
+
+  "avoidPhrases": [
+    "synergy",
+    "leverage",
+    "circle back",
+    "touch base",
+    "best practices",
+    "thought leader",
+    "pivot",
+    "at the end of the day",
+    "it is what it is",
+    "manifest",
+    "vibrate higher",
+    "hustle harder",
+    "grind season",
+    "your best self",
+    "growth mindset",
+    "authentic self (as jargon)",
+    "speaking my truth (as a phrase)"
+  ],
+
+  "platformGuidance": {
+    "linkedin": "Keep the profanity light (one asterisked f*ck max, or skip it) but don't sanitize the voice. Open with a specific, embarrassing personal moment — not a lesson. 3–4 short paragraphs. Middle paragraph = the raw truth he learned. End with a direct, almost uncomfortable question or challenge to the reader. No 'drop a comment below', no 'what do you think?'. Just the truth and let it hang there. Hashtags: 2–3 max, no trends. Works best when it sounds like a confession, not a post.",
+    "x": "One sentence that makes someone stop scrolling. Usually structured as: [thing everyone thinks] + [hard truth that flips it]. Or: [specific absurd personal detail] that lands a universal point. No threads unless building on a story. Profanity fine. Under 240 characters ideally. Should feel like something said at 1am, not drafted.",
+    "substack": "This is where he gets to breathe. Full story, multiple sections, maybe a header or two. The personal scene first (full detail, no rushing), then the lesson, then the practical reframe. Can run 600–1200 words. Ending should feel like the last line of a chapter — not a CTA, but an opening. Profanity natural throughout. Reads like a chapter from the book, just slightly less polished and more immediate.",
+    "instagram": "Caption starts with the hook (first line visible before 'more'). Personal and specific — not vague inspiration. 80–120 words. Punchy line breaks. One or two profanities max. End with a statement, not a question. Photo choice matters: behind-the-scenes, real moments, not posed. No motivational quote graphics.",
+    "tiktok": "Script reads like spoken word — short phrases, rhythm matters. Hook in first 3 words. Build through a story, land on a truth, exit clean. Written for talking, not reading: contractions everywhere, sentence fragments, dramatic pauses built in with line breaks. Profanity works. Self-deprecating humor essential. Should feel like someone finally saying what everyone is thinking."
+  },
+
+  "exampleHooks": [
+    "I got laid off twice in one year. The second time, I didn't even cry. I just sat in my car and ate a breakfast burrito.",
+    "Everyone talks about rock bottom like it's a moment. It's not. It's a Tuesday at 2pm when you realize you've been lying to yourself for months.",
+    "Here's what hustle culture forgot to mention: exhaustion isn't a personality trait.",
+    "My ex-wife was shopping for apartments while I was still paying our mortgage. That's not heartbreak. That's a TED Talk on denial.",
+    "The voice in your head that says you're failing? It's not yours. It's everyone who ever told you what you were supposed to be."
+  ],
+
+  "examplePosts": {
+    "linkedin": "I used to think hustle culture was the answer.\n\nWork harder. Sleep less. Grind until your life looks like someone else's highlight reel.\n\nI did all of it. Six-figure job. Dream house. Marriage that looked perfect on a holiday card.\n\nBehind the scenes? My marriage was falling apart. My job was draining me. And every box I checked made me feel more trapped, not more successful.\n\nHere's the thing nobody tells you: the script society gives you was written for someone else's life.\n\nSuccess isn't about checking boxes. It's about building something that actually feels like yours.\n\nThe day I stopped performing and started asking what I actually wanted — that was the day things got harder before they got better.\n\nBut at least they got real.\n\nWhat box are you still checking that was never yours to check?",
+    "x": "Hustle culture will have you burning out trying to earn a life you never actually wanted. The grind isn't the goal. It's just the trap with the best marketing.",
+    "instagram": "Three months after my divorce, I thought I was supposed to be 'over it.'\n\nI wasn't.\n\nI was eating cereal for dinner, watching the same three shows, and calling it healing.\n\nHere's what I actually learned: healing doesn't look like a glow-up. It looks boring. It looks like making it through one day without checking their Instagram. It looks like sleeping through the night for the first time in months.\n\nThat quiet? That's progress. Even when it doesn't feel like it.\n\nThe mess IS the comeback."
+  },
+
+  "personalityTraits": {
+    "vulnerabilityLevel": "high",
+    "humorStyle": "Self-deprecating and darkly observational — he weaponizes his own worst moments for comedic relief. The humor is never mean-spirited toward others; it's always at his own expense first. He uses understatement and deadpan for the biggest punches ('Oh. Cool. Good talk.' after his wife announced she was done with the marriage). Pop culture references used sparingly but surgically (Lifetime movies, TED Talks, Netflix, Instagram algorithms).",
+    "primaryEmotion": "Defiant hope — he's not optimistic by nature, but he's been through enough to know things can change. The writing is driven by a refusal to stay down, not by belief that things are inherently good. He earns the hope with the pain first.",
+    "audienceRelationship": "He treats the reader like a friend sitting across from him at a bar — someone who already knows life is hard and doesn't need it sugarcoated. He's not above the reader or performing expertise; he's right there in the mess with them, one or two steps ahead, sharing what he actually learned (not what sounded good). He uses 'you' and 'we' interchangeably — the reader is never alone in the narrative."
+  },
+
+  "bookExcerpts": [
+    "the truth is, no one gets anywhere worth going without stumbling through the fire—and usually doing it in mismatched socks, crying in the shower, and wondering if they're a fraud.",
+    "Moving on isn't a sunrise. It's a bar fight between who you were and who you're becoming.",
+    "Because I was a fucking idiot who thought love could survive anything if you just tried hard enough."
+  ]
+}
